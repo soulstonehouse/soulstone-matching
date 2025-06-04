@@ -1,4 +1,3 @@
-
 document.getElementById("matchForm").addEventListener("submit", async function (e) {
   e.preventDefault();
 
