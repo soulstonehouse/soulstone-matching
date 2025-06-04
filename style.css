@@ -1,0 +1,62 @@
+
+.soul-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #f5f0ff, #e8fcff);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  font-family: "Helvetica Neue", sans-serif;
+  color: #444;
+}
+.soul-container h2 {
+  text-align: center;
+  font-size: 28px;
+  color: #7048e8;
+  margin-bottom: 10px;
+}
+.soul-container p {
+  text-align: center;
+  color: #666;
+  margin-bottom: 30px;
+}
+.soul-container label {
+  font-weight: bold;
+  display: block;
+  margin: 10px 0 5px;
+  color: #555;
+}
+.soul-container input,
+.soul-container select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  font-size: 16px;
+}
+.soul-container button {
+  background-color: #8f7ada;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+.soul-container button:hover {
+  background-color: #a288ec;
+}
+#result {
+  margin-top: 30px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  line-height: 1.6;
+  border: 1px dashed #b6a5f2;
+  color: #444;
+  min-height: 100px;
+}
