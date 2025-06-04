@@ -1,0 +1,35 @@
+<!-- public/elemental-chat.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Elemental Chat</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>✨ Talk with Your Elemental Spirit</h2>
+    <select id="elementSelect">
+      <option value="Wood">🌳 Wood</option>
+      <option value="Fire">🔥 Fire</option>
+      <option value="Water">💧 Water</option>
+      <option value="Earth">🌍 Earth</option>
+      <option value="Metal">⚙️ Metal</option>
+      <option value="Thunder">⚡ Thunder</option>
+      <option value="Ice">❄️ Ice</option>
+      <option value="Light">🌞 Light</option>
+      <option value="Darkness">🌑 Darkness</option>
+      <option value="Wind">🍃 Wind</option>
+    </select>
+
+    <div id="chatBox"></div>
+
+    <form id="chatForm">
+      <input type="text" id="userInput" placeholder="Ask your spirit..." required />
+      <button type="submit">Send</button>
+    </form>
+  </div>
+
+  <script src="chat.js"></script>
+</body>
+</html>
