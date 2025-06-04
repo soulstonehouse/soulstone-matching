@@ -9,6 +9,7 @@ document.getElementById("matchForm").addEventListener("submit", async function (
   resultBox.innerHTML = "<p>Matching in progress...</p>";
 
   try {
+    // 向 GPT 接口请求分析
     const response = await fetch("/api/match-crystal", {
       method: "POST",
       headers: {
@@ -20,19 +21,20 @@ document.getElementById("matchForm").addEventListener("submit", async function (
     const data = await response.json();
     if (!data.message) throw new Error("No message returned");
 
-    // 显示 GPT 返回内容
+    // 显示 GPT 分析结果
     resultBox.innerHTML = `<p>${data.message.replace(/\n/g, "<br>")}</p>`;
 
-    // 自动识别元素关键字
+    // 自动识别元素关键词
     const elementKeywords = ["Wood", "Fire", "Earth", "Metal", "Water", "Ice", "Thunder", "Light", "Darkness", "Wind"];
     const matchedElement = elementKeywords.find(el => data.message.includes(el));
     if (!matchedElement) return;
 
-    // 加载 JSON 数据
+    // 加载 JSON 映射数据
     const jsonRes = await fetch("/element_crystal_mapping.json");
     const jsonData = await jsonRes.json();
     const crystal = jsonData[matchedElement];
 
+    // 展示推荐的水晶信息
     if (crystal) {
       const crystalBox = document.createElement("div");
       crystalBox.innerHTML = `
