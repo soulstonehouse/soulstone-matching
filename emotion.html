@@ -1,0 +1,45 @@
+<!-- public/emotion.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Emotion Energy Test</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>🌀 Emotion Energy Evaluation</h2>
+    <form id="emotionForm">
+      <p>Over the past 2 weeks, how often have you felt...</p>
+      
+      <label>1. Tired or low energy?</label>
+      <select name="q1">
+        <option value="0">Not at all</option>
+        <option value="1">Several days</option>
+        <option value="2">More than half</option>
+        <option value="3">Nearly every day</option>
+      </select>
+
+      <label>2. Hopeless or discouraged?</label>
+      <select name="q2"> ... </select>
+
+      <label>3. Lack of interest or motivation?</label>
+      <select name="q3"> ... </select>
+
+      <label>4. Sleep issues or restlessness?</label>
+      <select name="q4"> ... </select>
+
+      <label>5. Easily overwhelmed?</label>
+      <select name="q5"> ... </select>
+
+      <br><br>
+      <button type="submit" id="submitBtn">🔮 Match My Element</button>
+    </form>
+
+    <div id="emotionResult"></div>
+  </div>
+
+  <script src="emotion.js"></script>
+</body>
+</html>
