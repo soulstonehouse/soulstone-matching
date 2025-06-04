@@ -1,4 +1,3 @@
-// 路径应为：/api/match-crystal.js
 export default async function handler(req, res) {
   const { birthdate, birthtime, language } = req.body;
 
@@ -6,8 +5,7 @@ export default async function handler(req, res) {
 You are a crystal energy expert. The user was born on ${birthdate} at ${birthtime}.
 Please use Chinese Five Elements theory + Western astrology to analyze the user's energy pattern.
 Then recommend 4-6 crystals and output matching product links (example: /products/rose-quartz).
-Answer in ${language}.
-`;
+Answer in ${language}.`;
 
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
