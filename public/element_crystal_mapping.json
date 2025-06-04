@@ -1,0 +1,62 @@
+{
+  "Wood": {
+    "element": "Wood",
+    "crystal": "Green Aventurine",
+    "description": "Promotes growth, healing, and emotional balance. Ideal for those seeking personal renewal.",
+    "link": "https://yourstore.com/products/green-aventurine"
+  },
+  "Fire": {
+    "element": "Fire",
+    "crystal": "Carnelian",
+    "description": "Boosts confidence, vitality, and motivation. Perfect for igniting passion and action.",
+    "link": "https://yourstore.com/products/carnelian"
+  },
+  "Earth": {
+    "element": "Earth",
+    "crystal": "Tiger's Eye",
+    "description": "Encourages grounding, stability, and focus. A great companion for decision making.",
+    "link": "https://yourstore.com/products/tigers-eye"
+  },
+  "Metal": {
+    "element": "Metal",
+    "crystal": "Clear Quartz",
+    "description": "Amplifies clarity, communication, and spiritual strength. Useful for channeling intentions.",
+    "link": "https://yourstore.com/products/clear-quartz"
+  },
+  "Water": {
+    "element": "Water",
+    "crystal": "Aquamarine",
+    "description": "Soothes the mind and enhances intuition. Great for emotional healing and flow.",
+    "link": "https://yourstore.com/products/aquamarine"
+  },
+  "Ice": {
+    "element": "Ice",
+    "crystal": "Blue Lace Agate",
+    "description": "Calms nerves and helps with emotional expression. Ideal for peaceful communication.",
+    "link": "https://yourstore.com/products/blue-lace-agate"
+  },
+  "Thunder": {
+    "element": "Thunder",
+    "crystal": "Amethyst",
+    "description": "Awakens higher consciousness and protects energy. Great for spiritual insight.",
+    "link": "https://yourstore.com/products/amethyst"
+  },
+  "Light": {
+    "element": "Light",
+    "crystal": "Citrine",
+    "description": "Brings joy, success, and abundance. Perfect for manifesting goals and happiness.",
+    "link": "https://yourstore.com/products/citrine"
+  },
+  "Darkness": {
+    "element": "Darkness",
+    "crystal": "Obsidian",
+    "description": "Absorbs negative energy and brings hidden emotions to light. Ideal for deep healing.",
+    "link": "https://yourstore.com/products/obsidian"
+  },
+  "Wind": {
+    "element": "Wind",
+    "crystal": "Fluorite",
+    "description": "Supports mental clarity and fresh perspectives. Useful for intellectual and creative work.",
+    "link": "https://yourstore.com/products/fluorite"
+  }
+}
