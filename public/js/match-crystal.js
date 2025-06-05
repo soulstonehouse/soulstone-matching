@@ -1,15 +1,15 @@
 // 精灵图片映射
 const spiritImageMap = {
-  "Wood": "/images/spirit-wood.png",
-  "Fire": "/images/spirit-fire.png",
-  "Earth": "/images/spirit-earth.png",
-  "Metal": "/images/spirit-metal.png",
-  "Water": "/images/spirit-water.png",
-  "Ice": "/images/spirit-ice.png",
-  "Thunder": "/images/spirit-thunder.png",
-  "Light": "/images/spirit-light.png",
-  "Darkness": "/images/spirit-darkness.png",
-  "Wind": "/images/spirit-wind.png"
+  "Water": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/water.png?v=1749120912",
+  "Fire": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/fire.png?v=1749120966",
+  "Ice": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/ice.png?v=1749121020",
+  "Earth": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/earth.png?v=1749121018",
+  "Wood": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/wood.png?v=1749121025",
+  "Wind": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/wind.png?v=1749121176",
+  "Thunder": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/Thunder.png?v=1749121312",
+  "Light": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/light.png?v=1749121855",
+  "Darkness": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/darkness.png?v=1749122291",
+  "Metal": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/metal.png?v=1749122654"
 };
 
 document.getElementById('matchBtn').addEventListener('click', async () => {
