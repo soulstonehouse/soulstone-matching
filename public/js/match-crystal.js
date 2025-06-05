@@ -1,3 +1,4 @@
+
 const spiritImageMap = {
   "Water": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/water.png?v=1749120912",
   "Fire": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/fire.png?v=1749120966",
@@ -15,6 +16,7 @@ document.getElementById('matchBtn').addEventListener('click', async () => {
   const birthday = document.getElementById('birthday').value;
   const birthtime = document.getElementById('birthtime').value;
   const language = document.getElementById('language').value;
+  const gender = document.getElementById('gender') ? document.getElementById('gender').value : 'female';
   const resultDiv = document.getElementById('result');
 
   if (!birthday || !birthtime) {
@@ -24,9 +26,25 @@ document.getElementById('matchBtn').addEventListener('click', async () => {
 
   resultDiv.innerHTML = '🔮 Matching your crystal... Please wait...';
 
-  const month = new Date(birthday).getMonth() + 1;
-  let element = 'Wood';
+  const birthDateObj = new Date(birthday);
+  const month = birthDateObj.getMonth() + 1;
+  const day = birthDateObj.getDate();
 
+  let zodiac = '';
+  if ((month == 1 && day >= 20) || (month == 2 && day <= 18)) zodiac = "Aquarius";
+  else if ((month == 2 && day >= 19) || (month == 3 && day <= 20)) zodiac = "Pisces";
+  else if ((month == 3 && day >= 21) || (month == 4 && day <= 19)) zodiac = "Aries";
+  else if ((month == 4 && day >= 20) || (month == 5 && day <= 20)) zodiac = "Taurus";
+  else if ((month == 5 && day >= 21) || (month == 6 && day <= 20)) zodiac = "Gemini";
+  else if ((month == 6 && day >= 21) || (month == 7 && day <= 22)) zodiac = "Cancer";
+  else if ((month == 7 && day >= 23) || (month == 8 && day <= 22)) zodiac = "Leo";
+  else if ((month == 8 && day >= 23) || (month == 9 && day <= 22)) zodiac = "Virgo";
+  else if ((month == 9 && day >= 23) || (month == 10 && day <= 22)) zodiac = "Libra";
+  else if ((month == 10 && day >= 23) || (month == 11 && day <= 21)) zodiac = "Scorpio";
+  else if ((month == 11 && day >= 22) || (month == 12 && day <= 21)) zodiac = "Sagittarius";
+  else zodiac = "Capricorn";
+
+  let element = 'Wood';
   if ([3, 4].includes(month)) element = 'Wood';
   else if ([5, 6].includes(month)) element = 'Fire';
   else if ([7, 8].includes(month)) element = 'Earth';
@@ -49,10 +67,10 @@ document.getElementById('matchBtn').addEventListener('click', async () => {
 
   let gptReply = {};
   try {
-    const response = await fetch('/api/match-crystal.js', {
+    const response = await fetch('/api/match-crystal', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ birthday, birthtime, language, element })
+      body: JSON.stringify({ birthday, birthtime, language, element, zodiac, gender })
     });
     gptReply = await response.json();
   } catch (e) {
