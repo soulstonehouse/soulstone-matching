@@ -16,19 +16,18 @@ document.getElementById('matchBtn').addEventListener('click', async () => {
   const birthday = document.getElementById('birthday').value;
   const birthtime = document.getElementById('birthtime').value;
   const language = document.getElementById('language').value;
-  const gender = document.getElementById('gender') ? document.getElementById('gender').value : 'female';
+  const gender = document.getElementById('gender').value;
   const resultDiv = document.getElementById('result');
 
-  if (!birthday || !birthtime) {
-    resultDiv.innerHTML = '❗ Please enter both birth date and time.';
+  if (!birthday || !birthtime || !gender) {
+    resultDiv.innerHTML = '❗ Please complete all fields.';
     return;
   }
 
   resultDiv.innerHTML = '🔮 Matching your crystal... Please wait...';
 
-  const birthDateObj = new Date(birthday);
-  const month = birthDateObj.getMonth() + 1;
-  const day = birthDateObj.getDate();
+  const month = new Date(birthday).getMonth() + 1;
+  const day = new Date(birthday).getDate();
 
   let zodiac = '';
   if ((month == 1 && day >= 20) || (month == 2 && day <= 18)) zodiac = "Aquarius";
@@ -44,15 +43,31 @@ document.getElementById('matchBtn').addEventListener('click', async () => {
   else if ((month == 11 && day >= 22) || (month == 12 && day <= 21)) zodiac = "Sagittarius";
   else zodiac = "Capricorn";
 
-  let element = 'Wood';
-  if ([3, 4].includes(month)) element = 'Wood';
-  else if ([5, 6].includes(month)) element = 'Fire';
-  else if ([7, 8].includes(month)) element = 'Earth';
-  else if ([9, 10].includes(month)) element = 'Metal';
-  else if ([11, 12].includes(month)) element = 'Water';
-  else if (month === 1) element = 'Ice';
-  else if (month === 2) element = 'Thunder';
+  // 五行初判
+  const monthToElement = {
+    1: "Ice", 2: "Thunder", 3: "Wood", 4: "Wood",
+    5: "Fire", 6: "Fire", 7: "Earth", 8: "Earth",
+    9: "Metal", 10: "Metal", 11: "Water", 12: "Water"
+  };
+  const zodiacToElement = {
+    "Aries": "Fire", "Leo": "Fire", "Sagittarius": "Fire",
+    "Taurus": "Earth", "Virgo": "Earth", "Capricorn": "Earth",
+    "Gemini": "Wind", "Libra": "Wind", "Aquarius": "Wind",
+    "Cancer": "Water", "Scorpio": "Water", "Pisces": "Water"
+  };
 
+  const elementScore = {
+    Fire: 0, Earth: 0, Water: 0, Wind: 0, Metal: 0, Wood: 0, Ice: 0, Thunder: 0
+  };
+
+  const mEle = monthToElement[month];
+  const zEle = zodiacToElement[zodiac];
+
+  if (mEle) elementScore[mEle] += 1;
+  if (zEle) elementScore[zEle] += 1.5;
+
+  const sorted = Object.entries(elementScore).sort((a, b) => b[1] - a[1]);
+  const element = sorted[0][0];
   const spiritImage = spiritImageMap[element] || "";
 
   let crystalInfo = {};
