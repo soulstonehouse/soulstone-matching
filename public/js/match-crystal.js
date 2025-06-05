@@ -1,4 +1,3 @@
-// 精灵图片映射
 const spiritImageMap = {
   "Water": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/water.png?v=1749120912",
   "Fire": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/fire.png?v=1749120966",
@@ -36,8 +35,7 @@ document.getElementById('matchBtn').addEventListener('click', async () => {
   else if (month === 1) element = 'Ice';
   else if (month === 2) element = 'Thunder';
 
-  const spiritLabel = element + " Spirit";
-  const spiritImage = spiritImageMap[element] || "/images/default.png";
+  const spiritImage = spiritImageMap[element] || "";
 
   let crystalInfo = {};
   try {
@@ -65,7 +63,7 @@ document.getElementById('matchBtn').addEventListener('click', async () => {
   resultDiv.innerHTML = `
     <div style="border: 2px dashed #d7c9f7; border-radius: 16px; padding: 20px; background: #f9f7ff;">
       <h3>🧝‍♀️ Your Element: ${element}</h3>
-      <img src="${spiritImage}" alt="${element} Spirit" style="max-width: 100px; margin: 10px 0;">
+      <img src="${spiritImage}" alt="${element} Spirit" style="max-width: 140px; display: block; margin: 20px auto;">
       <p><strong>Crystal:</strong> ${crystalInfo.crystal || 'Unknown'}</p>
       <p><strong>About:</strong> ${crystalInfo.description || 'No description available.'}</p>
       <p><strong>Message from your Spirit:</strong></p>
