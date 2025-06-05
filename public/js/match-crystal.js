@@ -11,7 +11,6 @@ document.getElementById('matchBtn').addEventListener('click', async () => {
 
   resultDiv.innerHTML = '🔮 Matching your crystal... Please wait...';
 
-  // 🔮 步骤1：推断元素类型
   const month = new Date(birthday).getMonth() + 1;
   let element = 'Wood';
 
@@ -23,7 +22,6 @@ document.getElementById('matchBtn').addEventListener('click', async () => {
   else if (month === 1) element = 'Ice';
   else if (month === 2) element = 'Thunder';
 
-  // 🌟 精灵语气标题映射
   const spiritLabelMap = {
     Water: "💧 Message from the Water Spirit",
     Fire: "🔥 Message from the Fire Spirit",
@@ -37,9 +35,22 @@ document.getElementById('matchBtn').addEventListener('click', async () => {
     Wind: "🌬️ Guidance from the Wind Spirit"
   };
 
-  const spiritLabel = spiritLabelMap[element] || "✨ Message from your Spirit Guide";
+  const spiritImageMap = {
+    Water: "/images/water-spirit.png",
+    Fire: "/images/fire-spirit.png",
+    Wood: "/images/wood-spirit.png",
+    Earth: "/images/earth-spirit.png",
+    Metal: "/images/metal-spirit.png",
+    Ice: "/images/ice-spirit.png",
+    Thunder: "/images/thunder-spirit.png",
+    Light: "/images/light-spirit.png",
+    Darkness: "/images/shadow-spirit.png",
+    Wind: "/images/wind-spirit.png"
+  };
 
-  // 🌈 步骤2：读取水晶匹配数据
+  const spiritLabel = spiritLabelMap[element] || "✨ Message from your Spirit Guide";
+  const spiritImage = spiritImageMap[element] || "/images/default-spirit.png";
+
   let crystalInfo = {};
   try {
     const response = await fetch('/element_crystal_mapping.json');
@@ -50,7 +61,6 @@ document.getElementById('matchBtn').addEventListener('click', async () => {
     return;
   }
 
-  // 🤖 步骤3：请求 GPT 分析
   let gptReply = {};
   try {
     const response = await fetch('/api/match-crystal.js', {
@@ -66,15 +76,37 @@ document.getElementById('matchBtn').addEventListener('click', async () => {
     return;
   }
 
-  // 🌸 步骤4：渲染结果内容
-  resultDiv.innerHTML = `
-    <div style="border: 2px dashed #d7c9f7; border-radius: 16px; padding: 20px; background: #f9f7ff;">
-      <h3>🧝‍♀️ Your Element: ${element}</h3>
-      <p><strong>Crystal:</strong> ${crystalInfo.crystal || 'Unknown'}</p>
-      <p><strong>About:</strong> ${crystalInfo.description || 'No description available.'}</p>
-      <p style="margin-top: 16px;"><strong>${spiritLabel}:</strong></p>
-      <p>${gptReply.message || 'Your crystal reflects your soul\'s needs.'}</p>
-      ${crystalInfo.link ? `<p><a href="${crystalInfo.link}" target="_blank">🛒 View Product</a></p>` : ''}
-    </div>
+  const container = document.createElement('div');
+  container.style.border = '2px dashed #d7c9f7';
+  container.style.borderRadius = '16px';
+  container.style.padding = '20px';
+  container.style.background = '#f9f7ff';
+
+  container.innerHTML = `
+    <h3>🧝‍♀️ Your Element: ${element}</h3>
+    <img src="${spiritImage}" alt="${element} Spirit" style="max-width: 100px; margin: 10px 0;">
+    <p><strong>Crystal:</strong> ${crystalInfo.crystal || 'Unknown'}</p>
+    <p><strong>About:</strong> ${crystalInfo.description || 'No description available.'}</p>
+    <p style="margin-top: 16px;"><strong>${spiritLabel}:</strong></p>
+    <p id="typed-response"></p>
+    ${crystalInfo.link ? `<p><a href="${crystalInfo.link}" target="_blank">🛒 View Product</a></p>` : ''}
   `;
+
+  resultDiv.innerHTML = '';
+  resultDiv.appendChild(container);
+
+  const typeWriter = (text, elementId, delay = 25) => {
+    let i = 0;
+    const target = document.getElementById(elementId);
+    const interval = setInterval(() => {
+      if (i < text.length) {
+        target.innerHTML += text.charAt(i);
+        i++;
+      } else {
+        clearInterval(interval);
+      }
+    }, delay);
+  };
+
+  typeWriter(gptReply.message || "Your crystal reflects your soul's needs.", "typed-response");
 });
