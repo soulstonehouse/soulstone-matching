@@ -1,30 +1,83 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Soulstone Matching</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css">
+  <style>
+    .soul-container {
+      max-width: 480px;
+      margin: 40px auto;
+      padding: 30px;
+      background: linear-gradient(to bottom right, #f6f3ff, #eaf1ff);
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+      font-family: 'Helvetica Neue', sans-serif;
+      color: #333;
+    }
+    h2 {
+      color: #6639ca;
+      text-align: center;
+    }
+    label {
+      font-weight: 600;
+      display: block;
+      margin: 16px 0 6px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      background-color: #8a6df1;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #6d4bd2;
+    }
+  </style>
   <script src="js/match-crystal.js" defer></script>
 </head>
 <body>
   <div class="soul-container">
     <h2>🔮 Birth Info Crystal Matching</h2>
     <p>Enter your birth details and discover the crystals that align with your soul's frequency.</p>
-    
+
     <label for="birthday">Birth Date</label>
-    <input required id="birthday" type="date">
+    <input required id="birthday" type="date" />
 
     <label for="birthtime">Birth Time</label>
-    <input required id="birthtime" type="time">
+    <input required id="birthtime" type="time" />
+
+    <label for="gender">Gender</label>
+    <select id="gender" required>
+      <option value="female">Female</option>
+      <option value="male">Male</option>
+      <option value="nonbinary">Non-Binary</option>
+    </select>
 
     <label for="language">Preferred Language</label>
     <select required id="language">
       <option value="English">English</option>
+      <option value="Chinese">Chinese</option>
     </select>
 
     <button id="matchBtn">✨ Start Matching</button>
 
-    <div id="result" style="margin-top: 20px; padding: 10px;"></div>
+    <div id="result" style="margin-top: 30px;"></div>
   </div>
 </body>
 </html>
