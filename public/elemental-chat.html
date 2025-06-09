@@ -1,14 +1,91 @@
-<!-- public/elemental-chat.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Elemental Chat</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f9f7ff;
+      border-radius: 16px;
+      box-shadow: 0 0 10px rgba(160, 144, 255, 0.2);
+      text-align: center;
+    }
+
+    #spiritImage {
+      max-width: 150px;
+      margin: 10px auto;
+      display: none;
+    }
+
+    #chatBox {
+      margin: 20px 0;
+      padding: 10px;
+      border: 1px solid #ddd;
+      background: #fff;
+      border-radius: 10px;
+      height: 300px;
+      overflow-y: auto;
+      text-align: left;
+    }
+
+    .chat-bubble {
+      margin: 10px 0;
+      padding: 10px 15px;
+      border-radius: 10px;
+      max-width: 80%;
+    }
+
+    .user {
+      background-color: #e0dcff;
+      align-self: flex-end;
+      text-align: right;
+      margin-left: auto;
+    }
+
+    .spirit {
+      background-color: #f1f0f7;
+      align-self: flex-start;
+      text-align: left;
+      margin-right: auto;
+    }
+
+    #chatForm {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    #chatForm input {
+      flex: 1;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+
+    #chatForm button {
+      padding: 10px 20px;
+      background-color: #7d65f8;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    #chatForm button:hover {
+      background-color: #5e49c2;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h2>✨ Talk with Your Elemental Spirit</h2>
+
+    <label for="elementSelect">Choose Your Element</label>
     <select id="elementSelect">
       <option value="Wood">🌳 Wood</option>
       <option value="Fire">🔥 Fire</option>
@@ -22,6 +99,8 @@
       <option value="Wind">🍃 Wind</option>
     </select>
 
+    <img id="spiritImage" src="" alt="Spirit Image" />
+
     <div id="chatBox"></div>
 
     <form id="chatForm">
@@ -30,6 +109,6 @@
     </form>
   </div>
 
-  <script src="chat.js"></script>
+  <script src="/js/chat.js"></script>
 </body>
 </html>
