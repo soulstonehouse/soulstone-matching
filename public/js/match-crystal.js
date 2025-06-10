@@ -1,4 +1,3 @@
-
 const spiritImageMap = {
   "Water": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/water.png?v=1749120912",
   "Fire": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/fire.png?v=1749120966",
@@ -43,7 +42,6 @@ document.getElementById('matchBtn').addEventListener('click', async () => {
   else if ((month == 11 && day >= 22) || (month == 12 && day <= 21)) zodiac = "Sagittarius";
   else zodiac = "Capricorn";
 
-  // 五行初判
   const monthToElement = {
     1: "Ice", 2: "Thunder", 3: "Wood", 4: "Wood",
     5: "Fire", 6: "Fire", 7: "Earth", 8: "Earth",
@@ -82,11 +80,25 @@ document.getElementById('matchBtn').addEventListener('click', async () => {
 
   let gptReply = {};
   try {
+    const payload = {
+      birthday,
+      birthtime,
+      language,
+      element,
+      zodiac,
+      gender
+    };
+
+    if (window.promptOverride) {
+      payload.promptOverride = window.promptOverride;
+    }
+
     const response = await fetch('/api/match-crystal', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ birthday, birthtime, language, element, zodiac, gender })
+      body: JSON.stringify(payload)
     });
+
     gptReply = await response.json();
   } catch (e) {
     resultDiv.innerHTML = '⚠️ GPT request failed.';
@@ -108,6 +120,7 @@ document.getElementById('matchBtn').addEventListener('click', async () => {
   const typeWriter = (text, elementId, delay = 25) => {
     let i = 0;
     const target = document.getElementById(elementId);
+    target.innerHTML = "";
     const interval = setInterval(() => {
       if (i < text.length) {
         target.innerHTML += text.charAt(i);
