@@ -55,7 +55,7 @@ document.getElementById('matchBtn').addEventListener('click', async () => {
   };
 
   const elementScore = {
-    Fire: 0, Earth: 0, Water: 0, Wind: 0, Metal: 0, Wood: 0, Ice: 0, Thunder: 0
+    Fire: 0, Earth: 0, Water: 0, Wind: 0, Metal: 0, Wood: 0, Ice: 0, Thunder: 0, Light: 0, Darkness: 0
   };
 
   const mEle = monthToElement[month];
@@ -68,11 +68,14 @@ document.getElementById('matchBtn').addEventListener('click', async () => {
   const element = sorted[0][0];
   const spiritImage = spiritImageMap[element] || "";
 
-  let crystalInfo = {};
+  let selectedCrystal = {};
   try {
     const response = await fetch('/element_crystal_mapping.json');
     const data = await response.json();
-    crystalInfo = data[element] || {};
+    const crystals = data[element];
+    if (Array.isArray(crystals) && crystals.length > 0) {
+      selectedCrystal = crystals[Math.floor(Math.random() * crystals.length)];
+    }
   } catch (e) {
     resultDiv.innerHTML = '❌ Failed to load crystal data.';
     return;
@@ -109,11 +112,11 @@ document.getElementById('matchBtn').addEventListener('click', async () => {
     <div style="border: 2px dashed #d7c9f7; border-radius: 16px; padding: 20px; background: #f9f7ff;">
       <h3>🧝‍♀️ Your Element: ${element}</h3>
       <img src="${spiritImage}" alt="${element} Spirit" style="max-width: 140px; display: block; margin: 20px auto;">
-      <p><strong>Crystal:</strong> ${crystalInfo.crystal || 'Unknown'}</p>
-      <p><strong>About:</strong> ${crystalInfo.description || 'No description available.'}</p>
+      <p><strong>Crystal:</strong> ${selectedCrystal.crystal || 'Unknown'}</p>
+      <p><strong>About:</strong> ${selectedCrystal.description || 'No description available.'}</p>
       <p><strong>Message from your Spirit:</strong></p>
       <p id="typed-response"></p>
-      ${crystalInfo.link ? `<p><a href="${crystalInfo.link}" target="_blank">🛒 View Product</a></p>` : ''}
+      ${selectedCrystal.link ? `<p><a href="${selectedCrystal.link}" target="_blank">🛒 View Product</a></p>` : ''}
     </div>
   `;
 
