@@ -2,6 +2,7 @@ const elementSelect = document.getElementById("elementSelect");
 const spiritImage = document.getElementById("spiritImage");
 const chatBox = document.getElementById("chatBox");
 
+// 精灵图片映射
 const spiritImageMap = {
   "Water": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/water.png",
   "Fire": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/fire.png",
@@ -15,23 +16,25 @@ const spiritImageMap = {
   "Metal": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/metal.png"
 };
 
-// 页面加载时：自动显示精灵图
+// 页面加载时显示默认精灵图
 window.addEventListener("DOMContentLoaded", () => {
+  updateSpiritImage();
+});
+
+// 下拉切换时更新图片
+elementSelect.addEventListener("change", updateSpiritImage);
+
+function updateSpiritImage() {
   const selected = elementSelect.value;
   if (spiritImageMap[selected]) {
     spiritImage.src = spiritImageMap[selected];
     spiritImage.style.display = "block";
+  } else {
+    spiritImage.style.display = "none";
   }
-});
+}
 
-// 用户切换时：更新精灵图
-elementSelect.addEventListener("change", () => {
-  const selected = elementSelect.value;
-  spiritImage.src = spiritImageMap[selected];
-  spiritImage.style.display = "block";
-});
-
-// 提交聊天
+// 聊天提交
 document.getElementById("chatForm").addEventListener("submit", async function(e) {
   e.preventDefault();
 
@@ -47,9 +50,7 @@ document.getElementById("chatForm").addEventListener("submit", async function(e)
   try {
     const res = await fetch("/api/match-crystal", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         birthdate: "",
         birthtime: "",
@@ -61,7 +62,7 @@ document.getElementById("chatForm").addEventListener("submit", async function(e)
     const data = await res.json();
     const response = data.message || "🌀 The spirit is silent...";
 
-    // 删除“Thinking...”并打字
+    // 移除Thinking并打字
     thinkingBubble.remove();
     typeWriter(response, appendMessage("spirit", ""), 25);
   } catch (err) {
@@ -71,7 +72,7 @@ document.getElementById("chatForm").addEventListener("submit", async function(e)
   document.getElementById("userInput").value = "";
 });
 
-// 添加消息气泡
+// 添加聊天气泡
 function appendMessage(sender, text) {
   const div = document.createElement("div");
   div.className = `chat-bubble ${sender}`;
@@ -87,7 +88,7 @@ function typeWriter(text, targetDiv, delay = 25) {
   const interval = setInterval(() => {
     if (i < text.length) {
       targetDiv.innerText += text.charAt(i);
-      chatBox.scrollTop = chatBox.scrollHeight; // 自动滚动
+      chatBox.scrollTop = chatBox.scrollHeight;
       i++;
     } else {
       clearInterval(interval);
