@@ -56,9 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Append only this button
-  const container = document.querySelector(".soul-container");
-  container.appendChild(analyzeBtn);
+  // Append the button ABOVE the result box
+  resultDiv.insertAdjacentElement("beforebegin", analyzeBtn);
 });
 
 // Typing effect
