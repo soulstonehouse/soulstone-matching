@@ -2,16 +2,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const resultDiv = document.getElementById("result");
 
   const analyzeBtn = document.createElement("button");
-  analyzeBtn.textContent = "🌟 Get Full Analysis & Crystal Matching";
+  analyzeBtn.textContent = "✨ Get Full BaZi Analysis & Crystal Matching";
   analyzeBtn.style.marginTop = "20px";
   analyzeBtn.style.width = "100%";
-  analyzeBtn.style.padding = "12px";
+  analyzeBtn.style.padding = "14px";
   analyzeBtn.style.fontSize = "16px";
   analyzeBtn.style.fontWeight = "bold";
-  analyzeBtn.style.backgroundColor = "#f57c00";
+  analyzeBtn.style.backgroundColor = "#8a6df1";
   analyzeBtn.style.color = "white";
   analyzeBtn.style.border = "none";
-  analyzeBtn.style.borderRadius = "10px";
+  analyzeBtn.style.borderRadius = "50px";
   analyzeBtn.style.cursor = "pointer";
 
   analyzeBtn.addEventListener("click", async () => {
@@ -56,7 +56,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  document.querySelector(".soul-container").appendChild(analyzeBtn);
+  // Append only this button
+  const container = document.querySelector(".soul-container");
+  container.appendChild(analyzeBtn);
 });
 
 // Typing effect
