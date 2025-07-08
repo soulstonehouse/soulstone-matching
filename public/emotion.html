@@ -12,7 +12,7 @@
       padding: 20px;
     }
     .form-box {
-      max-width: 700px;
+      max-width: 600px;
       margin: 0 auto;
       background: #fff;
       padding: 30px;
@@ -59,10 +59,13 @@
     }
     #result a {
       display: inline-block;
-      margin-top: 10px;
-      color: #7d65f8;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #7d65f8;
+      color: white;
       text-decoration: none;
-      font-weight: 600;
+      border-radius: 8px;
+      font-weight: 500;
     }
   </style>
 </head>
@@ -70,89 +73,89 @@
   <div class="form-box">
     <h2>✨ Emotional Self-Assessment</h2>
     <form id="emotionForm">
+      <!-- 10 questions -->
       <label>1️⃣ When you spend time alone lately, does your mind feel mostly calm or sometimes uneasy?</label>
       <select name="q1">
-        <option>Very calm</option>
-        <option>Mostly calm</option>
-        <option>Sometimes uneasy</option>
-        <option>Often uneasy</option>
+        <option value="1">Very calm</option>
+        <option value="2">Mostly calm</option>
+        <option value="3">Sometimes uneasy</option>
+        <option value="4">Often uneasy</option>
       </select>
 
       <label>2️⃣ When you wake up in the morning, how does the day ahead feel to you?</label>
       <select name="q2">
-        <option>Very positive</option>
-        <option>Mostly positive</option>
-        <option>Sometimes difficult</option>
-        <option>Mostly difficult</option>
+        <option value="1">Very positive</option>
+        <option value="2">Mostly positive</option>
+        <option value="3">Sometimes difficult</option>
+        <option value="4">Mostly difficult</option>
       </select>
 
       <label>3️⃣ Have you felt motivated and energized recently?</label>
       <select name="q3">
-        <option>Very much</option>
-        <option>Mostly</option>
-        <option>Sometimes</option>
-        <option>Not at all</option>
+        <option value="1">Very much</option>
+        <option value="2">Mostly</option>
+        <option value="3">Sometimes</option>
+        <option value="4">Not at all</option>
       </select>
 
       <label>4️⃣ How would you describe the quality of your sleep these days?</label>
       <select name="q4">
-        <option>Very good</option>
-        <option>Mostly good</option>
-        <option>Sometimes poor</option>
-        <option>Very poor</option>
+        <option value="1">Very good</option>
+        <option value="2">Mostly good</option>
+        <option value="3">Sometimes poor</option>
+        <option value="4">Very poor</option>
       </select>
 
       <label>5️⃣ Do you feel your emotions are steady or easily shifting?</label>
       <select name="q5">
-        <option>Very steady</option>
-        <option>Mostly steady</option>
-        <option>Sometimes shifting</option>
-        <option>Very shifting</option>
+        <option value="1">Very steady</option>
+        <option value="2">Mostly steady</option>
+        <option value="3">Sometimes shifting</option>
+        <option value="4">Very shifting</option>
       </select>
 
       <label>6️⃣ Have you been feeling lonely or disconnected lately?</label>
       <select name="q6">
-        <option>Not at all</option>
-        <option>Rarely</option>
-        <option>Sometimes</option>
-        <option>Very often</option>
+        <option value="1">Not at all</option>
+        <option value="2">Rarely</option>
+        <option value="3">Sometimes</option>
+        <option value="4">Very often</option>
       </select>
 
       <label>7️⃣ Does your heart feel full and nourished these days?</label>
       <select name="q7">
-        <option>Very much</option>
-        <option>Mostly</option>
-        <option>Sometimes</option>
-        <option>Not at all</option>
+        <option value="1">Very much</option>
+        <option value="2">Mostly</option>
+        <option value="3">Sometimes</option>
+        <option value="4">Not at all</option>
       </select>
 
       <label>8️⃣ How hopeful do you feel about your future right now?</label>
       <select name="q8">
-        <option>Very hopeful</option>
-        <option>Mostly hopeful</option>
-        <option>Sometimes doubtful</option>
-        <option>Not hopeful</option>
+        <option value="1">Very hopeful</option>
+        <option value="2">Mostly hopeful</option>
+        <option value="3">Sometimes doubtful</option>
+        <option value="4">Not hopeful</option>
       </select>
 
       <label>9️⃣ How does your body feel recently?</label>
       <select name="q9">
-        <option>Very energetic</option>
-        <option>Mostly good</option>
-        <option>Sometimes tired</option>
-        <option>Very tired</option>
+        <option value="1">Very energetic</option>
+        <option value="2">Mostly good</option>
+        <option value="3">Sometimes tired</option>
+        <option value="4">Very tired</option>
       </select>
 
       <label>🔟 Do you feel valued and supported by those around you?</label>
       <select name="q10">
-        <option>Very much</option>
-        <option>Mostly</option>
-        <option>Sometimes</option>
-        <option>Not at all</option>
+        <option value="1">Very much</option>
+        <option value="2">Mostly</option>
+        <option value="3">Sometimes</option>
+        <option value="4">Not at all</option>
       </select>
 
       <button type="submit">Submit</button>
     </form>
-
     <div id="result"></div>
   </div>
 
@@ -161,35 +164,42 @@
       e.preventDefault();
 
       const form = e.target;
-      const answers = Array.from(form.querySelectorAll("select")).map(s => s.value);
+      const scores = Array.from(form.querySelectorAll("select")).map(s => parseInt(s.value));
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = "✨ Analyzing your responses, please wait...";
 
-      document.getElementById("result").innerHTML = "🔮 Analyzing your answers... Please wait...";
+      try {
+        const res = await fetch("/api/emotion-analysis", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ scores })
+        });
 
-      const res = await fetch("/api/emotion-analysis", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answers })
-      });
+        const data = await res.json();
+        const aiMessage = data.message || "Your emotional guide is here whenever you need support.";
 
-      if (!res.ok) {
-        document.getElementById("result").innerHTML = "❌ Sorry, something went wrong. Please try again.";
-        return;
+        // Determine element
+        const total = scores.reduce((a,b)=>a+b,0);
+        let element = "Light";
+        if (total >=20) element = "Darkness";
+        else if (scores[0]>=2 || scores[4]>=2) element = "Water";
+        else if (scores[2]>=2) element = "Fire";
+        else if (scores[3]>=2 || scores[9]>=2) element = "Earth";
+        else if (scores[5]>=2) element = "Wind";
+        else element = "Light";
+
+        resultDiv.innerHTML = `
+          <div style="white-space:pre-line;">
+            ${aiMessage}
+          </div>
+          <a href="/elemental-chat.html?element=${encodeURIComponent(element)}">
+            🌿 Begin conversation with your ${element} Spirit
+          </a>
+        `;
+      } catch (err) {
+        console.error(err);
+        resultDiv.innerHTML = "❌ Sorry, something went wrong. Please try again.";
       }
-
-      const data = await res.json();
-
-      const html = `
-        <p>💜 <strong>${data.summary}</strong></p>
-        <p><strong>Element Connection:</strong> ${data.element}</p>
-        <p><strong>Crystal Companion:</strong> ${data.crystal}</p>
-        <p>✨ ${data.message}</p>
-        <a href="/elemental-chat.html?element=${encodeURIComponent(data.element)}">
-          🌟 Begin a conversation with your ${data.element} Spirit
-        </a>
-      `;
-
-      document.getElementById("result").innerHTML = html;
-      window.scrollTo({ top: document.getElementById("result").offsetTop, behavior: 'smooth' });
     });
   </script>
 </body>
