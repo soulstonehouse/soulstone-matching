@@ -1,25 +1,36 @@
+// /api/bazi-analysis.js
 export default async function handler(req, res) {
   const { birthday, birthtime, gender, language } = req.body;
 
   const prompt = `
-You are a professional BaZi (Four Pillars of Destiny) master and a Chinese metaphysics expert. 
-Based on the user's birth details below, create an in-depth and warm reading.
+You are a professional BaZi (Chinese Four Pillars) metaphysics master, a feng shui consultant, and a warm-hearted healing guide.
+Please help the user analyze their destiny based on this information:
 
-Birth date: ${birthday}
-Birth time: ${birthtime}
-Gender: ${gender}
+- Birthday: ${birthday}
+- Birthtime: ${birthtime}
+- Gender: ${gender}
+- Language: ${language}
 
-1️⃣ First, calculate and explain the BaZi (Heavenly Stems and Earthly Branches), including the Year Pillar, Month Pillar, Day Pillar, and Hour Pillar.
+Step by step, do the following:
 
-2️⃣ Describe which Five Elements are dominant or lacking in their chart, and what this implies about personality, strengths, and weaknesses.
+1️⃣ Professionally interpret the BaZi chart (year, month, day, hour pillars) and describe their dominant Five Elements (Metal, Wood, Water, Fire, Earth).
 
-3️⃣ From a Feng Shui perspective, suggest what can be done to balance their Five Elements energy in daily life.
+2️⃣ Gently explain which elements are excessive, which are lacking, and how this affects their personality, relationships, and overall destiny.
 
-4️⃣ Recommend one or two crystals that could harmonize their energy and why.
+3️⃣ Offer feng shui and lifestyle advice to balance their elements (e.g., colors, directions, practices).
 
-5️⃣ Conclude with a caring and positive encouragement message, speaking like a trusted guide and healer.
+4️⃣ Recommend 2-3 crystals that will help harmonize their energy. For each crystal, briefly explain its benefits.
 
-Respond in ${language}, formatting clearly with paragraphs.
+5️⃣ Present all this in **friendly HTML**, with:
+- Clear paragraphs (use <p>)
+- Emojis to make it warm and approachable
+- Bold key concepts
+- A final paragraph with warm encouragement
+
+6️⃣ At the end, add a clickable link:
+"✨ <a href='/shop-crystals' target='_blank'>Explore Recommended Crystals</a>"
+
+Please keep the language simple and supportive.
 `.trim();
 
   try {
@@ -37,7 +48,7 @@ Respond in ${language}, formatting clearly with paragraphs.
     });
 
     const json = await response.json();
-    const message = json.choices?.[0]?.message?.content || "Your guide is ready whenever you wish to continue.";
+    const message = json.choices?.[0]?.message?.content || "Your BaZi guide is here whenever you need support.";
 
     res.status(200).json({ message });
   } catch (e) {
