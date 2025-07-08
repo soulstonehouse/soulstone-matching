@@ -1,33 +1,31 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const birthdayInput = document.getElementById("birthday");
-  const birthtimeInput = document.getElementById("birthtime");
-  const genderInput = document.getElementById("gender");
-  const languageInput = document.getElementById("language");
+document.addEventListener("DOMContentLoaded", () => {
   const resultDiv = document.getElementById("result");
 
-  // 创建新的按钮
-  const baziBtn = document.createElement("button");
-  baziBtn.textContent = "🌟 Get BaZi Analysis";
-  baziBtn.style.marginTop = "10px";
-  baziBtn.style.backgroundColor = "#f58f7c";
+  const analyzeBtn = document.createElement("button");
+  analyzeBtn.textContent = "🌟 Get Full Analysis & Crystal Matching";
+  analyzeBtn.style.marginTop = "20px";
+  analyzeBtn.style.width = "100%";
+  analyzeBtn.style.padding = "12px";
+  analyzeBtn.style.fontSize = "16px";
+  analyzeBtn.style.fontWeight = "bold";
+  analyzeBtn.style.backgroundColor = "#f57c00";
+  analyzeBtn.style.color = "white";
+  analyzeBtn.style.border = "none";
+  analyzeBtn.style.borderRadius = "10px";
+  analyzeBtn.style.cursor = "pointer";
 
-  // 插入按钮
-  const matchBtn = document.getElementById("matchBtn");
-  matchBtn.insertAdjacentElement("afterend", baziBtn);
-
-  // 监听点击
-  baziBtn.addEventListener("click", async () => {
-    const birthday = birthdayInput.value;
-    const birthtime = birthtimeInput.value;
-    const gender = genderInput.value;
-    const language = languageInput.value;
+  analyzeBtn.addEventListener("click", async () => {
+    const birthday = document.getElementById("birthday").value;
+    const birthtime = document.getElementById("birthtime").value;
+    const language = document.getElementById("language").value;
+    const gender = document.getElementById("gender").value;
 
     if (!birthday || !birthtime || !gender) {
-      resultDiv.innerHTML = "❗ Please complete all fields before analysis.";
+      resultDiv.innerHTML = "❗ Please complete all fields.";
       return;
     }
 
-    resultDiv.innerHTML = "🔮 Analyzing your BaZi chart... Please wait...";
+    resultDiv.innerHTML = "🔮 Analyzing your BaZi chart and matching crystals... Please wait...";
 
     try {
       const response = await fetch("/api/bazi-analysis", {
@@ -42,18 +40,36 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       const data = await response.json();
+      const message = data.message || "✨ Your analysis is ready.";
 
       resultDiv.innerHTML = `
-        <div style="border: 2px dashed #d7c9f7; border-radius: 16px; padding: 20px; background: #f9f7ff; white-space: pre-wrap;">
-          ${data.message}
+        <div style="border: 2px dashed #d7c9f7; border-radius: 16px; padding: 20px; background: #f9f7ff;">
+          <p id="typed-response"></p>
         </div>
       `;
-      window.scrollTo({
-        top: resultDiv.offsetTop - 20,
-        behavior: "smooth"
-      });
-    } catch (err) {
-      resultDiv.innerHTML = "⚠️ Failed to get BaZi analysis.";
+
+      typeWriter(message, "typed-response", 15);
+
+    } catch (error) {
+      console.error(error);
+      resultDiv.innerHTML = "⚠️ An error occurred. Please try again.";
     }
   });
+
+  document.querySelector(".soul-container").appendChild(analyzeBtn);
 });
+
+// Typing effect
+function typeWriter(text, elementId, delay = 25) {
+  let i = 0;
+  const target = document.getElementById(elementId);
+  target.innerHTML = "";
+  const interval = setInterval(() => {
+    if (i < text.length) {
+      target.innerHTML += text.charAt(i);
+      i++;
+    } else {
+      clearInterval(interval);
+    }
+  }, delay);
+}
