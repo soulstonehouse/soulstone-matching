@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Elemental Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="/style.css" />
   <style>
     .container {
@@ -109,6 +110,36 @@
     </form>
   </div>
 
+  <script>
+    // 自动选择元素
+    const urlParams = new URLSearchParams(window.location.search);
+    const elementFromURL = urlParams.get('element');
+    const elementSelect = document.getElementById("elementSelect");
+    if (elementFromURL) {
+      elementSelect.value = elementFromURL;
+    }
+
+    // 图片逻辑
+    const spiritImageMap = {
+      "Water": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/water.png?v=1749120912",
+      "Fire": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/fire.png?v=1749120966",
+      "Ice": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/ice.png?v=1749121020",
+      "Earth": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/earth.png?v=1749121018",
+      "Wood": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/wood.png?v=1749121025",
+      "Wind": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/wind.png?v=1749121176",
+      "Thunder": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/Thunder.png?v=1749121312",
+      "Light": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/light.png?v=1749121855",
+      "Darkness": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/darkness.png?v=1749122291",
+      "Metal": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/metal.png?v=1749122654"
+    };
+    const spiritImage = document.getElementById("spiritImage");
+    if (elementFromURL && spiritImageMap[elementFromURL]) {
+      spiritImage.src = spiritImageMap[elementFromURL];
+      spiritImage.style.display = "block";
+    }
+
+    // chat.js
+  </script>
   <script src="/js/chat.js"></script>
 </body>
 </html>
