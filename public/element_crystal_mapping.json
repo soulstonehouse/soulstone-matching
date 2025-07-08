@@ -1,62 +1,302 @@
 {
   "Wood": {
     "element": "Wood",
-    "crystal": "Green Aventurine",
-    "description": "Promotes growth, healing, and emotional balance. Ideal for those seeking personal renewal.",
-    "link": "https://yourstore.com/products/green-aventurine"
+    "crystals": [
+      {
+        "name": "Green Aventurine",
+        "description": "Encourages growth, renewal, and optimism.",
+        "link": "https://yourstore.com/products/green-aventurine"
+      },
+      {
+        "name": "Tree Agate",
+        "description": "Supports grounding and connection to nature.",
+        "link": "https://yourstore.com/products/tree-agate"
+      },
+      {
+        "name": "Moss Agate",
+        "description": "Promotes abundance and emotional balance.",
+        "link": "https://yourstore.com/products/moss-agate"
+      },
+      {
+        "name": "Peridot",
+        "description": "Stimulates growth and positive change.",
+        "link": "https://yourstore.com/products/peridot"
+      },
+      {
+        "name": "Malachite",
+        "description": "Transforms negative energy and supports renewal.",
+        "link": "https://yourstore.com/products/malachite"
+      }
+    ]
   },
   "Fire": {
     "element": "Fire",
-    "crystal": "Carnelian",
-    "description": "Boosts confidence, vitality, and motivation. Perfect for igniting passion and action.",
-    "link": "https://yourstore.com/products/carnelian"
+    "crystals": [
+      {
+        "name": "Carnelian",
+        "description": "Boosts motivation and creativity.",
+        "link": "https://yourstore.com/products/carnelian"
+      },
+      {
+        "name": "Sunstone",
+        "description": "Inspires joy and personal power.",
+        "link": "https://yourstore.com/products/sunstone"
+      },
+      {
+        "name": "Red Jasper",
+        "description": "Enhances stamina and courage.",
+        "link": "https://yourstore.com/products/red-jasper"
+      },
+      {
+        "name": "Garnet",
+        "description": "Energizes and revitalizes.",
+        "link": "https://yourstore.com/products/garnet"
+      },
+      {
+        "name": "Ruby",
+        "description": "Stimulates passion and vitality.",
+        "link": "https://yourstore.com/products/ruby"
+      }
+    ]
   },
   "Earth": {
     "element": "Earth",
-    "crystal": "Tiger's Eye",
-    "description": "Encourages grounding, stability, and focus. A great companion for decision making.",
-    "link": "https://yourstore.com/products/tigers-eye"
+    "crystals": [
+      {
+        "name": "Tiger's Eye",
+        "description": "Encourages grounding and focus.",
+        "link": "https://yourstore.com/products/tigers-eye"
+      },
+      {
+        "name": "Smoky Quartz",
+        "description": "Absorbs negativity and anchors energy.",
+        "link": "https://yourstore.com/products/smoky-quartz"
+      },
+      {
+        "name": "Hematite",
+        "description": "Promotes strength and protection.",
+        "link": "https://yourstore.com/products/hematite"
+      },
+      {
+        "name": "Picture Jasper",
+        "description": "Connects with Earth's energies.",
+        "link": "https://yourstore.com/products/picture-jasper"
+      },
+      {
+        "name": "Petrified Wood",
+        "description": "Supports patience and stability.",
+        "link": "https://yourstore.com/products/petrified-wood"
+      }
+    ]
   },
   "Metal": {
     "element": "Metal",
-    "crystal": "Clear Quartz",
-    "description": "Amplifies clarity, communication, and spiritual strength. Useful for channeling intentions.",
-    "link": "https://yourstore.com/products/clear-quartz"
+    "crystals": [
+      {
+        "name": "Clear Quartz",
+        "description": "Amplifies intentions and clarity.",
+        "link": "https://yourstore.com/products/clear-quartz"
+      },
+      {
+        "name": "Pyrite",
+        "description": "Attracts wealth and confidence.",
+        "link": "https://yourstore.com/products/pyrite"
+      },
+      {
+        "name": "Hematite",
+        "description": "Provides grounding and protection.",
+        "link": "https://yourstore.com/products/hematite"
+      },
+      {
+        "name": "Silver Obsidian",
+        "description": "Enhances spiritual awareness.",
+        "link": "https://yourstore.com/products/silver-obsidian"
+      },
+      {
+        "name": "Shungite",
+        "description": "Purifies and shields from EMF.",
+        "link": "https://yourstore.com/products/shungite"
+      }
+    ]
   },
   "Water": {
     "element": "Water",
-    "crystal": "Aquamarine",
-    "description": "Soothes the mind and enhances intuition. Great for emotional healing and flow.",
-    "link": "https://yourstore.com/products/aquamarine"
+    "crystals": [
+      {
+        "name": "Aquamarine",
+        "description": "Soothes emotions and promotes flow.",
+        "link": "https://yourstore.com/products/aquamarine"
+      },
+      {
+        "name": "Lapis Lazuli",
+        "description": "Enhances wisdom and truth.",
+        "link": "https://yourstore.com/products/lapis-lazuli"
+      },
+      {
+        "name": "Sodalite",
+        "description": "Supports calm communication.",
+        "link": "https://yourstore.com/products/sodalite"
+      },
+      {
+        "name": "Blue Apatite",
+        "description": "Clears confusion and stimulates intellect.",
+        "link": "https://yourstore.com/products/blue-apatite"
+      },
+      {
+        "name": "Larimar",
+        "description": "Brings tranquility and healing.",
+        "link": "https://yourstore.com/products/larimar"
+      }
+    ]
   },
   "Ice": {
     "element": "Ice",
-    "crystal": "Blue Lace Agate",
-    "description": "Calms nerves and helps with emotional expression. Ideal for peaceful communication.",
-    "link": "https://yourstore.com/products/blue-lace-agate"
+    "crystals": [
+      {
+        "name": "Blue Lace Agate",
+        "description": "Calms nerves and encourages peace.",
+        "link": "https://yourstore.com/products/blue-lace-agate"
+      },
+      {
+        "name": "Howlite",
+        "description": "Relieves stress and promotes rest.",
+        "link": "https://yourstore.com/products/howlite"
+      },
+      {
+        "name": "Moonstone",
+        "description": "Enhances intuition and cycles.",
+        "link": "https://yourstore.com/products/moonstone"
+      },
+      {
+        "name": "Clear Quartz",
+        "description": "Amplifies peaceful intentions.",
+        "link": "https://yourstore.com/products/clear-quartz"
+      },
+      {
+        "name": "Angelite",
+        "description": "Connects to higher guidance.",
+        "link": "https://yourstore.com/products/angelite"
+      }
+    ]
   },
   "Thunder": {
     "element": "Thunder",
-    "crystal": "Amethyst",
-    "description": "Awakens higher consciousness and protects energy. Great for spiritual insight.",
-    "link": "https://yourstore.com/products/amethyst"
+    "crystals": [
+      {
+        "name": "Amethyst",
+        "description": "Boosts spiritual insight and calm.",
+        "link": "https://yourstore.com/products/amethyst"
+      },
+      {
+        "name": "Black Tourmaline",
+        "description": "Protects and grounds energy.",
+        "link": "https://yourstore.com/products/black-tourmaline"
+      },
+      {
+        "name": "Labradorite",
+        "description": "Strengthens intuition and transformation.",
+        "link": "https://yourstore.com/products/labradorite"
+      },
+      {
+        "name": "Herkimer Diamond",
+        "description": "Amplifies spiritual energy.",
+        "link": "https://yourstore.com/products/herkimer-diamond"
+      },
+      {
+        "name": "Charoite",
+        "description": "Encourages acceptance and courage.",
+        "link": "https://yourstore.com/products/charoite"
+      }
+    ]
   },
   "Light": {
     "element": "Light",
-    "crystal": "Citrine",
-    "description": "Brings joy, success, and abundance. Perfect for manifesting goals and happiness.",
-    "link": "https://yourstore.com/products/citrine"
+    "crystals": [
+      {
+        "name": "Citrine",
+        "description": "Brings joy and abundance.",
+        "link": "https://yourstore.com/products/citrine"
+      },
+      {
+        "name": "Yellow Calcite",
+        "description": "Promotes clarity and motivation.",
+        "link": "https://yourstore.com/products/yellow-calcite"
+      },
+      {
+        "name": "Golden Healer Quartz",
+        "description": "Heals and energizes the spirit.",
+        "link": "https://yourstore.com/products/golden-healer-quartz"
+      },
+      {
+        "name": "Amber",
+        "description": "Radiates warmth and vitality.",
+        "link": "https://yourstore.com/products/amber"
+      },
+      {
+        "name": "Sunstone",
+        "description": "Encourages personal power and light.",
+        "link": "https://yourstore.com/products/sunstone"
+      }
+    ]
   },
   "Darkness": {
     "element": "Darkness",
-    "crystal": "Obsidian",
-    "description": "Absorbs negative energy and brings hidden emotions to light. Ideal for deep healing.",
-    "link": "https://yourstore.com/products/obsidian"
+    "crystals": [
+      {
+        "name": "Obsidian",
+        "description": "Protects and uncovers truths.",
+        "link": "https://yourstore.com/products/obsidian"
+      },
+      {
+        "name": "Black Onyx",
+        "description": "Strengthens inner resolve.",
+        "link": "https://yourstore.com/products/black-onyx"
+      },
+      {
+        "name": "Jet",
+        "description": "Absorbs negativity.",
+        "link": "https://yourstore.com/products/jet"
+      },
+      {
+        "name": "Shungite",
+        "description": "Purifies and shields.",
+        "link": "https://yourstore.com/products/shungite"
+      },
+      {
+        "name": "Smoky Quartz",
+        "description": "Transmutes dense energy.",
+        "link": "https://yourstore.com/products/smoky-quartz"
+      }
+    ]
   },
   "Wind": {
     "element": "Wind",
-    "crystal": "Fluorite",
-    "description": "Supports mental clarity and fresh perspectives. Useful for intellectual and creative work.",
-    "link": "https://yourstore.com/products/fluorite"
+    "crystals": [
+      {
+        "name": "Fluorite",
+        "description": "Supports clarity and focus.",
+        "link": "https://yourstore.com/products/fluorite"
+      },
+      {
+        "name": "Blue Kyanite",
+        "description": "Aligns energy and communication.",
+        "link": "https://yourstore.com/products/blue-kyanite"
+      },
+      {
+        "name": "Lepidolite",
+        "description": "Eases stress and promotes calm.",
+        "link": "https://yourstore.com/products/lepidolite"
+      },
+      {
+        "name": "Selenite",
+        "description": "Clears energy and uplifts.",
+        "link": "https://yourstore.com/products/selenite"
+      },
+      {
+        "name": "Celestite",
+        "description": "Inspires peace and clear thought.",
+        "link": "https://yourstore.com/products/celestite"
+      }
+    ]
   }
 }
