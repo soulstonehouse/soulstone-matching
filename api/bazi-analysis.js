@@ -1,36 +1,28 @@
 // /api/bazi-analysis.js
+
 export default async function handler(req, res) {
   const { birthday, birthtime, gender, language } = req.body;
 
   const prompt = `
-You are a professional BaZi (Chinese Four Pillars) metaphysics master, a feng shui consultant, and a warm-hearted healing guide.
-Please help the user analyze their destiny based on this information:
+You are a highly skilled Chinese BaZi (Four Pillars) master and wellness consultant. 
+Please generate a detailed BaZi reading for the user based on:
 
-- Birthday: ${birthday}
-- Birthtime: ${birthtime}
+- Birth date: ${birthday}
+- Birth time: ${birthtime}
 - Gender: ${gender}
-- Language: ${language}
 
-Step by step, do the following:
+Include the following sections:
 
-1️⃣ Professionally interpret the BaZi chart (year, month, day, hour pillars) and describe their dominant Five Elements (Metal, Wood, Water, Fire, Earth).
+1️⃣ Four Pillars with Heavenly Stems and Earthly Branches (Year, Month, Day, Hour).
+2️⃣ The Hidden Stems for each pillar.
+3️⃣ A Five Elements distribution with approximate percentages.
+4️⃣ Interpretation of the personality, strengths, and challenges.
+5️⃣ Feng Shui recommendations to balance missing or excessive elements (e.g., colors, directions, lifestyle).
+6️⃣ Crystal recommendations (at least 2) with explanations how they support balance.
+7️⃣ A final warm, encouraging paragraph reminding the user of their unique gifts.
 
-2️⃣ Gently explain which elements are excessive, which are lacking, and how this affects their personality, relationships, and overall destiny.
-
-3️⃣ Offer feng shui and lifestyle advice to balance their elements (e.g., colors, directions, practices).
-
-4️⃣ Recommend 2-3 crystals that will help harmonize their energy. For each crystal, briefly explain its benefits.
-
-5️⃣ Present all this in **friendly HTML**, with:
-- Clear paragraphs (use <p>)
-- Emojis to make it warm and approachable
-- Bold key concepts
-- A final paragraph with warm encouragement
-
-6️⃣ At the end, add a clickable link:
-"✨ <a href='/shop-crystals' target='_blank'>Explore Recommended Crystals</a>"
-
-Please keep the language simple and supportive.
+Write in ${language}.
+Keep the style professional, clear, and empathetic, blending traditional BaZi wisdom with modern wellness language.
 `.trim();
 
   try {
@@ -43,12 +35,12 @@ Please keep the language simple and supportive.
       body: JSON.stringify({
         model: "gpt-4",
         messages: [{ role: "user", content: prompt }],
-        temperature: 0.85
+        temperature: 0.7
       })
     });
 
     const json = await response.json();
-    const message = json.choices?.[0]?.message?.content || "Your BaZi guide is here whenever you need support.";
+    const message = json.choices?.[0]?.message?.content || "Your BaZi guide is ready whenever you are.";
 
     res.status(200).json({ message });
   } catch (e) {
