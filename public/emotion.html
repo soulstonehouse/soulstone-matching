@@ -1,25 +1,24 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Crystal Matching</title>
+  <title>Emotion Energy Evaluation</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="/style.css" />
   <style>
     body {
       font-family: 'Helvetica Neue', sans-serif;
-      background-color: #f2f0fb;
+      background: #f2f0fb;
       padding: 20px;
       color: #333;
     }
     .form-box {
-      max-width: 420px;
+      max-width: 600px;
       margin: 0 auto;
-      background: #ffffff;
+      background: #fff;
       padding: 30px;
       border-radius: 18px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
     }
     .form-box h2 {
       text-align: center;
@@ -30,20 +29,19 @@
       margin-top: 15px;
       font-weight: 600;
     }
-    input, select {
+    select {
       width: 100%;
       padding: 10px;
-      border: 1px solid #d0c4f7;
+      border: 1px solid #ccc;
       border-radius: 10px;
       margin-top: 5px;
-      font-size: 16px;
     }
     button {
       width: 100%;
       padding: 12px;
       margin-top: 20px;
       background: #7d65f8;
-      color: white;
+      color: #fff;
       font-weight: bold;
       font-size: 16px;
       border: none;
@@ -53,41 +51,96 @@
     button:hover {
       background: #5e49c2;
     }
-    #result {
-      margin-top: 30px;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
   </style>
 </head>
 <body>
   <div class="form-box">
-    <h2>🔮 Crystal Matching</h2>
-    <label for="birthday">Birth Date</label>
-    <input type="date" id="birthday" required />
+    <h2>🧘‍♀️ Emotion Energy Evaluation</h2>
+    <form id="emotionForm">
+      <!-- 10 questions -->
+      <label>1. When you spend time alone lately, does your mind feel mostly calm or sometimes uneasy?</label>
+      <select name="q1">
+        <option value="0">Very calm</option>
+        <option value="1">Mostly calm</option>
+        <option value="2">Sometimes uneasy</option>
+        <option value="3">Often uneasy</option>
+      </select>
 
-    <label for="birthtime">Birth Time</label>
-    <input type="time" id="birthtime" required />
+      <label>2. When you wake up in the morning, how does the day ahead feel to you?</label>
+      <select name="q2">
+        <option value="0">Light and joyful</option>
+        <option value="1">Mostly positive</option>
+        <option value="2">A bit heavy</option>
+        <option value="3">Very heavy</option>
+      </select>
 
-    <label for="gender">Gender</label>
-    <select id="gender" required>
-      <option value="female">Female</option>
-      <option value="male">Male</option>
-      <option value="nonbinary">Non-Binary</option>
-    </select>
+      <label>3. Have you felt motivated and energized recently?</label>
+      <select name="q3">
+        <option value="0">Very much</option>
+        <option value="1">Mostly</option>
+        <option value="2">Sometimes</option>
+        <option value="3">Not at all</option>
+      </select>
 
-    <label for="language">Language</label>
-    <select id="language">
-      <option value="English" selected>English</option>
-      <option value="Chinese">Chinese</option>
-    </select>
+      <label>4. How would you describe the quality of your sleep these days?</label>
+      <select name="q4">
+        <option value="0">Very good</option>
+        <option value="1">Quite good</option>
+        <option value="2">Not great</option>
+        <option value="3">Very poor</option>
+      </select>
 
-    <button id="matchBtn">Start Matching</button>
+      <label>5. Do you feel your emotions are steady or easily shifting?</label>
+      <select name="q5">
+        <option value="0">Very steady</option>
+        <option value="1">Mostly steady</option>
+        <option value="2">Sometimes shifting</option>
+        <option value="3">Very shifting</option>
+      </select>
+
+      <label>6. Have you been feeling lonely or disconnected lately?</label>
+      <select name="q6">
+        <option value="0">Not at all</option>
+        <option value="1">Rarely</option>
+        <option value="2">Sometimes</option>
+        <option value="3">Often</option>
+      </select>
+
+      <label>7. Does your heart feel full and nourished these days?</label>
+      <select name="q7">
+        <option value="0">Completely</option>
+        <option value="1">Mostly</option>
+        <option value="2">Partly</option>
+        <option value="3">Not at all</option>
+      </select>
+
+      <label>8. How hopeful do you feel about your future right now?</label>
+      <select name="q8">
+        <option value="0">Very hopeful</option>
+        <option value="1">Mostly hopeful</option>
+        <option value="2">A bit uncertain</option>
+        <option value="3">Not hopeful</option>
+      </select>
+
+      <label>9. How does your body feel recently?</label>
+      <select name="q9">
+        <option value="0">Strong and rested</option>
+        <option value="1">Mostly okay</option>
+        <option value="2">Tired</option>
+        <option value="3">Very exhausted</option>
+      </select>
+
+      <label>10. Do you feel valued and supported by those around you?</label>
+      <select name="q10">
+        <option value="0">Very much</option>
+        <option value="1">Mostly</option>
+        <option value="2">Sometimes</option>
+        <option value="3">Not at all</option>
+      </select>
+
+      <button type="submit">🔍 Evaluate</button>
+    </form>
   </div>
-
-  <div id="result"></div>
-
-  <script src="/js/match-crystal.js"></script>
+  <script src="/js/emotion.js"></script>
 </body>
 </html>
