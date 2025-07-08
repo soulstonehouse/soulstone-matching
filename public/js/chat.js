@@ -2,7 +2,6 @@ const elementSelect = document.getElementById("elementSelect");
 const spiritImage = document.getElementById("spiritImage");
 const chatBox = document.getElementById("chatBox");
 
-// 显示对应精灵图
 const spiritImageMap = {
   "Water": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/water.png",
   "Fire": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/fire.png",
@@ -16,7 +15,16 @@ const spiritImageMap = {
   "Metal": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/metal.png"
 };
 
-// 初次设置精灵图
+// 页面加载时：自动显示精灵图
+window.addEventListener("DOMContentLoaded", () => {
+  const selected = elementSelect.value;
+  if (spiritImageMap[selected]) {
+    spiritImage.src = spiritImageMap[selected];
+    spiritImage.style.display = "block";
+  }
+});
+
+// 用户切换时：更新精灵图
 elementSelect.addEventListener("change", () => {
   const selected = elementSelect.value;
   spiritImage.src = spiritImageMap[selected];
@@ -24,7 +32,7 @@ elementSelect.addEventListener("change", () => {
 });
 
 // 提交聊天
-document.getElementById("chatForm").addEventListener("submit", async function (e) {
+document.getElementById("chatForm").addEventListener("submit", async function(e) {
   e.preventDefault();
 
   const element = elementSelect.value;
@@ -32,10 +40,9 @@ document.getElementById("chatForm").addEventListener("submit", async function (e
   if (!userMessage) return;
 
   appendMessage("user", userMessage);
+  const thinkingBubble = appendMessage("spirit", "🔮 Thinking...");
 
   const prompt = `You are the ${element} spirit. Respond to the user warmly and with empathy, offering guidance and crystal wisdom. User: "${userMessage}"`;
-
-  appendMessage("spirit", "🔮 Thinking...");
 
   try {
     const res = await fetch("/api/match-crystal", {
@@ -44,32 +51,46 @@ document.getElementById("chatForm").addEventListener("submit", async function (e
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        birthdate: "", birthtime: "", language: "English",
+        birthdate: "",
+        birthtime: "",
+        language: "English",
         promptOverride: prompt
       }),
     });
 
     const data = await res.json();
     const response = data.message || "🌀 The spirit is silent...";
-    updateLastSpiritMessage(response);
+
+    // 删除“Thinking...”并打字
+    thinkingBubble.remove();
+    typeWriter(response, appendMessage("spirit", ""), 25);
   } catch (err) {
-    updateLastSpiritMessage("⚠️ The spirit could not connect right now.");
+    thinkingBubble.innerText = "⚠️ The spirit could not connect right now.";
   }
 
   document.getElementById("userInput").value = "";
 });
 
+// 添加消息气泡
 function appendMessage(sender, text) {
   const div = document.createElement("div");
   div.className = `chat-bubble ${sender}`;
   div.innerText = text;
   chatBox.appendChild(div);
   chatBox.scrollTop = chatBox.scrollHeight;
+  return div;
 }
 
-function updateLastSpiritMessage(text) {
-  const bubbles = chatBox.getElementsByClassName("chat-bubble spirit");
-  if (bubbles.length > 0) {
-    bubbles[bubbles.length - 1].innerText = text;
-  }
+// 打字效果
+function typeWriter(text, targetDiv, delay = 25) {
+  let i = 0;
+  const interval = setInterval(() => {
+    if (i < text.length) {
+      targetDiv.innerText += text.charAt(i);
+      chatBox.scrollTop = chatBox.scrollHeight; // 自动滚动
+      i++;
+    } else {
+      clearInterval(interval);
+    }
+  }, delay);
 }
