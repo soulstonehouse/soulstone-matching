@@ -2,29 +2,25 @@ export default async function handler(req, res) {
   const { birthday, birthtime, gender, language } = req.body;
 
   const prompt = `
-You are a professional Chinese metaphysics consultant specializing in BaZi (Four Pillars of Destiny), Feng Shui, and Crystal Healing.
+You are a professional BaZi (Four Pillars of Destiny) master and a Chinese metaphysics expert. 
+Based on the user's birth details below, create an in-depth and warm reading.
 
-Based on the following birth information:
-- Birth Date: ${birthday}
-- Birth Time: ${birthtime}
-- Gender: ${gender}
+Birth date: ${birthday}
+Birth time: ${birthtime}
+Gender: ${gender}
 
-Please provide a professional analysis in ${language}.
+1️⃣ First, calculate and explain the BaZi (Heavenly Stems and Earthly Branches), including the Year Pillar, Month Pillar, Day Pillar, and Hour Pillar.
 
-Your response must include:
+2️⃣ Describe which Five Elements are dominant or lacking in their chart, and what this implies about personality, strengths, and weaknesses.
 
-1️⃣ **BaZi Analysis**: Clearly state the year, month, day, and hour pillars, their animals and elements, and what they mean in terms of personality, strengths, and weaknesses.
+3️⃣ From a Feng Shui perspective, suggest what can be done to balance their Five Elements energy in daily life.
 
-2️⃣ **Five Elements Balance**: Analyze the balance or imbalance among Wood, Fire, Earth, Metal, and Water. Which elements are strong, which are weak, and what does this imply?
+4️⃣ Recommend one or two crystals that could harmonize their energy and why.
 
-3️⃣ **Feng Shui Recommendations**: Offer 2-3 practical Feng Shui suggestions to harmonize the client's environment and support their well-being.
+5️⃣ Conclude with a caring and positive encouragement message, speaking like a trusted guide and healer.
 
-4️⃣ **Crystal Recommendations**: Suggest 2 crystals that will help balance and nourish the lacking elements.
-
-5️⃣ **Encouraging Closing**: Conclude with a warm, uplifting message reminding the client that life is a journey and they are supported.
-
-Please write with clear paragraphs separated by TWO line breaks, so the text is easy to read when displayed in HTML.
-  `.trim();
+Respond in ${language}, formatting clearly with paragraphs.
+`.trim();
 
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -36,16 +32,16 @@ Please write with clear paragraphs separated by TWO line breaks, so the text is 
       body: JSON.stringify({
         model: "gpt-4",
         messages: [{ role: "user", content: prompt }],
-        temperature: 0.8
+        temperature: 0.85
       })
     });
 
     const json = await response.json();
-    const message = json.choices?.[0]?.message?.content || "Your analysis is ready.";
+    const message = json.choices?.[0]?.message?.content || "Your guide is ready whenever you wish to continue.";
 
     res.status(200).json({ message });
   } catch (e) {
-    console.error("BaZi API error:", e);
-    res.status(500).json({ message: "AI BaZi analysis failed." });
+    console.error("GPT error:", e);
+    res.status(500).json({ message: "AI analysis failed." });
   }
 }
