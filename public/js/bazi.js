@@ -2,7 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const resultDiv = document.getElementById("result");
 
   const analyzeBtn = document.createElement("button");
-  analyzeBtn.textContent = "✨ Get Full BaZi Analysis & Crystal Matching";
+  analyzeBtn.id = "analyzeBtn";
+  analyzeBtn.textContent = "✨ Get Your BaZi Analysis";
   analyzeBtn.style.marginTop = "20px";
   analyzeBtn.style.width = "100%";
   analyzeBtn.style.padding = "14px";
@@ -25,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    resultDiv.innerHTML = "🔮 Analyzing your BaZi chart and matching crystals... Please wait...";
+    resultDiv.innerHTML = "🔮 Analyzing your BaZi chart and preparing your guidance... Please wait...";
 
     try {
       const response = await fetch("/api/bazi-analysis", {
@@ -56,11 +57,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Append the button ABOVE the result box
-  resultDiv.insertAdjacentElement("beforebegin", analyzeBtn);
+  const container = document.querySelector(".soul-container");
+  container.appendChild(analyzeBtn);
 });
 
-// Typing effect
 function typeWriter(text, elementId, delay = 25) {
   let i = 0;
   const target = document.getElementById(elementId);
