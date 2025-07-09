@@ -2,8 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const resultDiv = document.getElementById("result");
 
   const analyzeBtn = document.createElement("button");
-  analyzeBtn.id = "analyzeBtn";
-  analyzeBtn.textContent = "✨ Get Your BaZi Analysis";
+  analyzeBtn.textContent = "✨ Get Full BaZi Analysis & Crystal Matching";
   analyzeBtn.style.marginTop = "20px";
   analyzeBtn.style.width = "100%";
   analyzeBtn.style.padding = "14px";
@@ -26,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    resultDiv.innerHTML = "🔮 Analyzing your BaZi chart and preparing your guidance... Please wait...";
+    resultDiv.innerHTML = "🔮 Analyzing your BaZi chart and matching crystals... Please wait...";
 
     try {
       const response = await fetch("/api/bazi-analysis", {
@@ -41,7 +40,9 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const data = await response.json();
-      const message = data.message || "✨ Your analysis is ready.";
+      const messageRaw = data.message || "✨ Your analysis is ready.";
+      // Convert newlines to HTML breaks
+      const message = messageRaw.replace(/\n/g, "<br><br>");
 
       resultDiv.innerHTML = `
         <div style="border: 2px dashed #d7c9f7; border-radius: 16px; padding: 20px; background: #f9f7ff;">
@@ -49,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       `;
 
-      typeWriter(message, "typed-response", 15);
+      typeWriter(message, "typed-response", 10);
 
     } catch (error) {
       console.error(error);
@@ -57,18 +58,26 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Append button
   const container = document.querySelector(".soul-container");
   container.appendChild(analyzeBtn);
 });
 
+// Typing effect function
 function typeWriter(text, elementId, delay = 25) {
   let i = 0;
   const target = document.getElementById(elementId);
   target.innerHTML = "";
   const interval = setInterval(() => {
     if (i < text.length) {
-      target.innerHTML += text.charAt(i);
-      i++;
+      // Handle HTML tags correctly
+      if (text.slice(i, i + 4) === "<br>") {
+        target.innerHTML += "<br>";
+        i += 4;
+      } else {
+        target.innerHTML += text.charAt(i);
+        i++;
+      }
     } else {
       clearInterval(interval);
     }
