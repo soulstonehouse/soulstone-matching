@@ -1,26 +1,45 @@
+// /api/bazi-analysis.js
 export default async function handler(req, res) {
   const { birthday, birthtime, gender, language } = req.body;
 
   const prompt = `
-You are a professional Chinese metaphysics consultant and crystal healing expert.
+You are an expert Feng Shui Master, BaZi astrologer, and Healing Crystal guide. 
+Please analyze the user's birth information and output the results in clear, warm English.
 
-User's birth info:
-- Birthday: ${birthday}
-- Birth time: ${birthtime}
-- Gender: ${gender}
+Birth Date: ${birthday}
+Birth Time: ${birthtime}
+Gender: ${gender}
+Language: ${language}
 
-Please do the following in ${language}:
+**IMPORTANT: Format your response exactly as follows:**
 
-1️⃣ Calculate and present the BaZi Four Pillars (Year, Month, Day, Hour) with both Heavenly Stems and Earthly Branches.
-2️⃣ Show Hidden Stems inside each Branch.
-3️⃣ Give approximate Five Elements distribution in percentages (Metal, Wood, Water, Fire, Earth).
-4️⃣ Write a paragraph analyzing personality strengths and challenges.
-5️⃣ Provide Feng Shui recommendations to balance lacking elements.
-6️⃣ Recommend 2 commonly available crystals (e.g., Carnelian, Citrine, Amethyst, Clear Quartz, Rose Quartz, Green Aventurine, Black Obsidian, etc.), each with a short description.
-7️⃣ End with a warm, uplifting encouragement message.
+🌟 Your Personalized BaZi Analysis
 
-Output everything as a clear, structured text with emojis and clear formatting.
-`;
+🪶 Feng Shui Master’s BaZi Insights
+
+[In 3-4 sentences: BaZi pillars, Five Elements % distribution, personality strengths & weaknesses, example: "Your Four Pillars show... Your Five Elements distribution is..."]
+
+⸻
+
+🌿 Healing Master’s Suggestions
+
+[In 3-4 sentences: friendly advice about colors, home feng shui, lifestyle improvements, practical actions.]
+
+⸻
+
+💎 Elemental Spirit’s Crystal Recommendation
+
+[In 2-3 sentences: recommend 1-2 crystals, explain their purpose and benefits.]
+
+⸻
+
+🌈 Final Encouragement
+
+[In 2-3 sentences: uplifting words, self-trust, positivity.]
+
+**Keep tone warm, reassuring, and gently empowering. Use clear paragraph breaks and emoji titles exactly as shown.**
+
+`.trim();
 
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -37,11 +56,11 @@ Output everything as a clear, structured text with emojis and clear formatting.
     });
 
     const json = await response.json();
-    const message = json.choices?.[0]?.message?.content || "✨ Your BaZi analysis is ready.";
+    const message = json.choices?.[0]?.message?.content || "Your personalized analysis will appear here.";
 
     res.status(200).json({ message });
   } catch (e) {
-    console.error("BaZi analysis error:", e);
+    console.error("GPT error:", e);
     res.status(500).json({ message: "AI analysis failed." });
   }
 }
