@@ -1,301 +1,291 @@
 {
   "Wood": {
-    "element": "Wood",
     "crystals": [
       {
+        "name": "Green Phantom Quartz",
+        "description": "Placeholder description for Green Phantom Quartz.",
+        "link": "https://yourstore.com/products/green-phantom-quartz"
+      },
+      {
         "name": "Green Aventurine",
-        "description": "Encourages growth, renewal, and optimism.",
+        "description": "Placeholder description for Green Aventurine.",
         "link": "https://yourstore.com/products/green-aventurine"
       },
       {
-        "name": "Tree Agate",
-        "description": "Supports grounding and connection to nature.",
-        "link": "https://yourstore.com/products/tree-agate"
-      },
-      {
-        "name": "Moss Agate",
-        "description": "Promotes abundance and emotional balance.",
-        "link": "https://yourstore.com/products/moss-agate"
-      },
-      {
-        "name": "Peridot",
-        "description": "Stimulates growth and positive change.",
-        "link": "https://yourstore.com/products/peridot"
+        "name": "Jasper",
+        "description": "Placeholder description for Jasper.",
+        "link": "https://yourstore.com/products/jasper"
       },
       {
         "name": "Malachite",
-        "description": "Transforms negative energy and supports renewal.",
+        "description": "Placeholder description for Malachite.",
         "link": "https://yourstore.com/products/malachite"
+      },
+      {
+        "name": "Green Agate",
+        "description": "Placeholder description for Green Agate.",
+        "link": "https://yourstore.com/products/green-agate"
       }
     ]
   },
   "Fire": {
-    "element": "Fire",
     "crystals": [
       {
+        "name": "Red Agate",
+        "description": "Placeholder description for Red Agate.",
+        "link": "https://yourstore.com/products/red-agate"
+      },
+      {
+        "name": "Rubellite",
+        "description": "Placeholder description for Rubellite.",
+        "link": "https://yourstore.com/products/rubellite"
+      },
+      {
         "name": "Carnelian",
-        "description": "Boosts motivation and creativity.",
+        "description": "Placeholder description for Carnelian.",
         "link": "https://yourstore.com/products/carnelian"
       },
       {
-        "name": "Sunstone",
-        "description": "Inspires joy and personal power.",
-        "link": "https://yourstore.com/products/sunstone"
-      },
-      {
-        "name": "Red Jasper",
-        "description": "Enhances stamina and courage.",
-        "link": "https://yourstore.com/products/red-jasper"
-      },
-      {
         "name": "Garnet",
-        "description": "Energizes and revitalizes.",
+        "description": "Placeholder description for Garnet.",
         "link": "https://yourstore.com/products/garnet"
       },
       {
-        "name": "Ruby",
-        "description": "Stimulates passion and vitality.",
-        "link": "https://yourstore.com/products/ruby"
-      }
-    ]
-  },
-  "Earth": {
-    "element": "Earth",
-    "crystals": [
-      {
-        "name": "Tiger's Eye",
-        "description": "Encourages grounding and focus.",
-        "link": "https://yourstore.com/products/tigers-eye"
-      },
-      {
-        "name": "Smoky Quartz",
-        "description": "Absorbs negativity and anchors energy.",
-        "link": "https://yourstore.com/products/smoky-quartz"
-      },
-      {
-        "name": "Hematite",
-        "description": "Promotes strength and protection.",
-        "link": "https://yourstore.com/products/hematite"
-      },
-      {
-        "name": "Picture Jasper",
-        "description": "Connects with Earth's energies.",
-        "link": "https://yourstore.com/products/picture-jasper"
-      },
-      {
-        "name": "Petrified Wood",
-        "description": "Supports patience and stability.",
-        "link": "https://yourstore.com/products/petrified-wood"
-      }
-    ]
-  },
-  "Metal": {
-    "element": "Metal",
-    "crystals": [
-      {
-        "name": "Clear Quartz",
-        "description": "Amplifies intentions and clarity.",
-        "link": "https://yourstore.com/products/clear-quartz"
-      },
-      {
-        "name": "Pyrite",
-        "description": "Attracts wealth and confidence.",
-        "link": "https://yourstore.com/products/pyrite"
-      },
-      {
-        "name": "Hematite",
-        "description": "Provides grounding and protection.",
-        "link": "https://yourstore.com/products/hematite"
-      },
-      {
-        "name": "Silver Obsidian",
-        "description": "Enhances spiritual awareness.",
-        "link": "https://yourstore.com/products/silver-obsidian"
-      },
-      {
-        "name": "Shungite",
-        "description": "Purifies and shields from EMF.",
-        "link": "https://yourstore.com/products/shungite"
+        "name": "Southern Red Agate",
+        "description": "Placeholder description for Southern Red Agate.",
+        "link": "https://yourstore.com/products/southern-red-agate"
       }
     ]
   },
   "Water": {
-    "element": "Water",
     "crystals": [
       {
         "name": "Aquamarine",
-        "description": "Soothes emotions and promotes flow.",
+        "description": "Placeholder description for Aquamarine.",
         "link": "https://yourstore.com/products/aquamarine"
       },
       {
         "name": "Lapis Lazuli",
-        "description": "Enhances wisdom and truth.",
+        "description": "Placeholder description for Lapis Lazuli.",
         "link": "https://yourstore.com/products/lapis-lazuli"
       },
       {
-        "name": "Sodalite",
-        "description": "Supports calm communication.",
-        "link": "https://yourstore.com/products/sodalite"
+        "name": "Kyanite",
+        "description": "Placeholder description for Kyanite.",
+        "link": "https://yourstore.com/products/kyanite"
       },
       {
-        "name": "Blue Apatite",
-        "description": "Clears confusion and stimulates intellect.",
-        "link": "https://yourstore.com/products/blue-apatite"
+        "name": "Blue Agate",
+        "description": "Placeholder description for Blue Agate.",
+        "link": "https://yourstore.com/products/blue-agate"
       },
       {
-        "name": "Larimar",
-        "description": "Brings tranquility and healing.",
-        "link": "https://yourstore.com/products/larimar"
+        "name": "Blue Fluorite",
+        "description": "Placeholder description for Blue Fluorite.",
+        "link": "https://yourstore.com/products/blue-fluorite"
       }
     ]
   },
-  "Ice": {
-    "element": "Ice",
+  "Earth": {
     "crystals": [
       {
-        "name": "Blue Lace Agate",
-        "description": "Calms nerves and encourages peace.",
-        "link": "https://yourstore.com/products/blue-lace-agate"
+        "name": "Tiger’s Eye",
+        "description": "Placeholder description for Tiger’s Eye.",
+        "link": "https://yourstore.com/products/tigers-eye"
       },
-      {
-        "name": "Howlite",
-        "description": "Relieves stress and promotes rest.",
-        "link": "https://yourstore.com/products/howlite"
-      },
-      {
-        "name": "Moonstone",
-        "description": "Enhances intuition and cycles.",
-        "link": "https://yourstore.com/products/moonstone"
-      },
-      {
-        "name": "Clear Quartz",
-        "description": "Amplifies peaceful intentions.",
-        "link": "https://yourstore.com/products/clear-quartz"
-      },
-      {
-        "name": "Angelite",
-        "description": "Connects to higher guidance.",
-        "link": "https://yourstore.com/products/angelite"
-      }
-    ]
-  },
-  "Thunder": {
-    "element": "Thunder",
-    "crystals": [
-      {
-        "name": "Amethyst",
-        "description": "Boosts spiritual insight and calm.",
-        "link": "https://yourstore.com/products/amethyst"
-      },
-      {
-        "name": "Black Tourmaline",
-        "description": "Protects and grounds energy.",
-        "link": "https://yourstore.com/products/black-tourmaline"
-      },
-      {
-        "name": "Labradorite",
-        "description": "Strengthens intuition and transformation.",
-        "link": "https://yourstore.com/products/labradorite"
-      },
-      {
-        "name": "Herkimer Diamond",
-        "description": "Amplifies spiritual energy.",
-        "link": "https://yourstore.com/products/herkimer-diamond"
-      },
-      {
-        "name": "Charoite",
-        "description": "Encourages acceptance and courage.",
-        "link": "https://yourstore.com/products/charoite"
-      }
-    ]
-  },
-  "Light": {
-    "element": "Light",
-    "crystals": [
       {
         "name": "Citrine",
-        "description": "Brings joy and abundance.",
+        "description": "Placeholder description for Citrine.",
         "link": "https://yourstore.com/products/citrine"
       },
       {
-        "name": "Yellow Calcite",
-        "description": "Promotes clarity and motivation.",
-        "link": "https://yourstore.com/products/yellow-calcite"
-      },
-      {
-        "name": "Golden Healer Quartz",
-        "description": "Heals and energizes the spirit.",
-        "link": "https://yourstore.com/products/golden-healer-quartz"
-      },
-      {
-        "name": "Amber",
-        "description": "Radiates warmth and vitality.",
-        "link": "https://yourstore.com/products/amber"
-      },
-      {
-        "name": "Sunstone",
-        "description": "Encourages personal power and light.",
-        "link": "https://yourstore.com/products/sunstone"
-      }
-    ]
-  },
-  "Darkness": {
-    "element": "Darkness",
-    "crystals": [
-      {
-        "name": "Obsidian",
-        "description": "Protects and uncovers truths.",
-        "link": "https://yourstore.com/products/obsidian"
-      },
-      {
-        "name": "Black Onyx",
-        "description": "Strengthens inner resolve.",
-        "link": "https://yourstore.com/products/black-onyx"
-      },
-      {
         "name": "Jet",
-        "description": "Absorbs negativity.",
+        "description": "Placeholder description for Jet.",
         "link": "https://yourstore.com/products/jet"
       },
       {
-        "name": "Shungite",
-        "description": "Purifies and shields.",
-        "link": "https://yourstore.com/products/shungite"
+        "name": "Rhodochrosite",
+        "description": "Placeholder description for Rhodochrosite.",
+        "link": "https://yourstore.com/products/rhodochrosite"
       },
       {
-        "name": "Smoky Quartz",
-        "description": "Transmutes dense energy.",
-        "link": "https://yourstore.com/products/smoky-quartz"
+        "name": "Opal",
+        "description": "Placeholder description for Opal.",
+        "link": "https://yourstore.com/products/opal"
+      }
+    ]
+  },
+  "Metal": {
+    "crystals": [
+      {
+        "name": "Clear Quartz",
+        "description": "Placeholder description for Clear Quartz.",
+        "link": "https://yourstore.com/products/clear-quartz"
+      },
+      {
+        "name": "Pyrite",
+        "description": "Placeholder description for Pyrite.",
+        "link": "https://yourstore.com/products/pyrite"
+      },
+      {
+        "name": "Silver Obsidian",
+        "description": "Placeholder description for Silver Obsidian.",
+        "link": "https://yourstore.com/products/silver-obsidian"
+      },
+      {
+        "name": "Silver Calcite",
+        "description": "Placeholder description for Silver Calcite.",
+        "link": "https://yourstore.com/products/silver-calcite"
+      },
+      {
+        "name": "Gold Sheen Obsidian",
+        "description": "Placeholder description for Gold Sheen Obsidian.",
+        "link": "https://yourstore.com/products/gold-sheen-obsidian"
       }
     ]
   },
   "Wind": {
-    "element": "Wind",
     "crystals": [
       {
-        "name": "Fluorite",
-        "description": "Supports clarity and focus.",
-        "link": "https://yourstore.com/products/fluorite"
+        "name": "Purple Fluorite",
+        "description": "Placeholder description for Purple Fluorite.",
+        "link": "https://yourstore.com/products/purple-fluorite"
       },
       {
-        "name": "Blue Kyanite",
-        "description": "Aligns energy and communication.",
-        "link": "https://yourstore.com/products/blue-kyanite"
+        "name": "Blue Fluorite",
+        "description": "Placeholder description for Blue Fluorite.",
+        "link": "https://yourstore.com/products/blue-fluorite"
       },
       {
-        "name": "Lepidolite",
-        "description": "Eases stress and promotes calm.",
-        "link": "https://yourstore.com/products/lepidolite"
-      },
-      {
-        "name": "Selenite",
-        "description": "Clears energy and uplifts.",
-        "link": "https://yourstore.com/products/selenite"
+        "name": "White Agate",
+        "description": "Placeholder description for White Agate.",
+        "link": "https://yourstore.com/products/white-agate"
       },
       {
         "name": "Celestite",
-        "description": "Inspires peace and clear thought.",
+        "description": "Placeholder description for Celestite.",
         "link": "https://yourstore.com/products/celestite"
+      },
+      {
+        "name": "Blue Apatite",
+        "description": "Placeholder description for Blue Apatite.",
+        "link": "https://yourstore.com/products/blue-apatite"
+      }
+    ]
+  },
+  "Thunder": {
+    "crystals": [
+      {
+        "name": "Amethyst",
+        "description": "Placeholder description for Amethyst.",
+        "link": "https://yourstore.com/products/amethyst"
+      },
+      {
+        "name": "Tourmaline",
+        "description": "Placeholder description for Tourmaline.",
+        "link": "https://yourstore.com/products/tourmaline"
+      },
+      {
+        "name": "Magnetite",
+        "description": "Placeholder description for Magnetite.",
+        "link": "https://yourstore.com/products/magnetite"
+      },
+      {
+        "name": "Purple Agate",
+        "description": "Placeholder description for Purple Agate.",
+        "link": "https://yourstore.com/products/purple-agate"
+      },
+      {
+        "name": "Sulfur Quartz",
+        "description": "Placeholder description for Sulfur Quartz.",
+        "link": "https://yourstore.com/products/sulfur-quartz"
+      }
+    ]
+  },
+  "Ice": {
+    "crystals": [
+      {
+        "name": "Ice Clear Quartz",
+        "description": "Placeholder description for Ice Clear Quartz.",
+        "link": "https://yourstore.com/products/ice-clear-quartz"
+      },
+      {
+        "name": "Larimar",
+        "description": "Placeholder description for Larimar.",
+        "link": "https://yourstore.com/products/larimar"
+      },
+      {
+        "name": "Ice Phantom Quartz",
+        "description": "Placeholder description for Ice Phantom Quartz.",
+        "link": "https://yourstore.com/products/ice-phantom-quartz"
+      },
+      {
+        "name": "Selenite",
+        "description": "Placeholder description for Selenite.",
+        "link": "https://yourstore.com/products/selenite"
+      },
+      {
+        "name": "Moonstone",
+        "description": "Placeholder description for Moonstone.",
+        "link": "https://yourstore.com/products/moonstone"
+      }
+    ]
+  },
+  "Light": {
+    "crystals": [
+      {
+        "name": "Clear Quartz",
+        "description": "Placeholder description for Clear Quartz.",
+        "link": "https://yourstore.com/products/clear-quartz"
+      },
+      {
+        "name": "Moonstone",
+        "description": "Placeholder description for Moonstone.",
+        "link": "https://yourstore.com/products/moonstone"
+      },
+      {
+        "name": "Rutilated Quartz",
+        "description": "Placeholder description for Rutilated Quartz.",
+        "link": "https://yourstore.com/products/rutilated-quartz"
+      },
+      {
+        "name": "Angelite",
+        "description": "Placeholder description for Angelite.",
+        "link": "https://yourstore.com/products/angelite"
+      },
+      {
+        "name": "Citrine",
+        "description": "Placeholder description for Citrine.",
+        "link": "https://yourstore.com/products/citrine"
+      }
+    ]
+  },
+  "Darkness": {
+    "crystals": [
+      {
+        "name": "Obsidian",
+        "description": "Placeholder description for Obsidian.",
+        "link": "https://yourstore.com/products/obsidian"
+      },
+      {
+        "name": "Black Tourmaline",
+        "description": "Placeholder description for Black Tourmaline.",
+        "link": "https://yourstore.com/products/black-tourmaline"
+      },
+      {
+        "name": "Amethyst",
+        "description": "Placeholder description for Amethyst.",
+        "link": "https://yourstore.com/products/amethyst"
+      },
+      {
+        "name": "Black Agate",
+        "description": "Placeholder description for Black Agate.",
+        "link": "https://yourstore.com/products/black-agate"
+      },
+      {
+        "name": "Smoky Quartz",
+        "description": "Placeholder description for Smoky Quartz.",
+        "link": "https://yourstore.com/products/smoky-quartz"
       }
     ]
   }
