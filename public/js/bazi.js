@@ -61,17 +61,18 @@ document.addEventListener("DOMContentLoaded", () => {
   container.appendChild(analyzeBtn);
 });
 
-// Typing effect with clean line breaks
+// Typing effect with smart line breaks
 function typeWriter(text, elementId, delay = 25) {
   let i = 0;
   const target = document.getElementById(elementId);
 
-  // Clean up extra line breaks
+  // Clean up extra line breaks and spacing
   const cleanText = text
-    .replace(/\n{3,}/g, '\n\n')          // Max 2 consecutive newlines
-    .replace(/\n{2}/g, '\n<br>\n')       // Double newline becomes a paragraph break
-    .replace(/\n/g, '<br>');             // Single newline becomes line break
-
+    .trim()
+    .replace(/\n{3,}/g, "\n\n")     // No more than 2 consecutive newlines
+    .replace(/\n\n/g, "<br><br>")   // Double newline becomes paragraph break
+    .replace(/\n/g, " ");           // Single newline becomes space (avoid mid-sentence linebreak)
+  
   target.innerHTML = "";
   const interval = setInterval(() => {
     if (i < cleanText.length) {
