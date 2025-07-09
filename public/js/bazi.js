@@ -40,15 +40,17 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const data = await response.json();
-      const message = data.message || "✨ Your analysis is ready.";
+      const messageRaw = data.message || "✨ Your analysis is ready.";
+      // Convert newlines to HTML breaks
+      const message = messageRaw.replace(/\n/g, "<br><br>");
 
       resultDiv.innerHTML = `
         <div style="border: 2px dashed #d7c9f7; border-radius: 16px; padding: 20px; background: #f9f7ff;">
-          <p id="typed-response" style="white-space: pre-wrap;"></p>
+          <p id="typed-response"></p>
         </div>
       `;
 
-      typeWriter(message, "typed-response", 15);
+      typeWriter(message, "typed-response", 10);
 
     } catch (error) {
       console.error(error);
@@ -56,28 +58,26 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Append the button
+  // Append button
   const container = document.querySelector(".soul-container");
   container.appendChild(analyzeBtn);
 });
 
-// Typing effect with smart line breaks
+// Typing effect function
 function typeWriter(text, elementId, delay = 25) {
   let i = 0;
   const target = document.getElementById(elementId);
-
-  // Clean up extra line breaks and spacing
-  const cleanText = text
-    .trim()
-    .replace(/\n{3,}/g, "\n\n")     // No more than 2 consecutive newlines
-    .replace(/\n\n/g, "<br><br>")   // Double newline becomes paragraph break
-    .replace(/\n/g, " ");           // Single newline becomes space (avoid mid-sentence linebreak)
-  
   target.innerHTML = "";
   const interval = setInterval(() => {
-    if (i < cleanText.length) {
-      target.innerHTML += cleanText.charAt(i);
-      i++;
+    if (i < text.length) {
+      // Handle HTML tags correctly
+      if (text.slice(i, i + 4) === "<br>") {
+        target.innerHTML += "<br>";
+        i += 4;
+      } else {
+        target.innerHTML += text.charAt(i);
+        i++;
+      }
     } else {
       clearInterval(interval);
     }
