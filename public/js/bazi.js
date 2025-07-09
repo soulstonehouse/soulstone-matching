@@ -40,17 +40,15 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const data = await response.json();
-      const messageRaw = data.message || "✨ Your analysis is ready.";
-      // Convert newlines to HTML breaks
-      const message = messageRaw.replace(/\n/g, "<br><br>");
+      const message = data.message || "✨ Your analysis is ready.";
 
       resultDiv.innerHTML = `
         <div style="border: 2px dashed #d7c9f7; border-radius: 16px; padding: 20px; background: #f9f7ff;">
-          <p id="typed-response"></p>
+          <p id="typed-response" style="white-space: pre-wrap;"></p>
         </div>
       `;
 
-      typeWriter(message, "typed-response", 10);
+      typeWriter(message, "typed-response", 15);
 
     } catch (error) {
       console.error(error);
@@ -58,26 +56,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Append button
+  // Append the button
   const container = document.querySelector(".soul-container");
   container.appendChild(analyzeBtn);
 });
 
-// Typing effect function
+// Typing effect with clean line breaks
 function typeWriter(text, elementId, delay = 25) {
   let i = 0;
   const target = document.getElementById(elementId);
+
+  // Clean up extra line breaks
+  const cleanText = text
+    .replace(/\n{3,}/g, '\n\n')          // Max 2 consecutive newlines
+    .replace(/\n{2}/g, '\n<br>\n')       // Double newline becomes a paragraph break
+    .replace(/\n/g, '<br>');             // Single newline becomes line break
+
   target.innerHTML = "";
   const interval = setInterval(() => {
-    if (i < text.length) {
-      // Handle HTML tags correctly
-      if (text.slice(i, i + 4) === "<br>") {
-        target.innerHTML += "<br>";
-        i += 4;
-      } else {
-        target.innerHTML += text.charAt(i);
-        i++;
-      }
+    if (i < cleanText.length) {
+      target.innerHTML += cleanText.charAt(i);
+      i++;
     } else {
       clearInterval(interval);
     }
