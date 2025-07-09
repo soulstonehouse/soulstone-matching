@@ -1,44 +1,46 @@
-// /api/bazi-analysis.js
 export default async function handler(req, res) {
   const { birthday, birthtime, gender, language } = req.body;
 
   const prompt = `
-You are an expert Feng Shui Master, BaZi astrologer, and Healing Crystal guide. 
-Please analyze the user's birth information and output the results in clear, warm English.
+You are an expert Feng Shui Master, Healing Crystal Therapist, and compassionate Elemental Spirit Guide.
+You will analyze the user's BaZi (Four Pillars of Destiny) based on the provided birth date, time, and gender.
 
-Birth Date: ${birthday}
-Birth Time: ${birthtime}
-Gender: ${gender}
-Language: ${language}
+**IMPORTANT:**
+Please use the EXACT format below, replacing the content but KEEPING the structure and emojis.
+Add line breaks (\\n) between paragraphs.
 
-**IMPORTANT: Format your response exactly as follows:**
-
+FORMAT:
 🌟 Your Personalized BaZi Analysis
 
 🪶 Feng Shui Master’s BaZi Insights
 
-[In 3-4 sentences: BaZi pillars, Five Elements % distribution, personality strengths & weaknesses, example: "Your Four Pillars show... Your Five Elements distribution is..."]
+[2-3 paragraphs describing the Four Pillars, the Heavenly Stems and Earthly Branches, the Five Elements distribution (Metal, Wood, Water, Fire, Earth percentages), and what this means about personality.]
 
 ⸻
 
 🌿 Healing Master’s Suggestions
 
-[In 3-4 sentences: friendly advice about colors, home feng shui, lifestyle improvements, practical actions.]
+[1-2 paragraphs suggesting practical adjustments: colors, home directions, activities to balance elements.]
 
 ⸻
 
 💎 Elemental Spirit’s Crystal Recommendation
 
-[In 2-3 sentences: recommend 1-2 crystals, explain their purpose and benefits.]
+[1-2 paragraphs recommending specific crystals that will help balance and harmonize energies.]
 
 ⸻
 
 🌈 Final Encouragement
 
-[In 2-3 sentences: uplifting words, self-trust, positivity.]
+[1 paragraph with warm encouragement, inspiration, and invitation to trust themselves.]
 
-**Keep tone warm, reassuring, and gently empowering. Use clear paragraph breaks and emoji titles exactly as shown.**
+**Example BaZi Info:**
+Year: Xin (Metal) over You (Rooster)
+Month: Yi (Wood) over Hai (Pig)
+Day: Gui (Water) over Zi (Rat)
+Hour: Xin (Metal) over Chen (Dragon)
 
+Make sure your output is warm, positive, and clear.
 `.trim();
 
   try {
@@ -50,17 +52,33 @@ Language: ${language}
       },
       body: JSON.stringify({
         model: "gpt-4",
-        messages: [{ role: "user", content: prompt }],
+        messages: [
+          {
+            role: "system",
+            content: "You are a helpful assistant."
+          },
+          {
+            role: "user",
+            content: `
+Birth Date: ${birthday}
+Birth Time: ${birthtime}
+Gender: ${gender}
+Language: ${language}
+
+${prompt}
+            `.trim()
+          }
+        ],
         temperature: 0.8
       })
     });
 
     const json = await response.json();
-    const message = json.choices?.[0]?.message?.content || "Your personalized analysis will appear here.";
+    const message = json.choices?.[0]?.message?.content || "✨ Your analysis is ready.";
 
     res.status(200).json({ message });
-  } catch (e) {
-    console.error("GPT error:", e);
-    res.status(500).json({ message: "AI analysis failed." });
+  } catch (error) {
+    console.error("BaZi Analysis error:", error);
+    res.status(500).json({ message: "⚠️ Failed to generate BaZi analysis." });
   }
 }
