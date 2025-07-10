@@ -1,85 +1,60 @@
-export default async function handler(req, res) {
-  const { birthday, birthtime, gender, language } = req.body;
+document.addEventListener("DOMContentLoaded", () => {
+  const resultDiv = document.getElementById("result");
 
-  const prompt = `
-You are a professional Feng Shui Master, Healing Crystal Therapist, and compassionate Elemental Spirit Guide.
-You will analyze the user's BaZi (Four Pillars of Destiny) and recommend five crystals per element.
+  const analyzeBtn = document.getElementById("analyzeBtn");
+  analyzeBtn.addEventListener("click", async () => {
+    const birthday = document.getElementById("birthday").value;
+    const birthtime = document.getElementById("birthtime").value;
+    const language = document.getElementById("language").value;
+    const gender = document.getElementById("gender").value;
 
-IMPORTANT:
-Output MUST use Markdown format with clear headings and line breaks.
-Use warm, uplifting, professional language.
-Provide clear spacing and readability.
-If the user selected Chinese, provide Chinese text. If English, provide English text.
+    if (!birthday || !birthtime || !gender) {
+      resultDiv.innerHTML = "❗ Please complete all fields.";
+      return;
+    }
 
-FORMAT:
+    resultDiv.innerHTML = "🔮 Analyzing your BaZi chart... Please wait...";
 
-🌟 **Your Personalized BaZi Analysis**
+    try {
+      const response = await fetch("/api/bazi-analysis", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          birthday,
+          birthtime,
+          gender,
+          language
+        })
+      });
 
-### 🪶 Feng Shui Master’s BaZi Insights
+      const data = await response.json();
+      const message = data.message || "✨ Your analysis is ready.";
 
-[2-3 paragraphs describing the Four Pillars, Heavenly Stems and Earthly Branches, the Five Elements distribution (Metal, Wood, Water, Fire, Earth percentages), and personality.]
+      // Find main element for image (simulate: if Metal > Wood > Water, show Metal image)
+      const elementMatch = message.match(/Metal|Wood|Water|Fire|Earth/);
+      const mainElement = elementMatch ? elementMatch[0] : "Light";
+      const spiritImageMap = {
+        "Water": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/water.png",
+        "Fire": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/fire.png",
+        "Ice": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/ice.png",
+        "Earth": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/earth.png",
+        "Wood": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/wood.png",
+        "Wind": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/wind.png",
+        "Thunder": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/Thunder.png",
+        "Light": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/light.png",
+        "Darkness": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/darkness.png",
+        "Metal": "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/metal.png"
+      };
 
----
-
-### 🌿 Healing Master’s Suggestions
-
-[1-2 paragraphs suggesting practical adjustments (colors, directions, activities) to balance elements.]
-
----
-
-### 💎 Elemental Spirit’s Crystal Recommendation
-
-[For each relevant element, list 5 crystals. Each crystal should have a short description.]
-
----
-
-### 🌈 Final Encouragement
-
-[Warm encouragement, affirmation, and invitation to trust themselves.]
-
-Example BaZi Info:
-Year Pillar: Xin (Metal) over You (Rooster)
-Month Pillar: Yi (Wood) over Hai (Pig)
-Day Pillar: Gui (Water) over Zi (Rat)
-Hour Pillar: Xin (Metal) over Chen (Dragon)
-`.trim();
-
-  try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "gpt-4",
-        messages: [
-          {
-            role: "system",
-            content: "You are a warm, helpful assistant who writes clear, encouraging BaZi reports."
-          },
-          {
-            role: "user",
-            content: `
-Birth Date: ${birthday}
-Birth Time: ${birthtime}
-Gender: ${gender}
-Language: ${language}
-
-${prompt}
-            `.trim()
-          }
-        ],
-        temperature: 0.7
-      })
-    });
-
-    const json = await response.json();
-    const message = json.choices?.[0]?.message?.content || "✨ Your analysis is ready.";
-
-    res.status(200).json({ message });
-  } catch (error) {
-    console.error("BaZi Analysis error:", error);
-    res.status(500).json({ message: "⚠️ Failed to generate BaZi analysis." });
-  }
-}
+      resultDiv.innerHTML = `
+        <div style="border:2px dashed #d7c9f7; border-radius:16px; padding:20px; background:#f9f7ff; text-align:left;">
+          <img src="${spiritImageMap[mainElement]}" alt="${mainElement} Spirit" style="max-width:120px; display:block; margin:0 auto 20px;">
+          <pre style="white-space:pre-wrap; word-break:break-word; font-family:inherit;">${message}</pre>
+        </div>
+      `;
+    } catch (error) {
+      console.error(error);
+      resultDiv.innerHTML = "⚠️ An error occurred. Please try again.";
+    }
+  });
+});
