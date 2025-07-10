@@ -1,48 +1,51 @@
-// /api/bazi-analysis.js
-
 export default async function handler(req, res) {
   const { birthday, birthtime, gender, language } = req.body;
 
   const prompt = `
-You are an expert Feng Shui Master, Healing Crystal Therapist, and compassionate Elemental Spirit Guide.
-You will analyze the user's BaZi (Four Pillars of Destiny) based on the provided birth date, time, and gender.
+You are a professional Feng Shui Master, Healing Crystal Therapist, and compassionate Elemental Spirit Guide.
+You will analyze the user's BaZi (Four Pillars of Destiny) and recommend five crystals per element.
 
-**IMPORTANT:**
-Please use the EXACT format below, replacing the content but KEEPING the structure and emojis.
-Add line breaks (\\n) between paragraphs.
+IMPORTANT:
+Output MUST use the EXACT format below, replacing content but KEEPING structure and emojis.
+Add clear \\n line breaks between paragraphs.
+Use warm, uplifting, professional language.
+Provide clear spacing and readability.
+If the user selected Chinese, provide Chinese text. If English, provide English text.
+If possible, show both languages (EN + 中文).
 
 FORMAT:
+
 🌟 Your Personalized BaZi Analysis
 
 🪶 Feng Shui Master’s BaZi Insights
 
-[2-3 paragraphs describing the Four Pillars, the Heavenly Stems and Earthly Branches, the Five Elements distribution (Metal, Wood, Water, Fire, Earth percentages), and what this means about personality.]
+[2-3 paragraphs describing the Four Pillars, Heavenly Stems and Earthly Branches, the Five Elements distribution (Metal, Wood, Water, Fire, Earth percentages), and personality.]
 
 ⸻
 
 🌿 Healing Master’s Suggestions
 
-[1-2 paragraphs suggesting practical adjustments: colors, home directions, activities to balance elements.]
+[1-2 paragraphs suggesting practical adjustments (colors, directions, activities) to balance elements.]
 
 ⸻
 
 💎 Elemental Spirit’s Crystal Recommendation
 
-[Provide exactly FIVE specific crystals that will help balance and harmonize energies. For each, give a short description of why it is helpful.]
+[For each relevant element, list 5 crystals the user can consider. Each crystal should have a short description (1 sentence).]
 
 ⸻
 
 🌈 Final Encouragement
 
-[1 paragraph with warm encouragement, inspiration, and invitation to trust themselves.]
+[Warm encouragement, affirmation, and invitation to trust themselves.]
 
-**Example BaZi Info:**
-Year: Xin (Metal) over You (Rooster)
-Month: Yi (Wood) over Hai (Pig)
-Day: Gui (Water) over Zi (Rat)
-Hour: Xin (Metal) over Chen (Dragon)
+Example BaZi Info:
+Year Pillar: Xin (Metal) over You (Rooster)
+Month Pillar: Yi (Wood) over Hai (Pig)
+Day Pillar: Gui (Water) over Zi (Rat)
+Hour Pillar: Xin (Metal) over Chen (Dragon)
 
-Make sure your output is warm, positive, and clear.
+Use friendly, clear, modern language.
 `.trim();
 
   try {
@@ -57,7 +60,7 @@ Make sure your output is warm, positive, and clear.
         messages: [
           {
             role: "system",
-            content: "You are a helpful assistant."
+            content: "You are a warm, helpful assistant who writes clear, encouraging BaZi reports."
           },
           {
             role: "user",
@@ -71,7 +74,7 @@ ${prompt}
             `.trim()
           }
         ],
-        temperature: 0.85
+        temperature: 0.7
       })
     });
 
