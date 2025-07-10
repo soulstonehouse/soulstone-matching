@@ -1,29 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Soulstone Matching</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>🔮 BaZi & Crystal Matching</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="style.css" />
   <style>
-    .soul-container {
-      max-width: 480px;
-      margin: 40px auto;
-      padding: 30px;
-      background: linear-gradient(to bottom right, #f6f3ff, #eaf1ff);
-      border-radius: 16px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+    body {
       font-family: 'Helvetica Neue', sans-serif;
+      background: #f2f0fb;
       color: #333;
+      padding: 20px;
+    }
+    .soul-container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 18px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
     }
     h2 {
       color: #6639ca;
       text-align: center;
+      margin-bottom: 20px;
     }
     label {
-      font-weight: 600;
       display: block;
       margin: 16px 0 6px;
+      font-weight: 600;
     }
     input, select {
       width: 100%;
@@ -32,19 +37,92 @@
       border: 1px solid #ccc;
       font-size: 15px;
     }
+    #analyzeBtn {
+      margin-top: 20px;
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      background-color: #8a6df1;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+    }
+    #analyzeBtn:hover {
+      background-color: #6d4bd2;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 20px;
+      background: #f9f7ff;
+      border: 1px dashed #c9c0f7;
+      border-radius: 12px;
+      min-height: 100px;
+    }
   </style>
-  <script src="js/bazi.js" defer></script>
+  <script defer>
+    document.addEventListener("DOMContentLoaded", () => {
+      const resultDiv = document.getElementById("result");
+      const analyzeBtn = document.getElementById("analyzeBtn");
+
+      analyzeBtn.addEventListener("click", async () => {
+        const birthday = document.getElementById("birthday").value;
+        const birthtime = document.getElementById("birthtime").value;
+        const language = document.getElementById("language").value;
+        const gender = document.getElementById("gender").value;
+
+        if (!birthday || !birthtime || !gender) {
+          resultDiv.innerHTML = "❗ Please complete all fields.";
+          return;
+        }
+
+        resultDiv.innerHTML = "🔮 Analyzing your BaZi chart and matching crystals... Please wait...";
+
+        try {
+          const response = await fetch("/api/bazi-analysis", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ birthday, birthtime, gender, language })
+          });
+
+          const data = await response.json();
+          const message = data.message || "✨ Your analysis is ready.";
+
+          resultDiv.innerHTML = `<p id="typed-response"></p>`;
+          typeWriter(message, "typed-response", 15);
+        } catch (error) {
+          console.error(error);
+          resultDiv.innerHTML = "⚠️ An error occurred. Please try again.";
+        }
+      });
+    });
+
+    function typeWriter(text, elementId, delay = 25) {
+      let i = 0;
+      const target = document.getElementById(elementId);
+      target.innerHTML = "";
+      const interval = setInterval(() => {
+        if (i < text.length) {
+          target.innerHTML += text.charAt(i);
+          i++;
+        } else {
+          clearInterval(interval);
+        }
+      }, delay);
+    }
+  </script>
 </head>
 <body>
   <div class="soul-container">
-    <h2>🔮 Birth Info Crystal Matching</h2>
-    <p>Enter your birth details and discover the crystals that align with your soul's frequency.</p>
+    <h2>🔮 BaZi Analysis & Crystal Recommendations</h2>
+    <p>Enter your birth details and receive a complete BaZi reading and crystal guidance.</p>
 
     <label for="birthday">Birth Date</label>
-    <input required id="birthday" type="date" />
+    <input id="birthday" type="date" required />
 
     <label for="birthtime">Birth Time</label>
-    <input required id="birthtime" type="time" />
+    <input id="birthtime" type="time" required />
 
     <label for="gender">Gender</label>
     <select id="gender" required>
@@ -54,13 +132,16 @@
     </select>
 
     <label for="language">Preferred Language</label>
-    <select required id="language">
+    <select id="language" required>
       <option value="English">English</option>
       <option value="Chinese">Chinese</option>
     </select>
 
-    <!-- 不要在这里写任何按钮 -->
-    <div id="result" style="margin-top: 30px;"></div>
+    <!-- 🎯 按钮在这里 -->
+    <button id="analyzeBtn">✨ Analyze & Match</button>
+
+    <!-- 🎯 结果在按钮下面 -->
+    <div id="result"></div>
   </div>
 </body>
 </html>
