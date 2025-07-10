@@ -2,43 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>🔮 BaZi & Crystal Matching</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="style.css" />
+  <title>🔮 Explore Your Soul</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
-      font-family: 'Helvetica Neue', sans-serif;
+      font-family: "Helvetica Neue", sans-serif;
       background: #f2f0fb;
-      color: #333;
       padding: 20px;
+      color: #333;
     }
-    .soul-container {
-      max-width: 500px;
+    .container {
+      max-width: 600px;
       margin: 0 auto;
       background: #fff;
       padding: 30px;
-      border-radius: 18px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
     }
-    h2 {
-      color: #6639ca;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    label {
+    button {
       display: block;
-      margin: 16px 0 6px;
-      font-weight: 600;
-    }
-    input, select {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 15px;
-    }
-    #analyzeBtn {
-      margin-top: 20px;
       width: 100%;
       padding: 14px;
       font-size: 16px;
@@ -48,100 +30,87 @@
       border: none;
       border-radius: 50px;
       cursor: pointer;
+      margin-bottom: 20px;
     }
-    #analyzeBtn:hover {
-      background-color: #6d4bd2;
-    }
-    #result {
-      margin-top: 20px;
+    .result-box {
+      border: 2px dashed #d7c9f7;
+      border-radius: 16px;
       padding: 20px;
       background: #f9f7ff;
-      border: 1px dashed #c9c0f7;
-      border-radius: 12px;
-      min-height: 100px;
+      margin-top: 20px;
+    }
+    .element-icons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .element-icons img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 2px solid #ccc;
     }
   </style>
-  <script defer>
-    document.addEventListener("DOMContentLoaded", () => {
-      const resultDiv = document.getElementById("result");
-      const analyzeBtn = document.getElementById("analyzeBtn");
-
-      analyzeBtn.addEventListener("click", async () => {
-        const birthday = document.getElementById("birthday").value;
-        const birthtime = document.getElementById("birthtime").value;
-        const language = document.getElementById("language").value;
-        const gender = document.getElementById("gender").value;
-
-        if (!birthday || !birthtime || !gender) {
-          resultDiv.innerHTML = "❗ Please complete all fields.";
-          return;
-        }
-
-        resultDiv.innerHTML = "🔮 Analyzing your BaZi chart and matching crystals... Please wait...";
-
-        try {
-          const response = await fetch("/api/bazi-analysis", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ birthday, birthtime, gender, language })
-          });
-
-          const data = await response.json();
-          const message = data.message || "✨ Your analysis is ready.";
-
-          resultDiv.innerHTML = `<p id="typed-response"></p>`;
-          typeWriter(message, "typed-response", 15);
-        } catch (error) {
-          console.error(error);
-          resultDiv.innerHTML = "⚠️ An error occurred. Please try again.";
-        }
-      });
-    });
-
-    function typeWriter(text, elementId, delay = 25) {
-      let i = 0;
-      const target = document.getElementById(elementId);
-      target.innerHTML = "";
-      const interval = setInterval(() => {
-        if (i < text.length) {
-          target.innerHTML += text.charAt(i);
-          i++;
-        } else {
-          clearInterval(interval);
-        }
-      }, delay);
-    }
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
-  <div class="soul-container">
-    <h2>💫 Explore Your Soul</h2>
-    <p>Discover your unique energy blueprint and find crystals to guide your journey.</p>
-
-    <label for="birthday">Birth Date</label>
-    <input id="birthday" type="date" required />
-
-    <label for="birthtime">Birth Time</label>
-    <input id="birthtime" type="time" required />
-
-    <label for="gender">Gender</label>
-    <select id="gender" required>
-      <option value="female">Female</option>
-      <option value="male">Male</option>
-      <option value="nonbinary">Non-Binary</option>
-    </select>
-
-    <label for="language">Preferred Language</label>
-    <select id="language" required>
-      <option value="English">English</option>
-      <option value="Chinese">Chinese</option>
-    </select>
-
-    <!-- 🎯 按钮在这里 -->
+  <div class="container">
     <button id="analyzeBtn">✨ READ YOUR SOUL</button>
-
-    <!-- 🎯 结果在按钮下面 -->
     <div id="result"></div>
   </div>
+
+  <script>
+    const analyzeBtn = document.getElementById("analyzeBtn");
+    const resultDiv = document.getElementById("result");
+
+    analyzeBtn.addEventListener("click", async () => {
+      resultDiv.innerHTML = "🔮 Generating your analysis... Please wait.";
+
+      try {
+        const response = await fetch("/api/bazi-analysis", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            birthday: "1981-12-19",
+            birthtime: "03:40",
+            gender: "female",
+            language: "English"
+          })
+        });
+
+        const data = await response.json();
+        const markdown = data.message;
+
+        const html = marked.parse(markdown);
+
+        const iconsHTML = `
+          <div class="element-icons">
+            <img src="https://cdn.shopify.com/s/files/1/0649/0233/2586/files/water.png?v=1749120912" alt="Water" />
+            <img src="https://cdn.shopify.com/s/files/1/0649/0233/2586/files/fire.png?v=1749120966" alt="Fire" />
+            <img src="https://cdn.shopify.com/s/files/1/0649/0233/2586/files/ice.png?v=1749121020" alt="Ice" />
+            <img src="https://cdn.shopify.com/s/files/1/0649/0233/2586/files/earth.png?v=1749121018" alt="Earth" />
+            <img src="https://cdn.shopify.com/s/files/1/0649/0233/2586/files/wood.png?v=1749121025" alt="Wood" />
+            <img src="https://cdn.shopify.com/s/files/1/0649/0233/2586/files/wind.png?v=1749121176" alt="Wind" />
+            <img src="https://cdn.shopify.com/s/files/1/0649/0233/2586/files/Thunder.png?v=1749121312" alt="Thunder" />
+            <img src="https://cdn.shopify.com/s/files/1/0649/0233/2586/files/light.png?v=1749121855" alt="Light" />
+            <img src="https://cdn.shopify.com/s/files/1/0649/0233/2586/files/darkness.png?v=1749122291" alt="Darkness" />
+            <img src="https://cdn.shopify.com/s/files/1/0649/0233/2586/files/metal.png?v=1749122654" alt="Metal" />
+          </div>
+        `;
+
+        resultDiv.innerHTML = `
+          <div class="result-box">
+            ${iconsHTML}
+            ${html}
+          </div>
+        `;
+      } catch (error) {
+        console.error(error);
+        resultDiv.innerHTML = "⚠️ An error occurred. Please try again.";
+      }
+    });
+  </script>
 </body>
 </html>
