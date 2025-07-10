@@ -1,3 +1,5 @@
+// /api/bazi-analysis.js
+
 export default async function handler(req, res) {
   const { birthday, birthtime, gender, language } = req.body;
 
@@ -26,7 +28,7 @@ FORMAT:
 
 💎 Elemental Spirit’s Crystal Recommendation
 
-[1-2 paragraphs recommending specific crystals that will help balance and harmonize energies.]
+[Provide exactly FIVE specific crystals that will help balance and harmonize energies. For each, give a short description of why it is helpful.]
 
 ⸻
 
@@ -69,7 +71,7 @@ ${prompt}
             `.trim()
           }
         ],
-        temperature: 0.8
+        temperature: 0.85
       })
     });
 
