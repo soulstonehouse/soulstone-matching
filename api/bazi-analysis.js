@@ -1,24 +1,14 @@
 export default async function handler(req, res) {
-  const { birthday, birthtime, gender, language } = req.body;
+  const { yearPillar, monthPillar, dayPillar, hourPillar, gender, language } = req.body;
 
-  if (!birthday || !birthtime || !gender) {
+  if (!yearPillar || !monthPillar || !dayPillar || !hourPillar || !gender) {
     return res.status(400).json({ message: "❗ Missing required fields." });
   }
 
-  // Prompt for GPT
   const prompt = `
 You are a professional Feng Shui Master, Healing Crystal Therapist, and compassionate Elemental Spirit Guide.
 
-First, based on the user's Gregorian (solar) birth date and time, calculate the exact Four Pillars of Destiny (BaZi).
-To improve accuracy, reference the data and rules consistent with Chinese official calendars and trusted online sources such as:
-https://wannianrili.51240.com/
-https://www.buyiju.com/bazi/
-Be precise:
-- Confirm whether the date is before or after Li Chun (Start of Spring) and adjust the year pillar accordingly.
-- Convert to lunar calendar date.
-- Output the exact Heavenly Stems and Earthly Branches for Year, Month, Day, and Hour pillars.
-
-Next, analyze the BaZi chart in detail, including:
+Analyze the following Four Pillars of Destiny (BaZi) in detail, including:
 - The percentages of the Five Elements (Metal, Wood, Water, Fire, Earth).
 - Personality insights based on the element distribution.
 
@@ -36,11 +26,7 @@ FORMAT:
 
 🪶 Feng Shui Master’s BaZi Insights
 
-[First paragraph: conversion of Gregorian date to lunar date and calculation of Four Pillars.]
-
-[Second paragraph: Five Elements distribution.]
-
-[Third paragraph: Personality and destiny insights.]
+[2-3 paragraphs describing the Four Pillars, Five Elements distribution, personality.]
 
 ⸻
 
@@ -60,9 +46,11 @@ FORMAT:
 
 [Warm encouragement and affirmation.]
 
-**User's Birth Information:**
-Gregorian Birth Date: ${birthday}
-Time: ${birthtime}
+**User's BaZi Info:**
+Year Pillar: ${yearPillar}
+Month Pillar: ${monthPillar}
+Day Pillar: ${dayPillar}
+Hour Pillar: ${hourPillar}
 Gender: ${gender}
 Language: ${language}
 `.trim();
