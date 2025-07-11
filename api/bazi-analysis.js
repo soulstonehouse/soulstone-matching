@@ -1,6 +1,6 @@
 const { Solar } = require("lunar-javascript");
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   const { birthday, birthtime, gender, language } = req.body;
 
   if (!birthday || !birthtime || !gender) {
