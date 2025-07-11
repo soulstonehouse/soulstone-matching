@@ -35,14 +35,25 @@ document.getElementById("matchForm").addEventListener("submit", async function (
       Darkness: "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/darkness.png?v=1749122291"
     };
 
+    const elementNameMap = {
+      Wood: "木", Fire: "火", Earth: "土", Water: "水", Metal: "金",
+      Wind: "风", Ice: "冰", Thunder: "雷", Light: "光", Darkness: "暗"
+    };
+
     const matchedElement = data.dominantElement;
     const imageUrl = matchedElement ? elementImageMap[matchedElement] : "";
+    const elementZh = elementNameMap[matchedElement] || matchedElement;
 
     // 显示分析内容 + 精灵图像
     resultBox.innerHTML = `
       <div style="border:2px dashed #d7c9f7; border-radius:16px; padding:20px; background:#f9f7ff; text-align:left;">
-        ${imageUrl ? `<div style="text-align:center;"><img src="${imageUrl}" alt="${matchedElement} Spirit" style="width:120px; border-radius:16px; margin-bottom:16px; box-shadow:0 4px 12px rgba(0,0,0,0.1);" /></div>` : ""}
-        <pre style="white-space:pre-wrap; word-break:break-word; font-family:inherit;">${data.message}</pre>
+        ${imageUrl ? `
+          <div style="text-align:center;">
+            <img src="${imageUrl}" alt="${matchedElement} Spirit" style="width:120px; border-radius:16px; margin-bottom:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1);" />
+            <div style="font-weight:bold; font-size:16px; color:#5a4a91;">主属性：${elementZh}</div>
+          </div>
+        ` : ""}
+        <pre style="white-space:pre-wrap; word-break:break-word; font-family:inherit; margin-top:16px;">${data.message}</pre>
       </div>
     `;
 
