@@ -1,3 +1,4 @@
+// api/bazi-analysis.js
 const { Solar } = require("lunar-javascript");
 const fetch = require("node-fetch");
 
@@ -52,35 +53,35 @@ module.exports = async function handler(req, res) {
     });
 
     const crystals = {
-      "Wood": [
+      Wood: [
         { name: "Green Aventurine", desc: "Encourages growth, abundance, and vitality." },
         { name: "Moss Agate", desc: "Connects you with nature and stability." },
         { name: "Malachite", desc: "Promotes transformation and emotional balance." },
         { name: "Amazonite", desc: "Soothes the mind and enhances clear communication." },
         { name: "Jade", desc: "Brings harmony, prosperity, and good fortune." }
       ],
-      "Fire": [
+      Fire: [
         { name: "Carnelian", desc: "Boosts courage, motivation, and vitality." },
         { name: "Red Jasper", desc: "Strengthens stamina and grounding." },
         { name: "Garnet", desc: "Revitalizes passion and energy." },
         { name: "Sunstone", desc: "Brings optimism and enthusiasm." },
         { name: "Ruby", desc: "Ignites love and personal power." }
       ],
-      "Water": [
+      Water: [
         { name: "Aquamarine", desc: "Soothes emotions and enhances intuition." },
         { name: "Lapis Lazuli", desc: "Encourages wisdom and self-expression." },
         { name: "Sodalite", desc: "Balances emotional energy and insight." },
         { name: "Blue Lace Agate", desc: "Promotes calm communication." },
         { name: "Kyanite", desc: "Aligns chakras and clears blockages." }
       ],
-      "Earth": [
+      Earth: [
         { name: "Tiger's Eye", desc: "Brings confidence and grounding." },
         { name: "Citrine", desc: "Manifests abundance and stability." },
         { name: "Yellow Jasper", desc: "Provides clarity and protection." },
         { name: "Smoky Quartz", desc: "Dispels negativity and anchors energy." },
         { name: "Picture Jasper", desc: "Connects to Earth's harmony." }
       ],
-      "Metal": [
+      Metal: [
         { name: "Hematite", desc: "Grounds and clarifies intention." },
         { name: "Pyrite", desc: "Attracts prosperity and shields negativity." },
         { name: "Silver Obsidian", desc: "Promotes self-awareness and protection." },
@@ -90,48 +91,48 @@ module.exports = async function handler(req, res) {
     };
 
     const sorted = Object.entries(percentages).sort((a, b) => a[1] - b[1]);
-    const dominantElement = Object.entries(percentages).sort((a, b) => b[1] - a[1])[0][0];
-
-    const lowestPercent = sorted[0][1];
-    const weakestElements = sorted.filter(([_, val]) => val === lowestPercent).map(([k]) => k);
-    const allCrystals = weakestElements.flatMap(el => crystals[el] || []).slice(0, 5);
-    const crystalText = allCrystals.map(c => `- ${c.name}: ${c.desc}`).join("\n");
-
-    const elementText = Object.entries(percentages).map(([el, val]) => `${el}: ${val}%`).join("\n");
-
-    const langPrefix = language === "zh" ? "中文回复：" : "English only.";
-
-    const spiritName = dominantElement + " Spirit";
+    const dominantElement = sorted[4][0];
+    const weakestElements = sorted.slice(0, 2).map(([k]) => k);
 
     const prompt = `
-${langPrefix}
+You are a BaZi master and healing spirit guide. Language: ${language}.
+Please provide a ${language === "zh" ? "Chinese" : language === "en" ? "English" : "bilingual (Chinese + English)"} response.
+Each paragraph should be followed by its translation if bilingual.
 
-Your Four Pillars are:
+Four Pillars:
 Year Pillar: ${yearPillar} (${withPinyin(yearPillar)})
 Month Pillar: ${monthPillar} (${withPinyin(monthPillar)})
 Day Pillar: ${dayPillar} (${withPinyin(dayPillar)})
 Hour Pillar: ${hourPillar} (${withPinyin(hourPillar)})
 
-Element Distribution:
-${elementText}
+Element Percentages:
+${Object.entries(percentages).map(([el, val]) => `${el}: ${val}%`).join("\n")}
 
-Your dominant element is ${dominantElement}, represented by the spirit ${spiritName}.
-Your weakest element(s): ${weakestElements.join(", ")} — areas needing support.
+Your dominant element is ${dominantElement}.
 
-Crystals to help you rebalance:
-${crystalText}
+You should support your two weakest elements:
+${weakestElements.map(el => `- ${el}`).join("\n")}
 
-Please write a warm, inspiring message that:
-- Gently explains the BaZi findings
-- Encourages the user spiritually
-- Offers practical guidance
-- Ends with “Your friend, ${spiritName}”
+Crystal Recommendations:
+${weakestElements
+  .map(el => {
+    const list = crystals[el];
+    return `${el} Crystals:\n${list.map(c => `- ${c.name}: ${c.desc}`).join("\n")}`;
+  })
+  .join("\n\n")}
+
+Please write a warm, letter-style message that:
+- Starts with a friendly greeting
+- Explains the Four Pillars and element balance
+- Encourages lifestyle or mindset practices
+- Recommends the above crystals
+- Ends with "Your friend, [Spirit]"
 `;
 
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
@@ -140,7 +141,7 @@ Please write a warm, inspiring message that:
         messages: [
           {
             role: "system",
-            content: `You are a warm and gentle BaZi interpreter and spiritual guide. Reply in ${language === "zh" ? "Chinese" : "English"} only.`
+            content: "You are a gentle, empowering spiritual guide who helps people interpret BaZi and balance their energy."
           },
           { role: "user", content: prompt }
         ]
