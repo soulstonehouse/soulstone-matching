@@ -18,7 +18,8 @@ IMPORTANT:
 Output MUST use the EXACT format below, replacing content but KEEPING structure and emojis.
 Add clear \\n line breaks between paragraphs.
 Use warm, uplifting, professional language.
-If the user selected Chinese, provide Chinese text. If English, provide English text.
+If the user selected Chinese, provide Chinese text. If English, provide English text. 
+If the user selected English, translate all Chinese characters (like Heavenly Stems and Earthly Branches) into English with their corresponding element and pinyin, e.g., 辛 (Xin, Metal), 巳 (Si, Fire).
 
 FORMAT:
 
