@@ -1,9 +1,27 @@
 export default async function handler(req, res) {
   const { birthday, birthtime, gender, language } = req.body;
 
+  // Basic validation
+  if (!birthday || !birthtime || !gender) {
+    return res.status(400).json({ message: "❗ Missing required fields." });
+  }
+
+  // Prompt for GPT
   const prompt = `
 You are a professional Feng Shui Master, Healing Crystal Therapist, and compassionate Elemental Spirit Guide.
-You will analyze the user's BaZi (Four Pillars of Destiny), detect which element is most abundant and which is most lacking, and then recommend 5 crystals only for the lacking element.
+
+First, based on the user's Gregorian (solar) birth date and time, calculate the exact Four Pillars of Destiny (BaZi).
+Be precise:
+- Use Chinese metaphysics rules including the 24 solar terms.
+- Confirm whether the date is before or after Li Chun (Start of Spring) and adjust the year pillar accordingly.
+- Convert to lunar calendar date.
+- Output the exact Heavenly Stems and Earthly Branches for Year, Month, Day, and Hour pillars.
+
+Next, analyze the BaZi chart in detail, including:
+- The percentages of the Five Elements (Metal, Wood, Water, Fire, Earth).
+- Personality insights based on the element distribution.
+
+Finally, recommend five crystals for the element that is most lacking.
 
 IMPORTANT:
 Output MUST use the EXACT format below, replacing content but KEEPING structure and emojis.
@@ -18,7 +36,11 @@ FORMAT:
 
 🪶 Feng Shui Master’s BaZi Insights
 
-[2-3 paragraphs describing the Four Pillars, Heavenly Stems and Earthly Branches, the Five Elements distribution (Metal, Wood, Water, Fire, Earth percentages), and personality.]
+[First paragraph: conversion of Gregorian date to lunar date and calculation of Four Pillars.]
+
+[Second paragraph: Five Elements distribution.]
+
+[Third paragraph: Personality and destiny insights.]
 
 ⸻
 
@@ -38,14 +60,14 @@ FORMAT:
 
 [Warm encouragement and affirmation.]
 
-**Example BaZi Info:**
-Year Pillar: Xin (Metal) over You (Rooster)
-Month Pillar: Yi (Wood) over Hai (Pig)
-Day Pillar: Gui (Water) over Zi (Rat)
-Hour Pillar: Xin (Metal) over Chen (Dragon)
+**User's Birth Information:**
+Gregorian Birth Date: ${birthday}
+Time: ${birthtime}
+Gender: ${gender}
 `.trim();
 
   try {
+    // Call OpenAI Chat Completion
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -61,14 +83,7 @@ Hour Pillar: Xin (Metal) over Chen (Dragon)
           },
           {
             role: "user",
-            content: `
-Birth Date: ${birthday}
-Birth Time: ${birthtime}
-Gender: ${gender}
-Language: ${language}
-
-${prompt}
-            `.trim()
+            content: prompt
           }
         ],
         temperature: 0.7
