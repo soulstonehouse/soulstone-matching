@@ -95,9 +95,8 @@ module.exports = async function handler(req, res) {
     };
 
     const prompt = `
-You are a BaZi master and spiritual guide. Please respond only in English and follow this **strict structure**:
+You are a BaZi master and spiritual guide. Please respond only in English and follow this structure:
 
-1. Start with:
 Four Pillars:
 Year Pillar: ${withPinyin(yearPillar)}
 Month Pillar: ${withPinyin(monthPillar)}
@@ -107,19 +106,14 @@ Hour Pillar: ${withPinyin(hourPillar)}
 Five Element Percentages:
 ${Object.entries(percentages).map(([el, val]) => `${el}: ${val}%`).join("\n")}
 
-2. Then write a warm, empowering letter based on this data, including:
-- Highlight the dominant element: ${dominantElement}
-- Describe any elements below 25%: ${lowElements.join(", ") || "None"}
-- Suggest 5 healing crystals for each weak element:
-${lowElements.map(el =>
-  `For ${el}:
-${crystals[el].map(c => `- ${c.name}: ${c.desc}`).join("\n")}`
-).join("\n\n")}
-
-3. End the letter with this signature:
-"Your friend,
-${dominantElement} Spirit"
-`.trim();
+Then write a warm, empowering letter including:
+- Highlight dominant element: ${dominantElement}
+- Discuss elements under 25%: ${lowElements.join(", ") || "None"}
+- Recommend 5 crystals for each weak element
+End with:
+Your friend,
+${dominantElement} Spirit
+    `.trim();
 
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -138,7 +132,21 @@ ${dominantElement} Spirit"
     });
 
     const json = await openaiRes.json();
-    const message = json.choices?.[0]?.message?.content || "✨ Analysis complete.";
+    const gptMessage = json.choices?.[0]?.message?.content || "✨ Analysis complete.";
+
+    const introHeader = `
+=== Four Pillars ===
+Year Pillar: ${withPinyin(yearPillar)}
+Month Pillar: ${withPinyin(monthPillar)}
+Day Pillar: ${withPinyin(dayPillar)}
+Hour Pillar: ${withPinyin(hourPillar)}
+
+=== Five Element Percentages ===
+${Object.entries(percentages).map(([el, val]) => `${el}: ${val}%`).join("\n")}
+
+`.trim();
+
+    const fullMessage = `${introHeader}\n\n${gptMessage}`;
 
     const analysis = {
       fourPillars: {
@@ -155,7 +163,7 @@ ${dominantElement} Spirit"
       )
     };
 
-    res.status(200).json({ message, analysis });
+    res.status(200).json({ message: fullMessage, analysis });
   } catch (err) {
     console.error("BaZi Analysis error:", err);
     res.status(500).json({ message: "⚠️ Failed to generate BaZi analysis." });
