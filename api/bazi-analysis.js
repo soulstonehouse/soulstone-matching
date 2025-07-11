@@ -1,4 +1,3 @@
-
 const { Solar } = require("lunar-javascript");
 const fetch = require("node-fetch");
 
@@ -45,10 +44,11 @@ module.exports = async function handler(req, res) {
       counts[elementMap[stem]]++;
       counts[elementMap[branch]]++;
     });
+
     const total = Object.values(counts).reduce((a, b) => a + b, 0);
     const percentages = {};
     Object.keys(counts).forEach(k => {
-      percentages[k] = total ? Math.round(counts[k] / total * 100) : 0;
+      percentages[k] = total ? Math.round((counts[k] / total) * 100) : 0;
     });
 
     const crystals = {
@@ -91,38 +91,42 @@ module.exports = async function handler(req, res) {
 
     const sorted = Object.entries(percentages).sort((a, b) => a[1] - b[1]);
     const dominantElement = Object.entries(percentages).sort((a, b) => b[1] - a[1])[0][0];
-    const weakestElements = sorted.filter(([el, val]) => val === sorted[0][1]).map(([el]) => el);
-    const crystalRecommendations = weakestElements.map(el => ({
-      element: el,
-      crystals: crystals[el] || []
-    }));
+
+    const lowestPercent = sorted[0][1];
+    const weakestElements = sorted.filter(([_, val]) => val === lowestPercent).map(([k]) => k);
+    const allCrystals = weakestElements.flatMap(el => crystals[el] || []).slice(0, 5);
+    const crystalText = allCrystals.map(c => `- ${c.name}: ${c.desc}`).join("\n");
+
+    const elementText = Object.entries(percentages).map(([el, val]) => `${el}: ${val}%`).join("\n");
+
+    const langPrefix = language === "zh" ? "中文回复：" : "English only.";
+
+    const spiritName = dominantElement + " Spirit";
 
     const prompt = `
-You are a gentle spiritual guide who helps interpret BaZi charts.
-Language: ${language}
+${langPrefix}
 
-Four Pillars:
-Year: ${yearPillar} (${withPinyin(yearPillar)})
-Month: ${monthPillar} (${withPinyin(monthPillar)})
-Day: ${dayPillar} (${withPinyin(dayPillar)})
-Hour: ${hourPillar} (${withPinyin(hourPillar)})
+Your Four Pillars are:
+Year Pillar: ${yearPillar} (${withPinyin(yearPillar)})
+Month Pillar: ${monthPillar} (${withPinyin(monthPillar)})
+Day Pillar: ${dayPillar} (${withPinyin(dayPillar)})
+Hour Pillar: ${hourPillar} (${withPinyin(hourPillar)})
 
 Element Distribution:
-${Object.entries(percentages).map(([el, val]) => `${el}: ${val}%`).join("
-")}
+${elementText}
 
-Dominant: ${dominantElement}
-Weakest: ${weakestElements.join(", ")}
+Your dominant element is ${dominantElement}, represented by the spirit ${spiritName}.
+Your weakest element(s): ${weakestElements.join(", ")} — areas needing support.
 
-Crystals to enhance:
-${crystalRecommendations.map(e => `${e.element}:
-${e.crystals.map(c => `- ${c.name}: ${c.desc}`).join("
-")}`).join("
+Crystals to help you rebalance:
+${crystalText}
 
-")}
-
-Please generate a warm, empowering message in ${language === "zh" ? "Chinese" : "English"}.
-Sign off as: "Your friend, ${dominantElement} Spirit"`;
+Please write a warm, inspiring message that:
+- Gently explains the BaZi findings
+- Encourages the user spiritually
+- Offers practical guidance
+- Ends with “Your friend, ${spiritName}”
+`;
 
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -134,7 +138,10 @@ Sign off as: "Your friend, ${dominantElement} Spirit"`;
         model: "gpt-4",
         temperature: 0.8,
         messages: [
-          { role: "system", content: "You are a gentle, inspiring BaZi master and healing guide." },
+          {
+            role: "system",
+            content: `You are a warm and gentle BaZi interpreter and spiritual guide. Reply in ${language === "zh" ? "Chinese" : "English"} only.`
+          },
           { role: "user", content: prompt }
         ]
       })
