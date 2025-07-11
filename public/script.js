@@ -21,12 +21,29 @@ document.getElementById("matchForm").addEventListener("submit", async function (
     const data = await response.json();
     if (!data.message) throw new Error("No message returned");
 
-    // 格式化并显示AI分析结果
-    resultBox.innerHTML = `
-      <div style="border:2px dashed #d7c9f7; border-radius:16px; padding:20px; background:#f9f7ff; text-align:left;">
-        <pre style="white-space:pre-wrap; word-break:break-word; font-family:inherit;">${data.message}</pre>
-      </div>
-    `;
+const elementImageMap = {
+  Wood: "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/wood.png?v=1749121025",
+  Fire: "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/fire.png?v=1749120966",
+  Earth: "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/earth.png?v=1749121018",
+  Water: "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/water.png?v=1749120912",
+  Metal: "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/metal.png?v=1749122654",
+  Wind: "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/wind.png?v=1749121176",
+  Ice: "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/ice.png?v=1749121020",
+  Thunder: "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/Thunder.png?v=1749121312",
+  Light: "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/light.png?v=1749121855",
+  Darkness: "https://cdn.shopify.com/s/files/1/0649/0233/2586/files/darkness.png?v=1749122291"
+};
+
+const elementKeywords = Object.keys(elementImageMap);
+const matchedElement = elementKeywords.find(el => data.message.includes(el));
+const imageUrl = matchedElement ? elementImageMap[matchedElement] : "";
+
+resultBox.innerHTML = `
+  <div style="border:2px dashed #d7c9f7; border-radius:16px; padding:20px; background:#f9f7ff; text-align:left;">
+    ${imageUrl ? `<div style="text-align:center;"><img src="${imageUrl}" alt="${matchedElement} Spirit" style="width:120px; border-radius:16px; margin-bottom:16px; box-shadow:0 4px 12px rgba(0,0,0,0.1);" /></div>` : ""}
+    <pre style="white-space:pre-wrap; word-break:break-word; font-family:inherit;">${data.message}</pre>
+  </div>
+`;
 
     // 自动识别主要元素（可选）
     const elementKeywords = ["Wood", "Fire", "Earth", "Metal", "Water", "Ice", "Thunder", "Light", "Darkness", "Wind"];
