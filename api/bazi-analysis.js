@@ -197,7 +197,11 @@ ${Object.entries(percentages).map(([el, val]) => `${el}: ${val}%`).join("\n")}
       )
     };
 
-    res.status(200).json({ message: fullMessage, analysis });
+res.status(200).json({ 
+  message: fullMessage,
+  dominantElement, // ✅ 新增这句给前端用
+  analysis
+});
   } catch (err) {
     console.error("BaZi Analysis error:", err);
     res.status(500).json({ message: "⚠️ Failed to generate BaZi analysis." });
