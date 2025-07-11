@@ -83,31 +83,28 @@ module.exports = async function handler(req, res) {
     const lackingElement = sorted[0][0];
     const crystalList = crystals[lackingElement] || [];
 
-    const pillarsWithPinyin = {
-      zh: `年柱：${yearPillar}（${yearPillar.split('').map(p=>p==='辛'?'Xin':p==='巳'?'Si':p==='庚'?'Geng':p==='寅'?'Yin':p==='己'?'Ji':p==='亥'?'Hai':p==='丙'?'Bing':p).join(' ')}）\n月柱：${monthPillar}（...）\n日柱：${dayPillar}（...）\n时柱：${hourPillar}（...）`,
-      en: `Year: ${yearPillar}\nMonth: ${monthPillar}\nDay: ${dayPillar}\nHour: ${hourPillar}`
-    };
+    const prompt = `You are a BaZi master and healing spirit guide. Language: ${language}
 
-    const prompt = `You are a warm and supportive BaZi master and healer. Language: ${language}
-
-Pillars:
-${pillarsWithPinyin[language === 'zh' ? 'zh' : 'en']}
+Four Pillars:
+Year Pillar: ${yearPillar}
+Month Pillar: ${monthPillar}
+Day Pillar: ${dayPillar}
+Hour Pillar: ${hourPillar}
 
 Element Percentages:
 ${Object.entries(percentages).map(([el, val])=>`${el}: ${val}%`).join("\n")}
 
-Dominant: ${dominantElement}, Weakest: ${lackingElement}
+Your dominant element is ${dominantElement}, your associated Spirit is ${dominantElement} Spirit.
+Your weakest element is ${lackingElement}, which indicates an area to support.
 
-Crystals:
+Crystals to enhance ${lackingElement}:
 ${crystalList.map(c=>`- ${c.name}: ${c.desc}`).join("\n")}
 
-Now generate a heartfelt message including:
-- Element reading and interpretation
-- Lifestyle balance suggestions
-- Healing guidance
-- Crystal recommendations
-- Positive closing words
-Make it sound like a close friend who really understands them.`;
+Please generate a warm, encouraging letter-style message, including:
+- Insights on Four Pillars and elements
+- Lifestyle & emotional balance advice
+- Crystal guidance
+- Final note signed by the spirit guide (e.g., "Your friend, Fire Spirit")`;
 
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -117,9 +114,9 @@ Make it sound like a close friend who really understands them.`;
       },
       body: JSON.stringify({
         model: "gpt-4",
-        temperature: 0.7,
+        temperature: 0.75,
         messages: [
-          { role: "system", content: "You are a BaZi and healing spirit coach." },
+          { role: "system", content: "You are a friendly and insightful BaZi and healing guide." },
           { role: "user", content: prompt }
         ]
       })
