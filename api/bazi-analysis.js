@@ -34,9 +34,8 @@ module.exports = async function handler(req, res) {
       "午": "wǔ", "未": "wèi", "申": "shēn", "酉": "yǒu", "戌": "xū", "亥": "hài"
     };
 
-    function withPinyin(pillar) {
-      return pillar.split("").map(c => `${c} (${pinyinMap[c] || ""})`).join(" ");
-    }
+    const withPinyin = (pillar) =>
+      pillar.split("").map(c => `${c} (${pinyinMap[c] || ""})`).join(" ");
 
     const pillars = [yearPillar, monthPillar, dayPillar, hourPillar];
     const counts = { Metal: 0, Wood: 0, Water: 0, Fire: 0, Earth: 0 };
@@ -49,60 +48,53 @@ module.exports = async function handler(req, res) {
     const total = Object.values(counts).reduce((a, b) => a + b, 0);
     const percentages = {};
     Object.keys(counts).forEach(k => {
-      percentages[k] = total ? Math.round((counts[k] / total) * 100) : 0;
+      percentages[k] = total ? Math.round(counts[k] / total * 100) : 0;
     });
+
+    const sortedElements = Object.entries(percentages).sort((a, b) => a[1] - b[1]);
+    const weakest = sortedElements.slice(0, 2).map(([el]) => el);
+    const dominantElement = Object.entries(percentages).sort((a, b) => b[1] - a[1])[0][0];
 
     const crystals = {
       "Wood": [
-        { name: "Green Aventurine", desc: "Encourages growth and vitality." },
-        { name: "Moss Agate", desc: "Promotes grounding and stability." },
-        { name: "Malachite", desc: "Supports transformation and balance." },
-        { name: "Amazonite", desc: "Improves communication and calmness." },
-        { name: "Jade", desc: "Brings harmony and prosperity." }
+        { name: "Green Aventurine", desc: "Encourages growth, abundance, and vitality." },
+        { name: "Moss Agate", desc: "Connects you with nature and stability." },
+        { name: "Malachite", desc: "Promotes transformation and emotional balance." },
+        { name: "Amazonite", desc: "Soothes the mind and enhances clear communication." },
+        { name: "Jade", desc: "Brings harmony, prosperity, and good fortune." }
       ],
       "Fire": [
-        { name: "Carnelian", desc: "Boosts motivation and courage." },
-        { name: "Red Jasper", desc: "Enhances endurance and strength." },
-        { name: "Garnet", desc: "Revives passion and energy." },
-        { name: "Sunstone", desc: "Inspires joy and leadership." },
-        { name: "Ruby", desc: "Energizes love and confidence." }
+        { name: "Carnelian", desc: "Boosts courage, motivation, and vitality." },
+        { name: "Red Jasper", desc: "Strengthens stamina and grounding." },
+        { name: "Garnet", desc: "Revitalizes passion and energy." },
+        { name: "Sunstone", desc: "Brings optimism and enthusiasm." },
+        { name: "Ruby", desc: "Ignites love and personal power." }
       ],
       "Water": [
-        { name: "Aquamarine", desc: "Calms the mind and emotions." },
-        { name: "Lapis Lazuli", desc: "Fosters wisdom and truth." },
-        { name: "Sodalite", desc: "Balances mental clarity and peace." },
-        { name: "Blue Lace Agate", desc: "Soothes stress and enhances communication." },
-        { name: "Kyanite", desc: "Aligns energy and intuition." }
+        { name: "Aquamarine", desc: "Soothes emotions and enhances intuition." },
+        { name: "Lapis Lazuli", desc: "Encourages wisdom and self-expression." },
+        { name: "Sodalite", desc: "Balances emotional energy and insight." },
+        { name: "Blue Lace Agate", desc: "Promotes calm communication." },
+        { name: "Kyanite", desc: "Aligns chakras and clears blockages." }
       ],
       "Earth": [
-        { name: "Tiger's Eye", desc: "Builds confidence and grounding." },
-        { name: "Citrine", desc: "Attracts abundance and stability." },
-        { name: "Yellow Jasper", desc: "Encourages clarity and protection." },
-        { name: "Smoky Quartz", desc: "Dispels negativity." },
-        { name: "Picture Jasper", desc: "Connects to Earth’s wisdom." }
+        { name: "Tiger's Eye", desc: "Brings confidence and grounding." },
+        { name: "Citrine", desc: "Manifests abundance and stability." },
+        { name: "Yellow Jasper", desc: "Provides clarity and protection." },
+        { name: "Smoky Quartz", desc: "Dispels negativity and anchors energy." },
+        { name: "Picture Jasper", desc: "Connects to Earth's harmony." }
       ],
       "Metal": [
-        { name: "Hematite", desc: "Provides protection and focus." },
-        { name: "Pyrite", desc: "Encourages confidence and prosperity." },
-        { name: "Silver Obsidian", desc: "Enhances self-awareness and shielding." },
-        { name: "Clear Quartz", desc: "Amplifies intentions and clarity." },
-        { name: "Selenite", desc: "Cleanses and elevates energy." }
+        { name: "Hematite", desc: "Grounds and clarifies intention." },
+        { name: "Pyrite", desc: "Attracts prosperity and shields negativity." },
+        { name: "Silver Obsidian", desc: "Promotes self-awareness and protection." },
+        { name: "Clear Quartz", desc: "Amplifies clarity and intention." },
+        { name: "Selenite", desc: "Purifies and calms the mind." }
       ]
     };
 
-    const sorted = Object.entries(percentages).sort((a, b) => a[1] - b[1]);
-    const dominantElement = Object.entries(percentages).sort((a, b) => b[1] - a[1])[0][0];
-    const lackingElements = sorted.slice(0, 2).map(([el]) => el);
-
-    const crystalText = lackingElements.map(el => {
-      const list = crystals[el]
-        .map(c => `- ${c.name}: ${c.desc}`)
-        .join("\n");
-      return `Crystals to support ${el}:\n${list}`;
-    }).join("\n\n");
-
     const prompt = `
-Your BaZi chart has been analyzed based on your birth information.
+You are a BaZi master and spiritual guide. Please respond only in English with the following structure:
 
 Four Pillars:
 Year Pillar: ${withPinyin(yearPillar)}
@@ -110,17 +102,22 @@ Month Pillar: ${withPinyin(monthPillar)}
 Day Pillar: ${withPinyin(dayPillar)}
 Hour Pillar: ${withPinyin(hourPillar)}
 
-Five Element Distribution:
+Five Element Percentages:
 ${Object.entries(percentages).map(([el, val]) => `${el}: ${val}%`).join("\n")}
 
-Your dominant element is ${dominantElement}.
-Your weakest elements are: ${lackingElements.join(" and ")}.
+Dominant Element: ${dominantElement}
+Weakest Elements: ${weakest.join(", ")}
 
-${crystalText}
+Recommended Crystals:
+${weakest.map(el =>
+  `For ${el}:
+${crystals[el].map(c => `- ${c.name}: ${c.desc}`).join("\n")}`
+).join("\n\n")}
 
-Please generate a warm, inspiring message in English only. 
-End the letter with: "Your friend, ${dominantElement} Spirit".
-`;
+Please write a warm, empowering letter using the above data. Sign off with:
+"Your friend,
+${dominantElement} Spirit"
+    `.trim();
 
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -132,24 +129,17 @@ End the letter with: "Your friend, ${dominantElement} Spirit".
         model: "gpt-4",
         temperature: 0.8,
         messages: [
-          {
-            role: "system",
-            content: "You are a kind and encouraging spiritual guide who interprets BaZi for energy healing."
-          },
-          {
-            role: "user",
-            content: prompt
-          }
+          { role: "system", content: "You are a kind, wise BaZi interpreter and spiritual coach." },
+          { role: "user", content: prompt }
         ]
       })
     });
 
     const json = await openaiRes.json();
-    const message = json.choices?.[0]?.message?.content || "✨ BaZi reading generated.";
+    const message = json.choices?.[0]?.message?.content || "✨ Analysis complete.";
     res.status(200).json({ message });
-
   } catch (err) {
     console.error("BaZi Analysis error:", err);
-    res.status(500).json({ message: "⚠️ Failed to generate BaZi reading." });
+    res.status(500).json({ message: "⚠️ Failed to generate BaZi analysis." });
   }
 };
