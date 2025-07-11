@@ -1,4 +1,3 @@
-// api/bazi-analysis.js
 const { Solar } = require("lunar-javascript");
 const fetch = require("node-fetch");
 
@@ -45,11 +44,10 @@ module.exports = async function handler(req, res) {
       counts[elementMap[stem]]++;
       counts[elementMap[branch]]++;
     });
-
     const total = Object.values(counts).reduce((a, b) => a + b, 0);
     const percentages = {};
     Object.keys(counts).forEach(k => {
-      percentages[k] = total ? Math.round((counts[k] / total) * 100) : 0;
+      percentages[k] = total ? Math.round(counts[k] / total * 100) : 0;
     });
 
     const crystals = {
@@ -92,12 +90,21 @@ module.exports = async function handler(req, res) {
 
     const sorted = Object.entries(percentages).sort((a, b) => a[1] - b[1]);
     const dominantElement = sorted[4][0];
-    const weakestElements = sorted.slice(0, 2).map(([k]) => k);
+    const weakestElements = [sorted[0][0], sorted[1][0]];
+    const crystalAdvice = weakestElements.map(el => ({
+      element: el,
+      crystals: crystals[el].slice(0, 5)
+    }));
 
     const prompt = `
-You are a BaZi master and healing spirit guide. Language: ${language}.
-Please provide a ${language === "zh" ? "Chinese" : language === "en" ? "English" : "bilingual (Chinese + English)"} response.
-Each paragraph should be followed by its translation if bilingual.
+You are a BaZi master and bilingual healing spirit guide. Respond in friendly, warm tone.
+Use this format:
+1. Start with English paragraph, followed by Chinese translation (each in a new line).
+2. Clearly list Four Pillars and their Pinyin.
+3. Show five-element percentages.
+4. Identify dominant and weakest two elements.
+5. For each weak element, recommend 5 crystals.
+6. End with a warm closing: "Your friend, [Spirit] Spirit".
 
 Four Pillars:
 Year Pillar: ${yearPillar} (${withPinyin(yearPillar)})
@@ -105,34 +112,23 @@ Month Pillar: ${monthPillar} (${withPinyin(monthPillar)})
 Day Pillar: ${dayPillar} (${withPinyin(dayPillar)})
 Hour Pillar: ${hourPillar} (${withPinyin(hourPillar)})
 
-Element Percentages:
+Five Element Percentages:
 ${Object.entries(percentages).map(([el, val]) => `${el}: ${val}%`).join("\n")}
 
-Your dominant element is ${dominantElement}.
-
-You should support your two weakest elements:
-${weakestElements.map(el => `- ${el}`).join("\n")}
+Dominant Element: ${dominantElement}
+Weakest Elements: ${weakestElements.join(", ")}
 
 Crystal Recommendations:
-${weakestElements
-  .map(el => {
-    const list = crystals[el];
-    return `${el} Crystals:\n${list.map(c => `- ${c.name}: ${c.desc}`).join("\n")}`;
-  })
-  .join("\n\n")}
-
-Please write a warm, letter-style message that:
-- Starts with a friendly greeting
-- Explains the Four Pillars and element balance
-- Encourages lifestyle or mindset practices
-- Recommends the above crystals
-- Ends with "Your friend, [Spirit]"
+${crystalAdvice.map(entry => {
+  return `Element: ${entry.element}\n` +
+         entry.crystals.map(c => `- ${c.name}: ${c.desc}`).join("\n");
+}).join("\n\n")}
 `;
 
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
@@ -141,7 +137,7 @@ Please write a warm, letter-style message that:
         messages: [
           {
             role: "system",
-            content: "You are a gentle, empowering spiritual guide who helps people interpret BaZi and balance their energy."
+            content: "You are a gentle, bilingual spiritual guide who helps people understand BaZi and balance their energy."
           },
           { role: "user", content: prompt }
         ]
