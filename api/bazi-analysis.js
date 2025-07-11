@@ -52,8 +52,11 @@ module.exports = async function handler(req, res) {
     });
 
     const sortedElements = Object.entries(percentages).sort((a, b) => a[1] - b[1]);
-    const weakest = sortedElements.slice(0, 2).map(([el]) => el);
     const dominantElement = Object.entries(percentages).sort((a, b) => b[1] - a[1])[0][0];
+
+    const lowElements = Object.entries(percentages)
+      .filter(([_, val]) => val < 25)
+      .map(([el]) => el);
 
     const crystals = {
       "Wood": [
@@ -106,10 +109,10 @@ Five Element Percentages:
 ${Object.entries(percentages).map(([el, val]) => `${el}: ${val}%`).join("\n")}
 
 Dominant Element: ${dominantElement}
-Weakest Elements: ${weakest.join(", ")}
+Weakest Elements: ${lowElements.join(", ")}
 
 Recommended Crystals:
-${weakest.map(el =>
+${lowElements.map(el =>
   `For ${el}:
 ${crystals[el].map(c => `- ${c.name}: ${c.desc}`).join("\n")}`
 ).join("\n\n")}
@@ -137,7 +140,23 @@ ${dominantElement} Spirit"
 
     const json = await openaiRes.json();
     const message = json.choices?.[0]?.message?.content || "✨ Analysis complete.";
-    res.status(200).json({ message });
+
+    const analysis = {
+      fourPillars: {
+        year: withPinyin(yearPillar),
+        month: withPinyin(monthPillar),
+        day: withPinyin(dayPillar),
+        hour: withPinyin(hourPillar)
+      },
+      elementPercentages: percentages,
+      dominantElement,
+      weakElements: lowElements,
+      recommendedCrystals: Object.fromEntries(
+        lowElements.map(el => [el, crystals[el]])
+      )
+    };
+
+    res.status(200).json({ message, analysis });
   } catch (err) {
     console.error("BaZi Analysis error:", err);
     res.status(500).json({ message: "⚠️ Failed to generate BaZi analysis." });
