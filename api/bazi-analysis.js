@@ -19,20 +19,27 @@ module.exports = async function handler(req, res) {
     const yearPillar = lunar.getYearInGanZhi();
     const monthPillar = lunar.getMonthInGanZhi();
     const dayPillar = lunar.getDayInGanZhi();
-    const hourPillar = lunar.getTimeZhi(); // 注意这里用 getTimeZhi() 返回时支
+    const hourPillar = lunar.getTimeInGanZhi(); // 正确方法
 
-    // === 五行简单估算 (示例) ===
+    // === 五行估算 ===
     const elementMap = {
-      "甲":"Wood","乙":"Wood","丙":"Fire","丁":"Fire","戊":"Earth","己":"Earth","庚":"Metal","辛":"Metal","壬":"Water","癸":"Water",
-      "子":"Water","丑":"Earth","寅":"Wood","卯":"Wood","辰":"Earth","巳":"Fire","午":"Fire","未":"Earth","申":"Metal","酉":"Metal","戌":"Earth","亥":"Water"
+      "甲": "Wood", "乙": "Wood", "丙": "Fire", "丁": "Fire",
+      "戊": "Earth", "己": "Earth", "庚": "Metal", "辛": "Metal",
+      "壬": "Water", "癸": "Water",
+      "子": "Water", "丑": "Earth", "寅": "Wood", "卯": "Wood",
+      "辰": "Earth", "巳": "Fire", "午": "Fire", "未": "Earth",
+      "申": "Metal", "酉": "Metal", "戌": "Earth", "亥": "Water"
     };
 
     const pillars = [yearPillar, monthPillar, dayPillar, hourPillar];
     const counts = { Metal:0, Wood:0, Water:0, Fire:0, Earth:0 };
+
     pillars.forEach(pillar => {
-      const [stem, branch] = pillar.split("");
-      counts[elementMap[stem]]++;
-      counts[elementMap[branch]]++;
+      if (pillar && pillar.length === 2) {
+        const [stem, branch] = pillar;
+        counts[elementMap[stem]]++;
+        counts[elementMap[branch]]++;
+      }
     });
 
     const total = Object.values(counts).reduce((a,b)=>a+b,0);
@@ -41,62 +48,84 @@ module.exports = async function handler(req, res) {
       percentages[k] = total ? Math.round(counts[k]/total*100) : 0;
     });
 
+    // === 按最缺排序 ===
+    const entries = Object.entries(percentages);
+    const sorted = entries.sort((a, b) => a[1] - b[1]);
+    const lackingElements = sorted.filter(e => e[1] < 25).map(e => e[0]);
+
     // === 晶石定义 ===
     const crystals = {
-      "Wood": [
-        { "name":"Green Aventurine","description":"Encourages growth, abundance, and vitality." },
-        { "name":"Moss Agate","description":"Connects you with nature and stability." },
-        { "name":"Malachite","description":"Promotes transformation and emotional balance." },
-        { "name":"Amazonite","description":"Soothes the mind and enhances clear communication." },
-        { "name":"Jade","description":"Brings harmony, prosperity, and good fortune." }
-      ],
-      "Fire": [
-        { "name":"Carnelian","description":"Boosts courage, motivation, and vitality." },
-        { "name":"Red Jasper","description":"Strengthens stamina and grounding." },
-        { "name":"Garnet","description":"Revitalizes passion and energy." },
-        { "name":"Sunstone","description":"Brings optimism and enthusiasm." },
-        { "name":"Ruby","description":"Ignites love and personal power." }
-      ],
-      "Water": [
-        { "name":"Aquamarine","description":"Soothes emotions and enhances intuition." },
-        { "name":"Lapis Lazuli","description":"Encourages wisdom and self-expression." },
-        { "name":"Sodalite","description":"Balances emotional energy and insight." },
-        { "name":"Blue Lace Agate","description":"Promotes calm communication." },
-        { "name":"Kyanite","description":"Aligns chakras and clears blockages." }
-      ],
-      "Earth": [
-        { "name":"Tiger's Eye","description":"Brings confidence and grounding." },
-        { "name":"Citrine","description":"Manifests abundance and stability." },
-        { "name":"Yellow Jasper","description":"Provides clarity and protection." },
-        { "name":"Smoky Quartz","description":"Dispels negativity and anchors energy." },
-        { "name":"Picture Jasper","description":"Connects to Earth's harmony." }
-      ],
-      "Metal": [
-        { "name":"Hematite","description":"Grounds and clarifies intention." },
-        { "name":"Pyrite","description":"Attracts prosperity and shields negativity." },
-        { "name":"Silver Obsidian","description":"Promotes self-awareness and protection." },
-        { "name":"Clear Quartz","description":"Amplifies clarity and intention." },
-        { "name":"Selenite","description":"Purifies and calms the mind." }
-      ]
+      "Wood": {
+        crystals: [
+          { name: "Green Aventurine", description: "Encourages growth, abundance, and vitality." },
+          { name: "Moss Agate", description: "Connects you with nature and stability." },
+          { name: "Malachite", description: "Promotes transformation and emotional balance." },
+          { name: "Amazonite", description: "Soothes the mind and enhances clear communication." },
+          { name: "Jade", description: "Brings harmony, prosperity, and good fortune." }
+        ]
+      },
+      "Fire": {
+        crystals: [
+          { name: "Carnelian", description: "Boosts courage, motivation, and vitality." },
+          { name: "Red Jasper", description: "Strengthens stamina and grounding." },
+          { name: "Garnet", description: "Revitalizes passion and energy." },
+          { name: "Sunstone", description: "Brings optimism and enthusiasm." },
+          { name: "Ruby", description: "Ignites love and personal power." }
+        ]
+      },
+      "Water": {
+        crystals: [
+          { name: "Aquamarine", description: "Soothes emotions and enhances intuition." },
+          { name: "Lapis Lazuli", description: "Encourages wisdom and self-expression." },
+          { name: "Sodalite", description: "Balances emotional energy and insight." },
+          { name: "Blue Lace Agate", description: "Promotes calm communication." },
+          { name: "Kyanite", description: "Aligns chakras and clears blockages." }
+        ]
+      },
+      "Earth": {
+        crystals: [
+          { name: "Tiger's Eye", description: "Brings confidence and grounding." },
+          { name: "Citrine", description: "Manifests abundance and stability." },
+          { name: "Yellow Jasper", description: "Provides clarity and protection." },
+          { name: "Smoky Quartz", description: "Dispels negativity and anchors energy." },
+          { name: "Picture Jasper", description: "Connects to Earth's harmony." }
+        ]
+      },
+      "Metal": {
+        crystals: [
+          { name: "Hematite", description: "Grounds and clarifies intention." },
+          { name: "Pyrite", description: "Attracts prosperity and shields negativity." },
+          { name: "Silver Obsidian", description: "Promotes self-awareness and protection." },
+          { name: "Clear Quartz", description: "Amplifies clarity and intention." },
+          { name: "Selenite", description: "Purifies and calms the mind." }
+        ]
+      }
     };
 
-    // === 取最缺少的元素
-    const lackingElement = Object.entries(percentages).sort((a,b)=>a[1]-b[1])[0][0];
-    const recommendedCrystals = crystals[lackingElement] || [];
-    const crystalText = recommendedCrystals.map(c => `- ${c.name}: ${c.description}`).join("\n");
+    // === 拼接所有缺少元素水晶推荐 ===
+    let crystalText = "";
+    lackingElements.forEach(el => {
+      const list = crystals[el]?.crystals || [];
+      crystalText += `\n【${el}元素水晶】\n`;
+      list.forEach(c => {
+        crystalText += `- ${c.name}: ${c.description}\n`;
+      });
+    });
 
-    // === 生成报告
+    // === 拼接语言提示 ===
+    const languagePrompt = language === "Chinese"
+      ? "请用简体中文回答。"
+      : "Please reply in English.";
+
+    // === 拼接提示词 ===
     const prompt = `
 You are a professional Feng Shui Master and Healing Therapist.
 
 Use the user's Four Pillars and Five Element Percentages to analyze personality and provide suggestions.
 
 IMPORTANT:
-Use the provided percentages EXACTLY.
-Do NOT invent new crystal recommendations—only present the provided list.
 Include all sections: Feng Shui Insights, Five Element Suggestions, Healing Master Suggestions, Crystal Recommendations, and Final Encouragement.
-
-If the user selected Chinese, reply in Chinese. If English, reply in English.
+Reply according to user's language selection.
 
 FORMAT:
 
@@ -120,9 +149,9 @@ FORMAT:
 
 ⸻
 
-💎 Elemental Spirit’s Crystal Recommendation
+💎 Elemental Spirit’s Crystal Recommendations
 
-[Include the EXACT crystal recommendations below.]
+${crystalText}
 
 ⸻
 
@@ -137,12 +166,12 @@ Gender: ${gender}
 Language: ${language}
 
 **Five Element Percentages:**
-${Object.entries(percentages).map(e => `${e[0]}: ${e[1]}%`).join("\n")}
+${entries.map(e => `${e[0]}: ${e[1]}%`).join("\n")}
 
-**Crystal Recommendations for ${lackingElement}:**
-${crystalText}
-    `.trim();
+${languagePrompt}
+`;
 
+    // === 调用OpenAI生成文字 ===
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -152,7 +181,7 @@ ${crystalText}
       body: JSON.stringify({
         model: "gpt-4",
         messages: [
-          { role: "system", content: "You are a warm, helpful assistant who writes clear, encouraging BaZi reports." },
+          { role: "system", content: "You are a warm, professional BaZi and energy healing assistant." },
           { role: "user", content: prompt }
         ],
         temperature: 0.7
@@ -163,7 +192,6 @@ ${crystalText}
     const message = json.choices?.[0]?.message?.content || "✨ Your analysis is ready.";
 
     return res.status(200).json({ message });
-
   } catch (error) {
     console.error("BaZi Analysis error:", error);
     return res.status(500).json({ message: "⚠️ Failed to generate BaZi analysis." });
