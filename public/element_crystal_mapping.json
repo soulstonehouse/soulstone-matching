@@ -216,37 +216,39 @@
     ]
   },
   "Metal": {
-    "crystals": [
-      {
-        "name": "Hematite",
-        "description": "Grounds and clarifies intention.",
-        "link": "https://yourstore.com/products/hematite"
-      },
-      {
-        "name": "Pyrite",
-        "description": "Attracts prosperity and shields negativity.",
-        "link": "https://yourstore.com/products/pyrite"
-      },
-      {
-        "name": "Silver Obsidian",
-        "description": "Promotes self-awareness and protection.",
-        "link": "https://yourstore.com/products/silver-obsidian"
-      },
-      {
-        "name": "Clear Quartz",
-        "description": "Amplifies clarity and intention.",
-        "link": "https://yourstore.com/products/clear-quartz"
-      },
-      {
-        "name": "Selenite",
-        "description": "Purifies and calms the mind.",
-        "link": "https://yourstore.com/products/selenite"
-      },
-      {
-        "name": "Gold Sheen Obsidian",
-        "description": "Strengthens willpower and confidence.",
-        "link": "https://yourstore.com/products/gold-sheen-obsidian"
-      },
+  "crystals": [
+    {
+      "name": "Hematite",
+      "description": "Grounds and clarifies intention.",
+      "link": "https://yourstore.com/products/hematite"
+    },
+    {
+      "name": "Pyrite",
+      "description": "Attracts prosperity and shields negativity.",
+      "link": "https://yourstore.com/products/pyrite"
+    },
+    {
+      "name": "Silver Obsidian",
+      "description": "Promotes self-awareness and protection.",
+      "link": "https://yourstore.com/products/silver-obsidian"
+    },
+    {
+      "name": "Clear Quartz",
+      "description": "Amplifies clarity and intention.",
+      "link": "https://yourstore.com/products/clear-quartz"
+    },
+    {
+      "name": "Selenite",
+      "description": "Purifies and calms the mind.",
+      "link": "https://yourstore.com/products/selenite"
+    },
+    {
+      "name": "Gold Sheen Obsidian",
+      "description": "Strengthens willpower and confidence.",
+      "link": "https://yourstore.com/products/gold-sheen-obsidian"
+    }
+  ]
+},
   "Wind": {
     "crystals": [
       {
