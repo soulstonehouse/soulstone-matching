@@ -1,3 +1,5 @@
+import crystals from "../../public/element_crystal_mapping.json";
+
 export default async function handler(req, res) {
   const {
     yearPillar,
@@ -13,23 +15,30 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: "❗ Missing required fields." });
   }
 
+  // 1️⃣ 找到最缺元素
+  const entries = Object.entries(percentages);
+  const sorted = entries.sort((a, b) => a[1] - b[1]);
+  const lackingElement = sorted[0][0];
+
+  // 2️⃣ 拼接水晶推荐
+  const recommendedCrystals = crystals[lackingElement]?.crystals || [];
+  const crystalText = recommendedCrystals
+    .slice(0, 5)
+    .map(c => `- ${c.name}: ${c.description}\n  [View Product](${c.link})`)
+    .join("\\n");
+
+  // 3️⃣ 拼接Prompt
   const prompt = `
-You are a professional Feng Shui Master, Healing Crystal Therapist, and compassionate Elemental Spirit Guide.
+You are a professional Feng Shui Master and Healing Therapist.
 
-Analyze the user's BaZi chart in detail using the provided Four Pillars and Five Element Percentages. IMPORTANT: You MUST use the provided percentages EXACTLY as given, without modification or reinterpretation.
-
-Your analysis should include:
-- Interpretation of the Four Pillars
-- Explanation of the Five Element Percentages
-- Personality insights derived from these distributions
-- Crystal recommendations for the most lacking element
+Use the user's Four Pillars and Five Element Percentages to analyze personality and provide lifestyle suggestions.
 
 IMPORTANT:
-Output MUST use the EXACT format below, replacing content but KEEPING structure and emojis.
-Add clear \\n line breaks between paragraphs.
-Use warm, uplifting, professional language.
-If the user selected Chinese, provide Chinese text. If English, provide English text. 
-If any pillar is 'Unknown', simply state 'Unknown' without adding pinyin or element.
+You MUST use the provided percentages EXACTLY as given, without modification or reinterpretation.
+You do NOT need to invent any crystal recommendations (they are already provided).
+Just clearly present the provided recommendations in the output.
+
+If the user selected Chinese, reply in Chinese. If English, reply in English.
 
 FORMAT:
 
@@ -37,19 +46,19 @@ FORMAT:
 
 🪶 Feng Shui Master’s BaZi Insights
 
-[2-3 paragraphs describing the Four Pillars and provided Five Element Percentages.]
+[2-3 paragraphs describing the Four Pillars and Five Element Percentages.]
 
 ⸻
 
-🌿 Healing Master’s Suggestions
+🌿 Five Elements Balancing Suggestions
 
-[1-2 paragraphs suggesting practical adjustments (colors, directions, activities) to balance elements.]
+[1-2 paragraphs with lifestyle suggestions for balancing elements.]
 
 ⸻
 
 💎 Elemental Spirit’s Crystal Recommendation
 
-[Recommend 5 crystals ONLY for the most lacking element, each with a short description.]
+[Include the EXACT crystal recommendations provided below.]
 
 ⸻
 
@@ -66,11 +75,10 @@ Gender: ${gender}
 Language: ${language}
 
 **Five Element Percentages Provided:**
-Metal: ${percentages.Metal}%
-Wood: ${percentages.Wood}%
-Water: ${percentages.Water}%
-Fire: ${percentages.Fire}%
-Earth: ${percentages.Earth}%
+${entries.map(e => `${e[0]}: ${e[1]}%`).join("\\n")}
+
+**Crystal Recommendations for ${lackingElement}:**
+${crystalText}
 `.trim();
 
   try {
