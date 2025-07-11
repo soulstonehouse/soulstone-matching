@@ -1,3 +1,5 @@
+
+// api/bazi-analysis.js
 const { Solar } = require("lunar-javascript");
 const fetch = require("node-fetch");
 
@@ -50,7 +52,7 @@ module.exports = async function handler(req, res) {
       percentages[k] = total ? Math.round(counts[k] / total * 100) : 0;
     });
 
- const crystals = {
+    const crystals = {
       "Wood": [
         { name: "Green Aventurine", desc: "Encourages growth, abundance, and vitality." },
         { name: "Moss Agate", desc: "Connects you with nature and stability." },
@@ -90,57 +92,46 @@ module.exports = async function handler(req, res) {
 
     const sorted = Object.entries(percentages).sort((a, b) => a[1] - b[1]);
     const dominantElement = Object.entries(percentages).sort((a, b) => b[1] - a[1])[0][0];
-    const lackingElement = sorted[0][0];
-    const crystalList = crystals[lackingElement] || [];
+    const minVal = sorted[0][1];
+    const lackingElements = sorted.filter(([_, v]) => v === minVal).map(([k]) => k);
+    let crystalList = [];
+    lackingElements.forEach(el => {
+      crystalList = crystalList.concat(crystals[el] || []);
+    });
 
-    let languageHint = "";
-    if (language === "zh") {
-      languageHint = "请用纯中文回复，不要中英混排，也不需要拼音。结尾署名请用“你的朋友，" + lackingElement + "精灵”。";
-    } else if (language === "en") {
-      languageHint = `Please respond in English only. Do not include Chinese characters or pinyin. End the message with: "Your friend, the ${lackingElement} Spirit".`;
-    }
-
-    const prompt = `You are a BaZi master and healing spirit guide.
-Language: ${language}.
-${languageHint}
+    const prompt = \`
+You are a gentle, empowering spiritual guide who helps people interpret BaZi and balance their energy.
+Respond in \${language === "zh" ? "Chinese" : "English"} only.
 
 Four Pillars:
-Year Pillar: ${yearPillar} (${withPinyin(yearPillar)})
-Month Pillar: ${monthPillar} (${withPinyin(monthPillar)})
-Day Pillar: ${dayPillar} (${withPinyin(dayPillar)})
-Hour Pillar: ${hourPillar} (${withPinyin(hourPillar)})
+Year Pillar: \${yearPillar} (\${withPinyin(yearPillar)})
+Month Pillar: \${monthPillar} (\${withPinyin(monthPillar)})
+Day Pillar: \${dayPillar} (\${withPinyin(dayPillar)})
+Hour Pillar: \${hourPillar} (\${withPinyin(hourPillar)})
 
 Element Percentages:
-${Object.entries(percentages).map(([el, val]) => `${el}: ${val}%`).join("\n")}
+\${Object.entries(percentages).map(([el, val]) => \`\${el}: \${val}%\`).join("\n")}
 
-Your dominant element is ${dominantElement}, your associated Spirit is ${dominantElement} Spirit.
-Your weakest element is ${lackingElement}, which indicates an area to support.
+Your dominant element is \${dominantElement}, your associated Spirit is the \${dominantElement} Spirit.
+Your weakest elements are \${lackingElements.join(", ")}.
 
-Crystals to enhance ${lackingElement}:
-${crystalList.map(c => `- ${c.name}: ${c.desc}`).join("\n")}
+Crystals to enhance your weakest elements:
+\${crystalList.map(c => \`- \${c.name}: \${c.desc}\`).join("\n")}
 
-Please generate a warm, empowering letter-style message that:
-- Starts with a friendly greeting
-- Gives meaningful insights on Four Pillars and element makeup
-- Clearly lists the Four Pillars and element percentages
-- Offers positive, emotionally supportive lifestyle advice
-- Lists 5 crystals to help nourish the weakest element
-- Ends with a warm, loving encouragement as instructed`;
+Please write a warm letter offering insights, advice, and encouragement, and sign off as:
+"Your devoted guide, the \${dominantElement} Spirit"
+\`;
 
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+        "Authorization": \`Bearer \${process.env.OPENAI_API_KEY}\`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
         model: "gpt-4",
         temperature: 0.8,
         messages: [
-          {
-            role: "system",
-            content: "You are a gentle, empowering spiritual guide who helps people interpret BaZi and balance their energy."
-          },
           { role: "user", content: prompt }
         ]
       })
