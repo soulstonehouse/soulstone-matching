@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const analyzeBtn = document.getElementById("analyzeBtn");
   analyzeBtn.addEventListener("click", async () => {
-    const birthday = document.getElementById("birthday").value; // yyyy-mm-dd
-    const birthtime = document.getElementById("birthtime").value; // hh:mm
+    const birthday = document.getElementById("birthday").value;
+    const birthtime = document.getElementById("birthtime").value;
     const language = document.getElementById("language").value;
     const gender = document.getElementById("gender").value;
 
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // Day Pillar (using 60 JiaZi table)
+      // Day Pillar (60 JiaZi)
       const ganZhi60 = [
         "甲子","乙丑","丙寅","丁卯","戊辰","己巳","庚午","辛未","壬申","癸酉",
         "甲戌","乙亥","丙子","丁丑","戊寅","己卯","庚辰","辛巳","壬午","癸未",
@@ -52,25 +52,24 @@ document.addEventListener("DOMContentLoaded", () => {
       const dayIndex = Math.floor(new Date(birthday).getTime() / (24 * 60 * 60 * 1000)) % 60;
       const dayPillar = ganZhi60[dayIndex];
 
-      // Mapping each stem/branch to Five Elements
+      // Mapping each stem/branch to elements
       const elementMap = {
         "甲":"Wood","乙":"Wood","丙":"Fire","丁":"Fire","戊":"Earth","己":"Earth","庚":"Metal","辛":"Metal","壬":"Water","癸":"Water",
         "子":"Water","丑":"Earth","寅":"Wood","卯":"Wood","辰":"Earth","巳":"Fire","午":"Fire","未":"Earth","申":"Metal","酉":"Metal","戌":"Earth","亥":"Water"
       };
 
-      // Extract stems and branches
+      // Tally elements
       const pillars = [yearPillar, monthPillar, dayPillar, hourPillar];
       const counts = { Metal:0, Wood:0, Water:0, Fire:0, Earth:0 };
 
       pillars.forEach(pillar => {
-        if(pillar && pillar !== "Unknown"){
-          const [stemChar, branchChar] = pillar.split("");
-          counts[elementMap[stemChar]]++;
-          counts[elementMap[branchChar]]++;
+        if (pillar && pillar !== "Unknown") {
+          const [stem, branch] = pillar.split("");
+          counts[elementMap[stem]]++;
+          counts[elementMap[branch]]++;
         }
       });
 
-      // Calculate percentages
       const total = Object.values(counts).reduce((a,b)=>a+b,0);
       const percentages = {};
       Object.keys(counts).forEach(key => {
@@ -115,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <img src="${spiritImageMap[mainElement]}" alt="${mainElement} Spirit" style="max-width:120px; display:block; margin:0 auto 20px;">
           <pre style="white-space:pre-wrap; word-break:break-word; font-family:inherit;">${message}</pre>
           <div style="text-align:center; margin-top:24px;">
-            <a href="https://yourstore.com/products" 
+            <a href="https://yourstore.com/products"
                target="_blank"
                style="
                  display:inline-block;
@@ -126,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
                  font-weight:600;
                  text-decoration:none;
                  font-size:16px;">
-              🛍️ SHOP ALL
+              ❤️ SHOP ALL
             </a>
           </div>
         </div>
