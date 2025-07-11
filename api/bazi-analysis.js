@@ -94,7 +94,44 @@ module.exports = async function handler(req, res) {
       ]
     };
 
-    const prompt = `
+let prompt = "";
+
+if (language.toLowerCase().includes("zh") || language === "中文" || language === "Chinese") {
+  // 中文 Prompt
+  prompt = `
+你是一位资深的八字命理师和灵性疗愈师，请用温柔而鼓舞人心的语气，使用以下格式给出命理分析结果（全部使用中文）：
+
+一、四柱排盘：
+年柱：${withPinyin(yearPillar)}
+月柱：${withPinyin(monthPillar)}
+日柱：${withPinyin(dayPillar)}
+时柱：${withPinyin(hourPillar)}
+
+二、五行比例：
+${Object.entries(percentages).map(([el, val]) => {
+  const zh = { Wood: "木", Fire: "火", Earth: "土", Metal: "金", Water: "水" }[el];
+  return `${zh}：${val}%`;
+}).join("\n")}
+
+三、命理分析建议：
+- 主导五行：${{ Wood: "木", Fire: "火", Earth: "土", Metal: "金", Water: "水" }[dominantElement]}
+- 较弱五行：${lowElements.map(el => ({ Wood: "木", Fire: "火", Earth: "土", Metal: "金", Water: "水" }[el])).join("，") || "无"}
+
+四、针对较弱五行，请推荐 5 种相应的水晶疗愈石，并附简要说明：
+${lowElements.map(el => {
+  const zh = { Wood: "木", Fire: "火", Earth: "土", Metal: "金", Water: "水" }[el];
+  return `【${zh}】五行推荐水晶：
+${crystals[el].map(c => `- ${c.name}：${c.desc}`).join("\n")}`;
+}).join("\n\n")}
+
+最后，请写一段温暖的结语，鼓励用户拥抱自己的五行命格，并以以下签名结尾：
+
+你的朋友，
+${{ Wood: "木", Fire: "火", Earth: "土", Metal: "金", Water: "水" }[dominantElement]}之灵
+  `.trim();
+} else {
+  // English Prompt（原样保留）
+  prompt = `
 You are a BaZi master and spiritual guide. Please respond only in English and follow this structure:
 
 Four Pillars:
@@ -113,7 +150,8 @@ Then write a warm, empowering letter including:
 End with:
 Your friend,
 ${dominantElement} Spirit
-    `.trim();
+  `.trim();
+}
 
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
