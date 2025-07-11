@@ -51,9 +51,7 @@ module.exports = async function handler(req, res) {
       percentages[k] = total ? Math.round(counts[k] / total * 100) : 0;
     });
 
-    const sortedElements = Object.entries(percentages).sort((a, b) => a[1] - b[1]);
     const dominantElement = Object.entries(percentages).sort((a, b) => b[1] - a[1])[0][0];
-
     const lowElements = Object.entries(percentages)
       .filter(([_, val]) => val < 25)
       .map(([el]) => el);
@@ -97,8 +95,9 @@ module.exports = async function handler(req, res) {
     };
 
     const prompt = `
-You are a BaZi master and spiritual guide. Please respond only in English with the following structure:
+You are a BaZi master and spiritual guide. Please respond only in English and follow this **strict structure**:
 
+1. Start with:
 Four Pillars:
 Year Pillar: ${withPinyin(yearPillar)}
 Month Pillar: ${withPinyin(monthPillar)}
@@ -108,19 +107,19 @@ Hour Pillar: ${withPinyin(hourPillar)}
 Five Element Percentages:
 ${Object.entries(percentages).map(([el, val]) => `${el}: ${val}%`).join("\n")}
 
-Dominant Element: ${dominantElement}
-Weakest Elements: ${lowElements.join(", ")}
-
-Recommended Crystals:
+2. Then write a warm, empowering letter based on this data, including:
+- Highlight the dominant element: ${dominantElement}
+- Describe any elements below 25%: ${lowElements.join(", ") || "None"}
+- Suggest 5 healing crystals for each weak element:
 ${lowElements.map(el =>
   `For ${el}:
 ${crystals[el].map(c => `- ${c.name}: ${c.desc}`).join("\n")}`
 ).join("\n\n")}
 
-Please write a warm, empowering letter using the above data. Sign off with:
+3. End the letter with this signature:
 "Your friend,
 ${dominantElement} Spirit"
-    `.trim();
+`.trim();
 
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
