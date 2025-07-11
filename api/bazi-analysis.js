@@ -9,19 +9,19 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    // 日期与时间
+    // 解析日期和时间
     const [year, month, day] = birthday.split("-").map(Number);
     const [hour, minute] = birthtime.split(":").map(Number);
     const solar = Solar.fromYmdHms(year, month, day, hour, minute, 0);
     const lunar = solar.getLunar();
 
-    // 四柱
+    // 自动推算四柱
     const yearPillar = lunar.getYearInGanZhi();
     const monthPillar = lunar.getMonthInGanZhi();
     const dayPillar = lunar.getDayInGanZhi();
-    const hourPillar = lunar.getTimeGanZhiExact(); // 精确时柱
+    const hourPillar = lunar.getTimeGanZhi();
 
-    // 五行
+    // 五行计算
     const elementMap = {
       "甲":"Wood","乙":"Wood","丙":"Fire","丁":"Fire","戊":"Earth","己":"Earth","庚":"Metal","辛":"Metal","壬":"Water","癸":"Water",
       "子":"Water","丑":"Earth","寅":"Wood","卯":"Wood","辰":"Earth","巳":"Fire","午":"Fire","未":"Earth","申":"Metal","酉":"Metal","戌":"Earth","亥":"Water"
@@ -39,124 +39,114 @@ module.exports = async function handler(req, res) {
       percentages[k] = total ? Math.round(counts[k]/total*100) : 0;
     });
 
-    // 最低元素
-    const lackingElement = Object.entries(percentages).sort((a,b)=>a[1]-b[1])[0][0];
-
-    // 晶石
+    // 晶石定义
     const crystals = {
+      "Wood":[
+        { name:"Green Aventurine", desc:"Encourages growth, abundance, and vitality." },
+        { name:"Moss Agate", desc:"Connects you with nature and stability." },
+        { name:"Malachite", desc:"Promotes transformation and emotional balance." },
+        { name:"Amazonite", desc:"Soothes the mind and enhances clear communication." },
+        { name:"Jade", desc:"Brings harmony, prosperity, and good fortune." }
+      ],
       "Fire":[
-        "Carnelian: enhances courage and vitality.",
-        "Red Jasper: strengthens endurance.",
-        "Garnet: revives passion.",
-        "Sunstone: brings optimism.",
-        "Ruby: ignites love and power."
+        { name:"Carnelian", desc:"Boosts courage, motivation, and vitality." },
+        { name:"Red Jasper", desc:"Strengthens stamina and grounding." },
+        { name:"Garnet", desc:"Revitalizes passion and energy." },
+        { name:"Sunstone", desc:"Brings optimism and enthusiasm." },
+        { name:"Ruby", desc:"Ignites love and personal power." }
       ],
       "Water":[
-        "Aquamarine: soothes emotions.",
-        "Lapis Lazuli: inspires wisdom.",
-        "Sodalite: balances insight.",
-        "Blue Lace Agate: calms communication.",
-        "Kyanite: clears blockages."
-      ],
-      "Wood":[
-        "Green Aventurine: fosters growth.",
-        "Moss Agate: connects to nature.",
-        "Malachite: promotes balance.",
-        "Amazonite: enhances clarity.",
-        "Jade: brings harmony."
+        { name:"Aquamarine", desc:"Soothes emotions and enhances intuition." },
+        { name:"Lapis Lazuli", desc:"Encourages wisdom and self-expression." },
+        { name:"Sodalite", desc:"Balances emotional energy and insight." },
+        { name:"Blue Lace Agate", desc:"Promotes calm communication." },
+        { name:"Kyanite", desc:"Aligns chakras and clears blockages." }
       ],
       "Earth":[
-        "Tiger's Eye: builds confidence.",
-        "Citrine: manifests abundance.",
-        "Yellow Jasper: provides protection.",
-        "Smoky Quartz: anchors energy.",
-        "Picture Jasper: grounds harmony."
+        { name:"Tiger's Eye", desc:"Brings confidence and grounding." },
+        { name:"Citrine", desc:"Manifests abundance and stability." },
+        { name:"Yellow Jasper", desc:"Provides clarity and protection." },
+        { name:"Smoky Quartz", desc:"Dispels negativity and anchors energy." },
+        { name:"Picture Jasper", desc:"Connects to Earth's harmony." }
       ],
       "Metal":[
-        "Hematite: grounds intention.",
-        "Pyrite: shields negativity.",
-        "Silver Obsidian: promotes awareness.",
-        "Clear Quartz: amplifies clarity.",
-        "Selenite: purifies thoughts."
+        { name:"Hematite", desc:"Grounds and clarifies intention." },
+        { name:"Pyrite", desc:"Attracts prosperity and shields negativity." },
+        { name:"Silver Obsidian", desc:"Promotes self-awareness and protection." },
+        { name:"Clear Quartz", desc:"Amplifies clarity and intention." },
+        { name:"Selenite", desc:"Purifies and calms the mind." }
       ]
     };
 
-    // Format language
-    let message = "";
-    if (language === "Chinese") {
-      message = `
-🌟 **您的个性化八字分析**
+    // 找到最弱元素
+    const sorted = Object.entries(percentages).sort((a,b)=>a[1]-b[1]);
+    const lackingElement = sorted[0][0];
+    const crystalList = crystals[lackingElement] || [];
 
-🪶 **风水大师的八字洞察**
+    // 生成 GPT prompt
+    const prompt = `
+You are a professional Feng Shui Master and Healing Therapist.
+Use this format exactly. Do not invent extra content.
 
-您的八字：${yearPillar}年柱，${monthPillar}月柱，${dayPillar}日柱，${hourPillar}时柱。
-五行分布：金 ${percentages.Metal}%、木 ${percentages.Wood}%、水 ${percentages.Water}%、火 ${percentages.Fire}%、土 ${percentages.Earth}%。
+If language is Chinese, reply in Chinese. If English, reply in English.
 
-您的命盘显示${lackingElement==="Fire"?"火":"其他"}元素偏弱，需要加以调和。
+🌟 Your Personalized BaZi Analysis
 
-⸻
+🪶 Feng Shui Master’s BaZi Insights
+Provide 2 paragraphs about Four Pillars and element percentages.
 
-🌿 **五行平衡建议**
+🌿 Five Elements Balancing Suggestions
+Provide 1–2 paragraphs of lifestyle advice.
 
-请多接触与${lackingElement}相关的颜色和环境，调节您的能量平衡。
+🌸 Healing Master’s Suggestions
+Provide 1–2 paragraphs of emotional and color therapy advice.
 
-⸻
+💎 Elemental Spirit’s Crystal Recommendation
+List all 5 recommended crystals below:
+${crystalList.map(c=>`- ${c.name}: ${c.desc}`).join("\n")}
 
-🌸 **疗愈大师的建议**
+🌈 Final Encouragement
 
-尝试冥想、瑜伽或色彩疗愈。可多使用${lackingElement==="Fire"?"红色":"相关色彩"}来提高活力和信心。
+**User's BaZi Info:**
+Year Pillar: ${yearPillar}
+Month Pillar: ${monthPillar}
+Day Pillar: ${dayPillar}
+Hour Pillar: ${hourPillar}
+Gender: ${gender}
+Language: ${language}
 
-⸻
+**Element Percentages:**
+${Object.entries(percentages).map(e=>`${e[0]}: ${e[1]}%`).join("\n")}
+    `.trim();
 
-💎 **元素精灵的水晶推荐**
-
-${crystals[lackingElement].map(c=>"- "+c).join("\n")}
-
-⸻
-
-🌈 **最后的鼓励**
-
-请相信，您拥有平衡与改变的力量，愿生活充满喜悦。
-`.trim();
-    } else {
-      message = `
-🌟 **Your Personalized BaZi Analysis**
-
-🪶 **Feng Shui Master's Insights**
-
-Your BaZi: Year Pillar ${yearPillar}, Month Pillar ${monthPillar}, Day Pillar ${dayPillar}, Hour Pillar ${hourPillar}.
-Five Element Distribution: Metal ${percentages.Metal}%, Wood ${percentages.Wood}%, Water ${percentages.Water}%, Fire ${percentages.Fire}%, Earth ${percentages.Earth}%.
-Your chart shows a relative lack of ${lackingElement} element.
-
-⸻
-
-🌿 **Five Element Balancing Suggestions**
-
-Engage with environments and colors linked to ${lackingElement} to restore harmony.
-
-⸻
-
-🌸 **Healing Master's Suggestions**
-
-Consider meditation, yoga, or color therapy. Using ${lackingElement==="Fire"?"red":"related colors"} can enhance vitality and confidence.
-
-⸻
-
-💎 **Elemental Spirit's Crystal Recommendations**
-
-${crystals[lackingElement].map(c=>"- "+c).join("\n")}
-
-⸻
-
-🌈 **Final Encouragement**
-
-You hold the power to create balance and joy in your life.
-`.trim();
-    }
+    // 调用 OpenAI
+    const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "gpt-4",
+        temperature: 0.7,
+        messages: [
+          {
+            role: "system",
+            content: "You are a warm, encouraging BaZi analysis expert."
+          },
+          {
+            role: "user",
+            content: prompt
+          }
+        ]
+      })
+    });
+    const json = await openaiRes.json();
+    const message = json.choices?.[0]?.message?.content || "✨ Your analysis is ready.";
 
     res.status(200).json({ message });
-  } catch (error) {
-    console.error("BaZi Analysis error:", error);
+  } catch (err) {
+    console.error("BaZi Analysis error:", err);
     res.status(500).json({ message: "⚠️ Failed to generate BaZi analysis." });
   }
 };
