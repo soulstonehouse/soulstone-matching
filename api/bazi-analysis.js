@@ -1,4 +1,3 @@
-// api/bazi-analysis.js
 const { Solar } = require("lunar-javascript");
 const fetch = require("node-fetch");
 
@@ -94,12 +93,13 @@ module.exports = async function handler(req, res) {
     const lackingElement = sorted[0][0];
     const crystalList = crystals[lackingElement] || [];
 
-    const bilingualHint = language === "zh"
-      ? "请用中文完整回应，不要中英混合。"
-      : "Please respond in English only.";
+    // ✅ 修正判断：language === "en" 是英文提示，zh 纯中文提示
+    const languageHint = language === "en"
+      ? "Please respond in English only. Do not include Chinese characters or phonetics."
+      : "请使用纯中文回应，不需要中英混排，也不需要拼音。";
 
     const prompt = `You are a BaZi master and healing spirit guide. Language: ${language}.
-${bilingualHint}
+${languageHint}
 
 Four Pillars:
 Year Pillar: ${yearPillar} (${withPinyin(yearPillar)})
@@ -110,7 +110,7 @@ Hour Pillar: ${hourPillar} (${withPinyin(hourPillar)})
 Element Percentages:
 ${Object.entries(percentages).map(([el, val]) => `${el}: ${val}%`).join("\n")}
 
-Your dominant element is ${dominantElement}, your associated Spirit is ${dominantElement} Spirit.
+Your dominant element is ${dominantElement}, your associated Spirit is ${dominantElement}.
 Your weakest element is ${lackingElement}, which indicates an area to support.
 
 Crystals to enhance ${lackingElement}:
@@ -122,7 +122,7 @@ Please generate a warm, empowering letter-style message that:
 - Clearly lists the Four Pillars and element percentages
 - Offers positive, emotionally supportive lifestyle advice
 - Lists 5 crystals to help nourish the weakest element
-- Ends with a warm, loving encouragement signed as "Your friend, ${dominantElement} Spirit"`;
+- Ends with a warm, loving encouragement signed as "Your friend, ${dominantElement}"`;
 
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
