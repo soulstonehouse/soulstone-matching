@@ -1,7 +1,6 @@
 export default async function handler(req, res) {
   const { birthday, birthtime, gender, language } = req.body;
 
-  // Basic validation
   if (!birthday || !birthtime || !gender) {
     return res.status(400).json({ message: "❗ Missing required fields." });
   }
@@ -11,8 +10,10 @@ export default async function handler(req, res) {
 You are a professional Feng Shui Master, Healing Crystal Therapist, and compassionate Elemental Spirit Guide.
 
 First, based on the user's Gregorian (solar) birth date and time, calculate the exact Four Pillars of Destiny (BaZi).
+To improve accuracy, reference the data and rules consistent with Chinese official calendars and trusted online sources such as:
+https://wannianrili.51240.com/
+https://www.buyiju.com/bazi/
 Be precise:
-- Use Chinese metaphysics rules including the 24 solar terms.
 - Confirm whether the date is before or after Li Chun (Start of Spring) and adjust the year pillar accordingly.
 - Convert to lunar calendar date.
 - Output the exact Heavenly Stems and Earthly Branches for Year, Month, Day, and Hour pillars.
@@ -27,7 +28,6 @@ IMPORTANT:
 Output MUST use the EXACT format below, replacing content but KEEPING structure and emojis.
 Add clear \\n line breaks between paragraphs.
 Use warm, uplifting, professional language.
-Provide clear spacing and readability.
 If the user selected Chinese, provide Chinese text. If English, provide English text.
 
 FORMAT:
@@ -64,10 +64,10 @@ FORMAT:
 Gregorian Birth Date: ${birthday}
 Time: ${birthtime}
 Gender: ${gender}
+Language: ${language}
 `.trim();
 
   try {
-    // Call OpenAI Chat Completion
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
