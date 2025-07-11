@@ -13,51 +13,51 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: "❗ Missing required fields." });
   }
 
-  // 内嵌的 JSON 数据
+  // 内嵌的JSON数据
   const crystals = {
     "Wood": {
       "crystals": [
-        { "name": "Green Aventurine", "description": "Encourages growth, abundance, and vitality.", "link": "https://yourstore.com/products/green-aventurine" },
-        { "name": "Moss Agate", "description": "Connects you with nature and stability.", "link": "https://yourstore.com/products/moss-agate" },
-        { "name": "Malachite", "description": "Promotes transformation and emotional balance.", "link": "https://yourstore.com/products/malachite" },
-        { "name": "Amazonite", "description": "Soothes the mind and enhances clear communication.", "link": "https://yourstore.com/products/amazonite" },
-        { "name": "Jade", "description": "Brings harmony, prosperity, and good fortune.", "link": "https://yourstore.com/products/jade" }
+        { "name": "Green Aventurine", "description": "Encourages growth, abundance, and vitality." },
+        { "name": "Moss Agate", "description": "Connects you with nature and stability." },
+        { "name": "Malachite", "description": "Promotes transformation and emotional balance." },
+        { "name": "Amazonite", "description": "Soothes the mind and enhances clear communication." },
+        { "name": "Jade", "description": "Brings harmony, prosperity, and good fortune." }
       ]
     },
     "Fire": {
       "crystals": [
-        { "name": "Carnelian", "description": "Boosts courage, motivation, and vitality.", "link": "https://yourstore.com/products/carnelian" },
-        { "name": "Red Jasper", "description": "Strengthens stamina and grounding.", "link": "https://yourstore.com/products/red-jasper" },
-        { "name": "Garnet", "description": "Revitalizes passion and energy.", "link": "https://yourstore.com/products/garnet" },
-        { "name": "Sunstone", "description": "Brings optimism and enthusiasm.", "link": "https://yourstore.com/products/sunstone" },
-        { "name": "Ruby", "description": "Ignites love and personal power.", "link": "https://yourstore.com/products/ruby" }
+        { "name": "Carnelian", "description": "Boosts courage, motivation, and vitality." },
+        { "name": "Red Jasper", "description": "Strengthens stamina and grounding." },
+        { "name": "Garnet", "description": "Revitalizes passion and energy." },
+        { "name": "Sunstone", "description": "Brings optimism and enthusiasm." },
+        { "name": "Ruby", "description": "Ignites love and personal power." }
       ]
     },
     "Water": {
       "crystals": [
-        { "name": "Aquamarine", "description": "Soothes emotions and enhances intuition.", "link": "https://yourstore.com/products/aquamarine" },
-        { "name": "Lapis Lazuli", "description": "Encourages wisdom and self-expression.", "link": "https://yourstore.com/products/lapis-lazuli" },
-        { "name": "Sodalite", "description": "Balances emotional energy and insight.", "link": "https://yourstore.com/products/sodalite" },
-        { "name": "Blue Lace Agate", "description": "Promotes calm communication.", "link": "https://yourstore.com/products/blue-lace-agate" },
-        { "name": "Kyanite", "description": "Aligns chakras and clears blockages.", "link": "https://yourstore.com/products/kyanite" }
+        { "name": "Aquamarine", "description": "Soothes emotions and enhances intuition." },
+        { "name": "Lapis Lazuli", "description": "Encourages wisdom and self-expression." },
+        { "name": "Sodalite", "description": "Balances emotional energy and insight." },
+        { "name": "Blue Lace Agate", "description": "Promotes calm communication." },
+        { "name": "Kyanite", "description": "Aligns chakras and clears blockages." }
       ]
     },
     "Earth": {
       "crystals": [
-        { "name": "Tiger's Eye", "description": "Brings confidence and grounding.", "link": "https://yourstore.com/products/tigers-eye" },
-        { "name": "Citrine", "description": "Manifests abundance and stability.", "link": "https://yourstore.com/products/citrine" },
-        { "name": "Yellow Jasper", "description": "Provides clarity and protection.", "link": "https://yourstore.com/products/yellow-jasper" },
-        { "name": "Smoky Quartz", "description": "Dispels negativity and anchors energy.", "link": "https://yourstore.com/products/smoky-quartz" },
-        { "name": "Picture Jasper", "description": "Connects to Earth's harmony.", "link": "https://yourstore.com/products/picture-jasper" }
+        { "name": "Tiger's Eye", "description": "Brings confidence and grounding." },
+        { "name": "Citrine", "description": "Manifests abundance and stability." },
+        { "name": "Yellow Jasper", "description": "Provides clarity and protection." },
+        { "name": "Smoky Quartz", "description": "Dispels negativity and anchors energy." },
+        { "name": "Picture Jasper", "description": "Connects to Earth's harmony." }
       ]
     },
     "Metal": {
       "crystals": [
-        { "name": "Hematite", "description": "Grounds and clarifies intention.", "link": "https://yourstore.com/products/hematite" },
-        { "name": "Pyrite", "description": "Attracts prosperity and shields negativity.", "link": "https://yourstore.com/products/pyrite" },
-        { "name": "Silver Obsidian", "description": "Promotes self-awareness and protection.", "link": "https://yourstore.com/products/silver-obsidian" },
-        { "name": "Clear Quartz", "description": "Amplifies clarity and intention.", "link": "https://yourstore.com/products/clear-quartz" },
-        { "name": "Selenite", "description": "Purifies and calms the mind.", "link": "https://yourstore.com/products/selenite" }
+        { "name": "Hematite", "description": "Grounds and clarifies intention." },
+        { "name": "Pyrite", "description": "Attracts prosperity and shields negativity." },
+        { "name": "Silver Obsidian", "description": "Promotes self-awareness and protection." },
+        { "name": "Clear Quartz", "description": "Amplifies clarity and intention." },
+        { "name": "Selenite", "description": "Purifies and calms the mind." }
       ]
     }
   };
@@ -68,16 +68,18 @@ export default async function handler(req, res) {
 
   const recommendedCrystals = crystals[lackingElement]?.crystals || [];
   const crystalText = recommendedCrystals
-    .map(c => `- ${c.name}: ${c.description}\n  [View Product](${c.link})`)
+    .map(c => `- ${c.name}: ${c.description}`)
     .join("\\n");
 
   const prompt = `
 You are a professional Feng Shui Master and Healing Therapist.
 
-Use the user's Four Pillars and Five Element Percentages to analyze personality and provide lifestyle suggestions.
+Use the user's Four Pillars and Five Element Percentages to analyze personality and provide suggestions.
 
 IMPORTANT:
-Use the provided percentages EXACTLY. Do NOT invent new crystal recommendations—present the provided list only.
+Use the provided percentages EXACTLY.
+Do NOT invent new crystal recommendations—only present the provided list.
+Include all sections: Feng Shui Insights, Five Element Suggestions, Healing Master Suggestions, Crystal Recommendations, and Final Encouragement.
 
 If the user selected Chinese, reply in Chinese. If English, reply in English.
 
@@ -87,19 +89,25 @@ FORMAT:
 
 🪶 Feng Shui Master’s BaZi Insights
 
-[2-3 paragraphs describing the Four Pillars and Five Element Percentages.]
+[2–3 paragraphs describing the Four Pillars and Five Element Percentages.]
 
 ⸻
 
 🌿 Five Elements Balancing Suggestions
 
-[1-2 paragraphs with lifestyle suggestions.]
+[1–2 paragraphs with lifestyle suggestions.]
+
+⸻
+
+🌸 Healing Master’s Suggestions
+
+[1–2 paragraphs with emotional, meditation, or color therapy advice.]
 
 ⸻
 
 💎 Elemental Spirit’s Crystal Recommendation
 
-[Include the EXACT crystal recommendations below.]
+[Include the EXACT crystal recommendations below, without any links.]
 
 ⸻
 
@@ -130,8 +138,14 @@ ${crystalText}
       body: JSON.stringify({
         model: "gpt-4",
         messages: [
-          { role: "system", content: "You are a warm, helpful assistant who writes clear, encouraging BaZi reports." },
-          { role: "user", content: prompt }
+          {
+            role: "system",
+            content: "You are a warm, helpful assistant who writes clear, encouraging BaZi reports."
+          },
+          {
+            role: "user",
+            content: prompt
+          }
         ],
         temperature: 0.7
       })
