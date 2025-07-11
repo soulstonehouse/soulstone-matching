@@ -1,3 +1,4 @@
+// bazi-analysis.js
 const { Solar } = require("lunar-javascript");
 const fetch = require("node-fetch");
 
@@ -20,8 +21,10 @@ module.exports = async function handler(req, res) {
     const hourPillar = lunar.getTimeInGanZhi();
 
     const elementMap = {
-      "甲":"Wood","乙":"Wood","丙":"Fire","丁":"Fire","戊":"Earth","己":"Earth","庚":"Metal","辛":"Metal","壬":"Water","癸":"Water",
-      "子":"Water","丑":"Earth","寅":"Wood","卯":"Wood","辰":"Earth","巳":"Fire","午":"Fire","未":"Earth","申":"Metal","酉":"Metal","戌":"Earth","亥":"Water"
+      "甲":"Wood","乙":"Wood","丙":"Fire","丁":"Fire","戊":"Earth","己":"Earth",
+      "庚":"Metal","辛":"Metal","壬":"Water","癸":"Water",
+      "子":"Water","丑":"Earth","寅":"Wood","卯":"Wood","辰":"Earth","巳":"Fire",
+      "午":"Fire","未":"Earth","申":"Metal","酉":"Metal","戌":"Earth","亥":"Water"
     };
 
     const pillars = [yearPillar, monthPillar, dayPillar, hourPillar];
@@ -31,19 +34,12 @@ module.exports = async function handler(req, res) {
       counts[elementMap[stem]]++;
       counts[elementMap[branch]]++;
     });
-
     const total = Object.values(counts).reduce((a,b)=>a+b,0);
     const percentages = {};
     Object.keys(counts).forEach(k => {
       percentages[k] = total ? Math.round(counts[k]/total*100) : 0;
     });
 
-    // 最强与最弱
-    const sorted = Object.entries(percentages).sort((a,b)=>b[1]-a[1]);
-    const dominantElement = sorted[0][0];
-    const lackingElement = sorted[sorted.length-1][0];
-
-    // 晶石推荐
     const crystals = {
       "Wood":[
         { name:"Green Aventurine", desc:"Encourages growth, abundance, and vitality." },
@@ -82,67 +78,56 @@ module.exports = async function handler(req, res) {
       ]
     };
 
+    const sorted = Object.entries(percentages).sort((a,b)=>a[1]-b[1]);
+    const dominantElement = Object.entries(percentages).sort((a,b)=>b[1]-a[1])[0][0];
+    const lackingElement = sorted[0][0];
     const crystalList = crystals[lackingElement] || [];
 
-    const promptEN = `
-🌟 **Your Personalized BaZi Analysis**
+    const pillarsWithPinyin = {
+      zh: `年柱：${yearPillar}（${yearPillar.split('').map(p=>p==='辛'?'Xin':p==='巳'?'Si':p==='庚'?'Geng':p==='寅'?'Yin':p==='己'?'Ji':p==='亥'?'Hai':p==='丙'?'Bing':p).join(' ')}）\n月柱：${monthPillar}（...）\n日柱：${dayPillar}（...）\n时柱：${hourPillar}（...）`,
+      en: `Year: ${yearPillar}\nMonth: ${monthPillar}\nDay: ${dayPillar}\nHour: ${hourPillar}`
+    };
 
-🪶 **Feng Shui Insights**
-Your Four Pillars:  
-Year: ${yearPillar}  
-Month: ${monthPillar}  
-Day: ${dayPillar}  
-Hour: ${hourPillar}
+    const prompt = `You are a warm and supportive BaZi master and healer. Language: ${language}
 
-Element Distribution:  
-${Object.entries(percentages).map(e=>`${e[0]}: ${e[1]}%`).join(", ")}
+Pillars:
+${pillarsWithPinyin[language === 'zh' ? 'zh' : 'en']}
 
-Your dominant element is **${dominantElement}**, your associated Spirit is **${dominantElement} Spirit**, and your weakest element is **${lackingElement}**.
+Element Percentages:
+${Object.entries(percentages).map(([el, val])=>`${el}: ${val}%`).join("\n")}
 
-🌿 **Balance Recommendations**
-To enhance your weakest element, which is ${lackingElement}, consider incorporating more associated colors, activities, and mindset into your life.
+Dominant: ${dominantElement}, Weakest: ${lackingElement}
 
-🌸 **Healing Master Advice**
-Emotionally, allow yourself to experience your feelings fully, and surround yourself with colors linked to ${lackingElement} for balance.
-
-💎 **Elemental Spirit's Crystal Recommendations**
+Crystals:
 ${crystalList.map(c=>`- ${c.name}: ${c.desc}`).join("\n")}
 
-🌈 **Final Encouragement**
-Remember, you are a unique and special individual with your own strengths and weaknesses. Embrace each day with confidence and self-love.
-`.trim();
+Now generate a heartfelt message including:
+- Element reading and interpretation
+- Lifestyle balance suggestions
+- Healing guidance
+- Crystal recommendations
+- Positive closing words
+Make it sound like a close friend who really understands them.`;
 
-    const promptCN = `
-🌟 **您的个性化八字分析**
+    const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "gpt-4",
+        temperature: 0.7,
+        messages: [
+          { role: "system", content: "You are a BaZi and healing spirit coach." },
+          { role: "user", content: prompt }
+        ]
+      })
+    });
 
-🪶 **风水大师的八字洞察**
-您的四柱：  
-年柱：${yearPillar}  
-月柱：${monthPillar}  
-日柱：${dayPillar}  
-时柱：${hourPillar}
-
-五行分布：  
-${Object.entries(percentages).map(e=>`${e[0]}：${e[1]}%`).join("，")}
-
-您的主导元素是**${dominantElement}**，对应的元素精灵是**${dominantElement}精灵**，最弱的元素是**${lackingElement}**。
-
-🌿 **五行平衡建议**
-为增强您的${lackingElement}元素，请在生活中多融入对应的颜色、活动和心态。
-
-🌸 **疗愈大师建议**
-情绪上，允许自己充分体验各种感受，并使用与${lackingElement}相关的色彩来平衡能量。
-
-💎 **元素精灵的水晶推荐**
-${crystalList.map(c=>`- ${c.name}：${c.desc}`).join("\n")}
-
-🌈 **最后的鼓励**
-请记住，您是独一无二的存在。接纳自己的优点与不足，坚定信心，充满爱地迎接每一天。
-`.trim();
-
-    const finalPrompt = language === "Chinese" ? promptCN : promptEN;
-
-    res.status(200).json({ message: finalPrompt });
+    const json = await openaiRes.json();
+    const message = json.choices?.[0]?.message?.content || "✨ 分析已生成。";
+    res.status(200).json({ message });
   } catch (err) {
     console.error("BaZi Analysis error:", err);
     res.status(500).json({ message: "⚠️ Failed to generate BaZi analysis." });
