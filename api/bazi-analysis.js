@@ -19,7 +19,7 @@ module.exports = async function handler(req, res) {
     const yearPillar = lunar.getYearInGanZhi();
     const monthPillar = lunar.getMonthInGanZhi();
     const dayPillar = lunar.getDayInGanZhi();
-    const hourPillar = lunar.getTimeGanZhi();
+    const hourPillar = lunar.getTimeInGanZhi();
 
     // 五行计算
     const elementMap = {
