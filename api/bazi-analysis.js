@@ -18,12 +18,14 @@ module.exports = async function handler(req, res) {
     const yearPillar = lunar.getYearInGanZhi();
     const monthPillar = lunar.getMonthInGanZhi();
     const dayPillar = lunar.getDayInGanZhi();
-    const hourPillar = lunar.getTimeGanZhi();
+    const hourPillar = lunar.getTimeInGanZhi(); // ✅ 已修正
 
     // === 五行简单估算 (示例) ===
     const elementMap = {
-      "甲":"Wood","乙":"Wood","丙":"Fire","丁":"Fire","戊":"Earth","己":"Earth","庚":"Metal","辛":"Metal","壬":"Water","癸":"Water",
-      "子":"Water","丑":"Earth","寅":"Wood","卯":"Wood","辰":"Earth","巳":"Fire","午":"Fire","未":"Earth","申":"Metal","酉":"Metal","戌":"Earth","亥":"Water"
+      "甲":"Wood","乙":"Wood","丙":"Fire","丁":"Fire","戊":"Earth","己":"Earth",
+      "庚":"Metal","辛":"Metal","壬":"Water","癸":"Water",
+      "子":"Water","丑":"Earth","寅":"Wood","卯":"Wood","辰":"Earth","巳":"Fire",
+      "午":"Fire","未":"Earth","申":"Metal","酉":"Metal","戌":"Earth","亥":"Water"
     };
 
     const pillars = [yearPillar, monthPillar, dayPillar, hourPillar];
