@@ -1,184 +1,162 @@
 const { Solar } = require("lunar-javascript");
+const fetch = require("node-fetch");
 
 module.exports = async function handler(req, res) {
   const { birthday, birthtime, gender, language } = req.body;
 
-  if (!birthday || !birthtime || !gender) {
+  if (!birthday || !birthtime || !gender || !language) {
     return res.status(400).json({ message: "❗ Missing required fields." });
   }
 
   try {
-    // 解析日期和时间
+    // 日期与时间
     const [year, month, day] = birthday.split("-").map(Number);
     const [hour, minute] = birthtime.split(":").map(Number);
     const solar = Solar.fromYmdHms(year, month, day, hour, minute, 0);
     const lunar = solar.getLunar();
 
-    // 推算四柱
+    // 四柱
     const yearPillar = lunar.getYearInGanZhi();
     const monthPillar = lunar.getMonthInGanZhi();
     const dayPillar = lunar.getDayInGanZhi();
-    const hourPillar = lunar.getTimeZhi(); // 不用 getTimeGanZhi 以避免错误
+    const hourPillar = lunar.getTimeGanZhiExact(); // 精确时柱
 
-    // 五行映射
+    // 五行
     const elementMap = {
-      "甲": "Wood", "乙": "Wood",
-      "丙": "Fire", "丁": "Fire",
-      "戊": "Earth", "己": "Earth",
-      "庚": "Metal", "辛": "Metal",
-      "壬": "Water", "癸": "Water",
-      "子": "Water", "丑": "Earth",
-      "寅": "Wood", "卯": "Wood",
-      "辰": "Earth", "巳": "Fire",
-      "午": "Fire", "未": "Earth",
-      "申": "Metal", "酉": "Metal",
-      "戌": "Earth", "亥": "Water"
+      "甲":"Wood","乙":"Wood","丙":"Fire","丁":"Fire","戊":"Earth","己":"Earth","庚":"Metal","辛":"Metal","壬":"Water","癸":"Water",
+      "子":"Water","丑":"Earth","寅":"Wood","卯":"Wood","辰":"Earth","巳":"Fire","午":"Fire","未":"Earth","申":"Metal","酉":"Metal","戌":"Earth","亥":"Water"
     };
-
     const pillars = [yearPillar, monthPillar, dayPillar, hourPillar];
     const counts = { Metal:0, Wood:0, Water:0, Fire:0, Earth:0 };
     pillars.forEach(pillar => {
       const [stem, branch] = pillar.split("");
-      if (elementMap[stem]) counts[elementMap[stem]]++;
-      if (elementMap[branch]) counts[elementMap[branch]]++;
+      counts[elementMap[stem]]++;
+      counts[elementMap[branch]]++;
     });
-
-    const total = Object.values(counts).reduce((a, b) => a + b, 0);
+    const total = Object.values(counts).reduce((a,b)=>a+b,0);
     const percentages = {};
     Object.keys(counts).forEach(k => {
-      percentages[k] = total ? Math.round((counts[k] / total) * 100) : 0;
+      percentages[k] = total ? Math.round(counts[k]/total*100) : 0;
     });
 
+    // 最低元素
+    const lackingElement = Object.entries(percentages).sort((a,b)=>a[1]-b[1])[0][0];
+
+    // 晶石
     const crystals = {
-      Fire: {
-        crystals: [
-          { name: "Carnelian", description: "增强勇气、动力和活力。" },
-          { name: "Red Jasper", description: "增强耐力和接地能力。" },
-          { name: "Garnet", description: "激发热情和能量。" },
-          { name: "Sunstone", description: "带来乐观和热情。" },
-          { name: "Ruby", description: "点燃爱情和个人力量。" }
-        ]
-      },
-      Metal: {
-        crystals: [
-          { name: "Hematite", description: "增强清晰与专注。" },
-          { name: "Pyrite", description: "吸引繁荣并屏蔽负能量。" },
-          { name: "Silver Obsidian", description: "促进自我意识与保护。" },
-          { name: "Clear Quartz", description: "提升意图与清晰度。" },
-          { name: "Selenite", description: "净化和平静思绪。" }
-        ]
-      },
-      Wood: {
-        crystals: [
-          { name: "Green Aventurine", description: "促进成长与活力。" },
-          { name: "Moss Agate", description: "连接自然与稳定。" },
-          { name: "Malachite", description: "支持转化和平衡。" },
-          { name: "Amazonite", description: "舒缓心灵并加强沟通。" },
-          { name: "Jade", description: "带来和谐与繁荣。" }
-        ]
-      },
-      Water: {
-        crystals: [
-          { name: "Aquamarine", description: "增强直觉并安抚情绪。" },
-          { name: "Lapis Lazuli", description: "促进智慧与自我表达。" },
-          { name: "Sodalite", description: "平衡情绪能量。" },
-          { name: "Blue Lace Agate", description: "促进平和沟通。" },
-          { name: "Kyanite", description: "清理阻塞与校准能量。" }
-        ]
-      },
-      Earth: {
-        crystals: [
-          { name: "Tiger's Eye", description: "带来自信与稳定。" },
-          { name: "Citrine", description: "增强财富与稳定。" },
-          { name: "Yellow Jasper", description: "提供清晰与保护。" },
-          { name: "Smoky Quartz", description: "排除负能量并锚定能量。" },
-          { name: "Picture Jasper", description: "与大地的和谐连接。" }
-        ]
-      }
+      "Fire":[
+        "Carnelian: enhances courage and vitality.",
+        "Red Jasper: strengthens endurance.",
+        "Garnet: revives passion.",
+        "Sunstone: brings optimism.",
+        "Ruby: ignites love and power."
+      ],
+      "Water":[
+        "Aquamarine: soothes emotions.",
+        "Lapis Lazuli: inspires wisdom.",
+        "Sodalite: balances insight.",
+        "Blue Lace Agate: calms communication.",
+        "Kyanite: clears blockages."
+      ],
+      "Wood":[
+        "Green Aventurine: fosters growth.",
+        "Moss Agate: connects to nature.",
+        "Malachite: promotes balance.",
+        "Amazonite: enhances clarity.",
+        "Jade: brings harmony."
+      ],
+      "Earth":[
+        "Tiger's Eye: builds confidence.",
+        "Citrine: manifests abundance.",
+        "Yellow Jasper: provides protection.",
+        "Smoky Quartz: anchors energy.",
+        "Picture Jasper: grounds harmony."
+      ],
+      "Metal":[
+        "Hematite: grounds intention.",
+        "Pyrite: shields negativity.",
+        "Silver Obsidian: promotes awareness.",
+        "Clear Quartz: amplifies clarity.",
+        "Selenite: purifies thoughts."
+      ]
     };
 
-    const entries = Object.entries(percentages);
-    const sorted = entries.sort((a, b) => a[1] - b[1]);
-    const lackingElement = sorted[0][0];
-    const recommendedCrystals = crystals[lackingElement]?.crystals || [];
-
+    // Format language
     let message = "";
-
     if (language === "Chinese") {
       message = `
 🌟 **您的个性化八字分析**
 
 🪶 **风水大师的八字洞察**
 
-您的八字：年柱${yearPillar}，月柱${monthPillar}，日柱${dayPillar}，时柱${hourPillar}。
-五行分布为：${entries.map(([k, v]) => `${k}: ${v}%`).join("，")}。
-其中${lackingElement}元素相对较弱，需要关注能量平衡。
+您的八字：${yearPillar}年柱，${monthPillar}月柱，${dayPillar}日柱，${hourPillar}时柱。
+五行分布：金 ${percentages.Metal}%、木 ${percentages.Wood}%、水 ${percentages.Water}%、火 ${percentages.Fire}%、土 ${percentages.Earth}%。
+
+您的命盘显示${lackingElement==="Fire"?"火":"其他"}元素偏弱，需要加以调和。
 
 ⸻
 
 🌿 **五行平衡建议**
 
-建议您在日常生活中多接触与${lackingElement}相关的事物和环境，例如调整居家风水、佩戴对应色彩饰品或增加相关植物。
+请多接触与${lackingElement}相关的颜色和环境，调节您的能量平衡。
 
 ⸻
 
 🌸 **疗愈大师的建议**
 
-尝试冥想与色彩疗法，将${lackingElement}元素色系（如红色、绿色等）融入生活中，帮助恢复平衡与活力。
+尝试冥想、瑜伽或色彩疗愈。可多使用${lackingElement==="Fire"?"红色":"相关色彩"}来提高活力和信心。
 
 ⸻
 
 💎 **元素精灵的水晶推荐**
 
-${recommendedCrystals.map(c => `- ${c.name}：${c.description}`).join("\n")}
+${crystals[lackingElement].map(c=>"- "+c).join("\n")}
 
 ⸻
 
 🌈 **最后的鼓励**
 
-请相信，您拥有独一无二的力量。愿每一次努力都引领您走向更平衡、更幸福的未来。
-      `.trim();
+请相信，您拥有平衡与改变的力量，愿生活充满喜悦。
+`.trim();
     } else {
       message = `
 🌟 **Your Personalized BaZi Analysis**
 
 🪶 **Feng Shui Master's Insights**
 
-Your BaZi chart:
-Year Pillar: ${yearPillar}, Month: ${monthPillar}, Day: ${dayPillar}, Hour: ${hourPillar}.
-Element distribution: ${entries.map(([k, v]) => `${k}: ${v}%`).join(", ")}.
-The ${lackingElement} element is relatively low and deserves your attention.
+Your BaZi: Year Pillar ${yearPillar}, Month Pillar ${monthPillar}, Day Pillar ${dayPillar}, Hour Pillar ${hourPillar}.
+Five Element Distribution: Metal ${percentages.Metal}%, Wood ${percentages.Wood}%, Water ${percentages.Water}%, Fire ${percentages.Fire}%, Earth ${percentages.Earth}%.
+Your chart shows a relative lack of ${lackingElement} element.
 
 ⸻
 
-🌿 **Five Elements Balancing Suggestions**
+🌿 **Five Element Balancing Suggestions**
 
-Incorporate more ${lackingElement}-related activities and colors in your environment to restore balance.
+Engage with environments and colors linked to ${lackingElement} to restore harmony.
 
 ⸻
 
-🌸 **Healing Master's Advice**
+🌸 **Healing Master's Suggestions**
 
-Consider meditation and color therapy. Warm tones and intentional practices will help you regain vitality.
+Consider meditation, yoga, or color therapy. Using ${lackingElement==="Fire"?"red":"related colors"} can enhance vitality and confidence.
 
 ⸻
 
 💎 **Elemental Spirit's Crystal Recommendations**
 
-${recommendedCrystals.map(c => `- ${c.name}: ${c.description}`).join("\n")}
+${crystals[lackingElement].map(c=>"- "+c).join("\n")}
 
 ⸻
 
 🌈 **Final Encouragement**
 
-Remember: you hold unique power within. May your journey ahead be filled with balance and joy.
-      `.trim();
+You hold the power to create balance and joy in your life.
+`.trim();
     }
 
-    return res.status(200).json({ message });
-
+    res.status(200).json({ message });
   } catch (error) {
     console.error("BaZi Analysis error:", error);
-    return res.status(500).json({ message: "⚠️ Failed to generate BaZi analysis." });
+    res.status(500).json({ message: "⚠️ Failed to generate BaZi analysis." });
   }
 };
