@@ -50,12 +50,42 @@ module.exports = async function handler(req, res) {
       percentages[k] = total ? Math.round(counts[k] / total * 100) : 0;
     });
 
-    const crystals = {
-      "Wood": [...], // 省略，和你之前保持一致
-      "Fire": [...],
-      "Water": [...],
-      "Earth": [...],
-      "Metal": [...]
+ const crystals = {
+      "Wood": [
+        { name: "Green Aventurine", desc: "Encourages growth, abundance, and vitality." },
+        { name: "Moss Agate", desc: "Connects you with nature and stability." },
+        { name: "Malachite", desc: "Promotes transformation and emotional balance." },
+        { name: "Amazonite", desc: "Soothes the mind and enhances clear communication." },
+        { name: "Jade", desc: "Brings harmony, prosperity, and good fortune." }
+      ],
+      "Fire": [
+        { name: "Carnelian", desc: "Boosts courage, motivation, and vitality." },
+        { name: "Red Jasper", desc: "Strengthens stamina and grounding." },
+        { name: "Garnet", desc: "Revitalizes passion and energy." },
+        { name: "Sunstone", desc: "Brings optimism and enthusiasm." },
+        { name: "Ruby", desc: "Ignites love and personal power." }
+      ],
+      "Water": [
+        { name: "Aquamarine", desc: "Soothes emotions and enhances intuition." },
+        { name: "Lapis Lazuli", desc: "Encourages wisdom and self-expression." },
+        { name: "Sodalite", desc: "Balances emotional energy and insight." },
+        { name: "Blue Lace Agate", desc: "Promotes calm communication." },
+        { name: "Kyanite", desc: "Aligns chakras and clears blockages." }
+      ],
+      "Earth": [
+        { name: "Tiger's Eye", desc: "Brings confidence and grounding." },
+        { name: "Citrine", desc: "Manifests abundance and stability." },
+        { name: "Yellow Jasper", desc: "Provides clarity and protection." },
+        { name: "Smoky Quartz", desc: "Dispels negativity and anchors energy." },
+        { name: "Picture Jasper", desc: "Connects to Earth's harmony." }
+      ],
+      "Metal": [
+        { name: "Hematite", desc: "Grounds and clarifies intention." },
+        { name: "Pyrite", desc: "Attracts prosperity and shields negativity." },
+        { name: "Silver Obsidian", desc: "Promotes self-awareness and protection." },
+        { name: "Clear Quartz", desc: "Amplifies clarity and intention." },
+        { name: "Selenite", desc: "Purifies and calms the mind." }
+      ]
     };
 
     const sorted = Object.entries(percentages).sort((a, b) => a[1] - b[1]);
