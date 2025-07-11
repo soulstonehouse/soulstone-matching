@@ -94,7 +94,12 @@ module.exports = async function handler(req, res) {
     const lackingElement = sorted[0][0];
     const crystalList = crystals[lackingElement] || [];
 
-    const prompt = `You are a BaZi master and healing spirit guide. Language: ${language}. Please provide a bilingual (Chinese + English) response, with each paragraph followed by its translation.
+    const bilingualHint = language === "zh"
+      ? "请用中文完整回应，不要中英混合。"
+      : "Please respond in English only.";
+
+    const prompt = `You are a BaZi master and healing spirit guide. Language: ${language}.
+${bilingualHint}
 
 Four Pillars:
 Year Pillar: ${yearPillar} (${withPinyin(yearPillar)})
@@ -117,7 +122,7 @@ Please generate a warm, empowering letter-style message that:
 - Clearly lists the Four Pillars and element percentages
 - Offers positive, emotionally supportive lifestyle advice
 - Lists 5 crystals to help nourish the weakest element
-- Ends with a warm, loving encouragement signed as "Your friend, [Spirit]"`;
+- Ends with a warm, loving encouragement signed as "Your friend, ${dominantElement} Spirit"`;
 
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
