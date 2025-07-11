@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const analyzeBtn = document.getElementById("analyzeBtn");
   analyzeBtn.addEventListener("click", async () => {
-    const birthday = document.getElementById("birthday").value;
-    const birthtime = document.getElementById("birthtime").value;
+    const birthday = document.getElementById("birthday").value; // yyyy-mm-dd
+    const birthtime = document.getElementById("birthtime").value; // hh:mm
     const language = document.getElementById("language").value;
     const gender = document.getElementById("gender").value;
 
@@ -16,21 +16,53 @@ document.addEventListener("DOMContentLoaded", () => {
     resultDiv.innerHTML = "🔮 Analyzing your BaZi chart... Please wait...";
 
     try {
-      const response = await fetch("/api/bazi-analysis", {
+      // Load GanZhi table
+      const tableResponse = await fetch("/bazi_ganzhi_table.json");
+      const ganZhiData = await tableResponse.json();
+
+      // Parse date
+      const [year, month, day] = birthday.split("-");
+      const [hourStr] = birthtime.split(":");
+      const hour = parseInt(hourStr, 10);
+
+      // Year Pillar
+      const yearPillar = ganZhiData.yearPillars[year] || "未知";
+
+      // Month Pillar
+      const monthPillar = ganZhiData.monthPillars[month] || "未知";
+
+      // Hour Pillar
+      let hourPillar = "未知";
+      const hourKeys = Object.keys(ganZhiData.hourPillars)
+        .map(h => parseInt(h))
+        .sort((a, b) => a - b);
+      for (const h of hourKeys) {
+        if (hour >= h) {
+          hourPillar = ganZhiData.hourPillars[String(h)];
+        }
+      }
+
+      // Day Pillar placeholder
+      const dayPillar = "需进一步排盘";
+
+      // Send to backend
+      const apiResponse = await fetch("/api/bazi-analysis", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          birthday,
-          birthtime,
+          yearPillar,
+          monthPillar,
+          dayPillar,
+          hourPillar,
           gender,
           language
         })
       });
 
-      const data = await response.json();
-      const message = data.message || "✨ Your analysis is ready.";
+      const apiData = await apiResponse.json();
+      const message = apiData.message || "✨ Your analysis is ready.";
 
-      // Find main element for image (simulate: if Metal > Wood > Water, show Metal image)
+      // Match main element from response text
       const elementMatch = message.match(/Metal|Wood|Water|Fire|Earth/);
       const mainElement = elementMatch ? elementMatch[0] : "Light";
       const spiritImageMap = {
