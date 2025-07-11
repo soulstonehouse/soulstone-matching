@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Year Pillar
       const yearPillar = ganZhiData.yearPillars[year] || "Unknown";
 
-      // Month Pillar (fixed: convert '06' -> '6')
+      // Month Pillar
       const monthPillar = ganZhiData.monthPillars[String(parseInt(month, 10))] || "Unknown";
 
       // Hour Pillar
@@ -52,6 +52,31 @@ document.addEventListener("DOMContentLoaded", () => {
       const dayIndex = Math.floor(new Date(birthday).getTime() / (24 * 60 * 60 * 1000)) % 60;
       const dayPillar = ganZhi60[dayIndex];
 
+      // Mapping each stem/branch to Five Elements
+      const elementMap = {
+        "甲":"Wood","乙":"Wood","丙":"Fire","丁":"Fire","戊":"Earth","己":"Earth","庚":"Metal","辛":"Metal","壬":"Water","癸":"Water",
+        "子":"Water","丑":"Earth","寅":"Wood","卯":"Wood","辰":"Earth","巳":"Fire","午":"Fire","未":"Earth","申":"Metal","酉":"Metal","戌":"Earth","亥":"Water"
+      };
+
+      // Extract stems and branches
+      const pillars = [yearPillar, monthPillar, dayPillar, hourPillar];
+      const counts = { Metal:0, Wood:0, Water:0, Fire:0, Earth:0 };
+
+      pillars.forEach(pillar => {
+        if(pillar && pillar !== "Unknown"){
+          const [stemChar, branchChar] = pillar.split("");
+          counts[elementMap[stemChar]]++;
+          counts[elementMap[branchChar]]++;
+        }
+      });
+
+      // Calculate percentages
+      const total = Object.values(counts).reduce((a,b)=>a+b,0);
+      const percentages = {};
+      Object.keys(counts).forEach(key => {
+        percentages[key] = total ? Math.round(counts[key]/total*100) : 0;
+      });
+
       // Call backend
       const apiResponse = await fetch("/api/bazi-analysis", {
         method: "POST",
@@ -62,7 +87,8 @@ document.addEventListener("DOMContentLoaded", () => {
           dayPillar,
           hourPillar,
           gender,
-          language
+          language,
+          percentages
         })
       });
 
