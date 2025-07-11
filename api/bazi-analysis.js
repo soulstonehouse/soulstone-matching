@@ -100,11 +100,12 @@ Your weakest element is ${lackingElement}, which indicates an area to support.
 Crystals to enhance ${lackingElement}:
 ${crystalList.map(c=>`- ${c.name}: ${c.desc}`).join("\n")}
 
-Please generate a warm, encouraging letter-style message, including:
-- Insights on Four Pillars and elements
-- Lifestyle & emotional balance advice
-- Crystal guidance
-- Final note signed by the spirit guide (e.g., "Your friend, Fire Spirit")`;
+Please generate a warm, empowering letter-style message that:
+- Starts with a friendly greeting
+- Gives meaningful insights on Four Pillars and element makeup
+- Offers positive, emotionally supportive lifestyle advice
+- Lists 5 crystals to help nourish the weakest element
+- Ends with a warm, loving encouragement signed as "Your friend, [Spirit]"`;
 
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -114,9 +115,9 @@ Please generate a warm, encouraging letter-style message, including:
       },
       body: JSON.stringify({
         model: "gpt-4",
-        temperature: 0.75,
+        temperature: 0.8,
         messages: [
-          { role: "system", content: "You are a friendly and insightful BaZi and healing guide." },
+          { role: "system", content: "You are a gentle, empowering spiritual guide who helps people interpret BaZi and balance their energy." },
           { role: "user", content: prompt }
         ]
       })
