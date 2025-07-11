@@ -1,25 +1,35 @@
 export default async function handler(req, res) {
-  const { yearPillar, monthPillar, dayPillar, hourPillar, gender, language } = req.body;
+  const {
+    yearPillar,
+    monthPillar,
+    dayPillar,
+    hourPillar,
+    gender,
+    language,
+    percentages
+  } = req.body;
 
-  if (!yearPillar || !monthPillar || !dayPillar || !hourPillar || !gender) {
+  if (!yearPillar || !monthPillar || !dayPillar || !hourPillar || !gender || !percentages) {
     return res.status(400).json({ message: "❗ Missing required fields." });
   }
 
   const prompt = `
 You are a professional Feng Shui Master, Healing Crystal Therapist, and compassionate Elemental Spirit Guide.
 
-Analyze the following Four Pillars of Destiny (BaZi) in detail, including:
-- The percentages of the Five Elements (Metal, Wood, Water, Fire, Earth).
-- Personality insights based on the element distribution.
+Analyze the user's BaZi chart in detail using the provided Four Pillars and Five Element Percentages. IMPORTANT: You MUST use the provided percentages EXACTLY as given, without modification or reinterpretation.
 
-Finally, recommend five crystals for the element that is most lacking.
+Your analysis should include:
+- Interpretation of the Four Pillars
+- Explanation of the Five Element Percentages
+- Personality insights derived from these distributions
+- Crystal recommendations for the most lacking element
 
 IMPORTANT:
 Output MUST use the EXACT format below, replacing content but KEEPING structure and emojis.
 Add clear \\n line breaks between paragraphs.
 Use warm, uplifting, professional language.
 If the user selected Chinese, provide Chinese text. If English, provide English text. 
-If the user selected English, translate all Chinese characters (like Heavenly Stems and Earthly Branches) into English with their corresponding element and pinyin, e.g., 辛 (Xin, Metal), 巳 (Si, Fire).
+If any pillar is 'Unknown', simply state 'Unknown' without adding pinyin or element.
 
 FORMAT:
 
@@ -27,7 +37,7 @@ FORMAT:
 
 🪶 Feng Shui Master’s BaZi Insights
 
-[2-3 paragraphs describing the Four Pillars, Five Elements distribution, personality.]
+[2-3 paragraphs describing the Four Pillars and provided Five Element Percentages.]
 
 ⸻
 
@@ -54,6 +64,13 @@ Day Pillar: ${dayPillar}
 Hour Pillar: ${hourPillar}
 Gender: ${gender}
 Language: ${language}
+
+**Five Element Percentages Provided:**
+Metal: ${percentages.Metal}%
+Wood: ${percentages.Wood}%
+Water: ${percentages.Water}%
+Fire: ${percentages.Fire}%
+Earth: ${percentages.Earth}%
 `.trim();
 
   try {
