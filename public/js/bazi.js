@@ -114,6 +114,21 @@ document.addEventListener("DOMContentLoaded", () => {
         <div style="border:2px dashed #d7c9f7; border-radius:16px; padding:20px; background:#f9f7ff; text-align:left;">
           <img src="${spiritImageMap[mainElement]}" alt="${mainElement} Spirit" style="max-width:120px; display:block; margin:0 auto 20px;">
           <pre style="white-space:pre-wrap; word-break:break-word; font-family:inherit;">${message}</pre>
+          <div style="text-align:center; margin-top:24px;">
+            <a href="https://yourstore.com/products" 
+               target="_blank"
+               style="
+                 display:inline-block;
+                 background:#8c6eff;
+                 color:#fff;
+                 padding:12px 32px;
+                 border-radius:40px;
+                 font-weight:600;
+                 text-decoration:none;
+                 font-size:16px;">
+              🛍️ SHOP ALL
+            </a>
+          </div>
         </div>
       `;
     } catch (error) {
