@@ -51,41 +51,11 @@ module.exports = async function handler(req, res) {
     });
 
     const crystals = {
-      "Wood": [
-        { name: "Green Aventurine", desc: "Encourages growth, abundance, and vitality." },
-        { name: "Moss Agate", desc: "Connects you with nature and stability." },
-        { name: "Malachite", desc: "Promotes transformation and emotional balance." },
-        { name: "Amazonite", desc: "Soothes the mind and enhances clear communication." },
-        { name: "Jade", desc: "Brings harmony, prosperity, and good fortune." }
-      ],
-      "Fire": [
-        { name: "Carnelian", desc: "Boosts courage, motivation, and vitality." },
-        { name: "Red Jasper", desc: "Strengthens stamina and grounding." },
-        { name: "Garnet", desc: "Revitalizes passion and energy." },
-        { name: "Sunstone", desc: "Brings optimism and enthusiasm." },
-        { name: "Ruby", desc: "Ignites love and personal power." }
-      ],
-      "Water": [
-        { name: "Aquamarine", desc: "Soothes emotions and enhances intuition." },
-        { name: "Lapis Lazuli", desc: "Encourages wisdom and self-expression." },
-        { name: "Sodalite", desc: "Balances emotional energy and insight." },
-        { name: "Blue Lace Agate", desc: "Promotes calm communication." },
-        { name: "Kyanite", desc: "Aligns chakras and clears blockages." }
-      ],
-      "Earth": [
-        { name: "Tiger's Eye", desc: "Brings confidence and grounding." },
-        { name: "Citrine", desc: "Manifests abundance and stability." },
-        { name: "Yellow Jasper", desc: "Provides clarity and protection." },
-        { name: "Smoky Quartz", desc: "Dispels negativity and anchors energy." },
-        { name: "Picture Jasper", desc: "Connects to Earth's harmony." }
-      ],
-      "Metal": [
-        { name: "Hematite", desc: "Grounds and clarifies intention." },
-        { name: "Pyrite", desc: "Attracts prosperity and shields negativity." },
-        { name: "Silver Obsidian", desc: "Promotes self-awareness and protection." },
-        { name: "Clear Quartz", desc: "Amplifies clarity and intention." },
-        { name: "Selenite", desc: "Purifies and calms the mind." }
-      ]
+      "Wood": [...], // 省略，和你之前保持一致
+      "Fire": [...],
+      "Water": [...],
+      "Earth": [...],
+      "Metal": [...]
     };
 
     const sorted = Object.entries(percentages).sort((a, b) => a[1] - b[1]);
@@ -93,12 +63,15 @@ module.exports = async function handler(req, res) {
     const lackingElement = sorted[0][0];
     const crystalList = crystals[lackingElement] || [];
 
-    // ✅ 修正判断：language === "en" 是英文提示，zh 纯中文提示
-    const languageHint = language === "en"
-      ? "Please respond in English only. Do not include Chinese characters or phonetics."
-      : "请使用纯中文回应，不需要中英混排，也不需要拼音。";
+    let languageHint = "";
+    if (language === "zh") {
+      languageHint = "请用纯中文回复，不要中英混排，也不需要拼音。结尾署名请用“你的朋友，" + lackingElement + "精灵”。";
+    } else if (language === "en") {
+      languageHint = `Please respond in English only. Do not include Chinese characters or pinyin. End the message with: "Your friend, the ${lackingElement} Spirit".`;
+    }
 
-    const prompt = `You are a BaZi master and healing spirit guide. Language: ${language}.
+    const prompt = `You are a BaZi master and healing spirit guide.
+Language: ${language}.
 ${languageHint}
 
 Four Pillars:
@@ -110,7 +83,7 @@ Hour Pillar: ${hourPillar} (${withPinyin(hourPillar)})
 Element Percentages:
 ${Object.entries(percentages).map(([el, val]) => `${el}: ${val}%`).join("\n")}
 
-Your dominant element is ${dominantElement}, your associated Spirit is ${dominantElement}.
+Your dominant element is ${dominantElement}, your associated Spirit is ${dominantElement} Spirit.
 Your weakest element is ${lackingElement}, which indicates an area to support.
 
 Crystals to enhance ${lackingElement}:
@@ -122,7 +95,7 @@ Please generate a warm, empowering letter-style message that:
 - Clearly lists the Four Pillars and element percentages
 - Offers positive, emotionally supportive lifestyle advice
 - Lists 5 crystals to help nourish the weakest element
-- Ends with a warm, loving encouragement signed as "Your friend, ${dominantElement}"`;
+- Ends with a warm, loving encouragement as instructed`;
 
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
