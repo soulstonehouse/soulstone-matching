@@ -1,5 +1,4 @@
 
-// api/bazi-analysis.js
 const { Solar } = require("lunar-javascript");
 const fetch = require("node-fetch");
 
@@ -92,46 +91,50 @@ module.exports = async function handler(req, res) {
 
     const sorted = Object.entries(percentages).sort((a, b) => a[1] - b[1]);
     const dominantElement = Object.entries(percentages).sort((a, b) => b[1] - a[1])[0][0];
-    const minVal = sorted[0][1];
-    const lackingElements = sorted.filter(([_, v]) => v === minVal).map(([k]) => k);
-    let crystalList = [];
-    lackingElements.forEach(el => {
-      crystalList = crystalList.concat(crystals[el] || []);
-    });
+    const weakestElements = sorted.filter(([el, val]) => val === sorted[0][1]).map(([el]) => el);
+    const crystalRecommendations = weakestElements.map(el => ({
+      element: el,
+      crystals: crystals[el] || []
+    }));
 
-    const prompt = \`
-You are a gentle, empowering spiritual guide who helps people interpret BaZi and balance their energy.
-Respond in \${language === "zh" ? "Chinese" : "English"} only.
+    const prompt = `
+You are a gentle spiritual guide who helps interpret BaZi charts.
+Language: ${language}
 
 Four Pillars:
-Year Pillar: \${yearPillar} (\${withPinyin(yearPillar)})
-Month Pillar: \${monthPillar} (\${withPinyin(monthPillar)})
-Day Pillar: \${dayPillar} (\${withPinyin(dayPillar)})
-Hour Pillar: \${hourPillar} (\${withPinyin(hourPillar)})
+Year: ${yearPillar} (${withPinyin(yearPillar)})
+Month: ${monthPillar} (${withPinyin(monthPillar)})
+Day: ${dayPillar} (${withPinyin(dayPillar)})
+Hour: ${hourPillar} (${withPinyin(hourPillar)})
 
-Element Percentages:
-\${Object.entries(percentages).map(([el, val]) => \`\${el}: \${val}%\`).join("\n")}
+Element Distribution:
+${Object.entries(percentages).map(([el, val]) => `${el}: ${val}%`).join("
+")}
 
-Your dominant element is \${dominantElement}, your associated Spirit is the \${dominantElement} Spirit.
-Your weakest elements are \${lackingElements.join(", ")}.
+Dominant: ${dominantElement}
+Weakest: ${weakestElements.join(", ")}
 
-Crystals to enhance your weakest elements:
-\${crystalList.map(c => \`- \${c.name}: \${c.desc}\`).join("\n")}
+Crystals to enhance:
+${crystalRecommendations.map(e => `${e.element}:
+${e.crystals.map(c => `- ${c.name}: ${c.desc}`).join("
+")}`).join("
 
-Please write a warm letter offering insights, advice, and encouragement, and sign off as:
-"Your devoted guide, the \${dominantElement} Spirit"
-\`;
+")}
+
+Please generate a warm, empowering message in ${language === "zh" ? "Chinese" : "English"}.
+Sign off as: "Your friend, ${dominantElement} Spirit"`;
 
     const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": \`Bearer \${process.env.OPENAI_API_KEY}\`,
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
         model: "gpt-4",
         temperature: 0.8,
         messages: [
+          { role: "system", content: "You are a gentle, inspiring BaZi master and healing guide." },
           { role: "user", content: prompt }
         ]
       })
