@@ -24,13 +24,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const hour = parseInt(hourStr, 10);
 
       // Year Pillar
-      const yearPillar = ganZhiData.yearPillars[year] || "未知";
+      const yearPillar = ganZhiData.yearPillars[year] || "Unknown";
 
-      // Month Pillar
-      const monthPillar = ganZhiData.monthPillars[month] || "未知";
+      // Month Pillar (fixed: convert '06' -> '6')
+      const monthPillar = ganZhiData.monthPillars[String(parseInt(month, 10))] || "Unknown";
 
       // Hour Pillar
-      let hourPillar = "未知";
+      let hourPillar = "Unknown";
       const hourKeys = Object.keys(ganZhiData.hourPillars)
         .map(h => parseInt(h))
         .sort((a, b) => a - b);
