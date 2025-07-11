@@ -4,6 +4,9 @@
   "description": "Soulstonehouse BaZi App",
   "main": "index.js",
   "type": "commonjs",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "lunar-javascript": "^1.4.2",
     "node-fetch": "^2.6.9"
