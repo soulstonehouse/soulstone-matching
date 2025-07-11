@@ -1,40 +1,43 @@
 document.getElementById("matchForm").addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  const birthdate = document.getElementById("birthdate").value;
+  // 采集表单输入
+  const birthday = document.getElementById("birthdate").value;
   const birthtime = document.getElementById("birthtime").value;
+  const gender = document.getElementById("gender").value;
   const language = document.getElementById("language").value;
 
   const resultBox = document.getElementById("result");
-  resultBox.innerHTML = "<p>Matching in progress...</p>";
+  resultBox.innerHTML = "<p>🔮 Analyzing your BaZi chart... Please wait...</p>";
 
   try {
-    // 向 GPT 接口请求分析
-    const response = await fetch("/api/match-crystal", {
+    // 调用后端API
+    const response = await fetch("/api/bazi-analysis", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ birthdate, birthtime, language }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ birthday, birthtime, gender, language })
     });
 
     const data = await response.json();
     if (!data.message) throw new Error("No message returned");
 
-    // 显示 GPT 分析结果
-    resultBox.innerHTML = `<p>${data.message.replace(/\n/g, "<br>")}</p>`;
+    // 格式化并显示AI分析结果
+    resultBox.innerHTML = `
+      <div style="border:2px dashed #d7c9f7; border-radius:16px; padding:20px; background:#f9f7ff; text-align:left;">
+        <pre style="white-space:pre-wrap; word-break:break-word; font-family:inherit;">${data.message}</pre>
+      </div>
+    `;
 
-    // 自动识别元素关键词
+    // 自动识别主要元素（可选）
     const elementKeywords = ["Wood", "Fire", "Earth", "Metal", "Water", "Ice", "Thunder", "Light", "Darkness", "Wind"];
     const matchedElement = elementKeywords.find(el => data.message.includes(el));
     if (!matchedElement) return;
 
-    // 加载 JSON 映射数据
+    // 如果你仍希望加载本地JSON做增强（可选）
     const jsonRes = await fetch("/element_crystal_mapping.json");
     const jsonData = await jsonRes.json();
     const crystal = jsonData[matchedElement];
 
-    // 展示推荐的水晶信息
     if (crystal) {
       const crystalBox = document.createElement("div");
       crystalBox.innerHTML = `
@@ -45,8 +48,9 @@ document.getElementById("matchForm").addEventListener("submit", async function (
       `;
       resultBox.appendChild(crystalBox);
     }
+
   } catch (err) {
     console.error(err);
-    resultBox.innerHTML = "<p style='color:red;'>Sorry, something went wrong. Please try again later.</p>";
+    resultBox.innerHTML = "<p style='color:red;'>⚠️ Sorry, something went wrong. Please try again later.</p>";
   }
 });
