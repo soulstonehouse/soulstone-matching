@@ -1,4 +1,5 @@
 const { Solar } = require("lunar-javascript");
+
 module.exports = async function handler(req, res) {
   const { birthday, birthtime, gender, language } = req.body;
 
@@ -42,4 +43,54 @@ module.exports = async function handler(req, res) {
     // === 晶石定义 ===
     const crystals = {
       "Wood": { "crystals":[
-        { "name":"Green Aventurine","description":"Encourages growth, abundance, and vitalit
+        { "name":"Green Aventurine","description":"Encourages growth, abundance, and vitality." },
+        { "name":"Moss Agate","description":"Connects you with nature and stability." },
+        { "name":"Malachite","description":"Promotes transformation and emotional balance." },
+        { "name":"Amazonite","description":"Soothes the mind and enhances clear communication." },
+        { "name":"Jade","description":"Brings harmony, prosperity, and good fortune." }
+      ]},
+      "Fire": { "crystals":[
+        { "name":"Carnelian","description":"Boosts courage, motivation, and vitality." },
+        { "name":"Red Jasper","description":"Strengthens stamina and grounding." },
+        { "name":"Garnet","description":"Revitalizes passion and energy." },
+        { "name":"Sunstone","description":"Brings optimism and enthusiasm." },
+        { "name":"Ruby","description":"Ignites love and personal power." }
+      ]},
+      "Water": { "crystals":[
+        { "name":"Aquamarine","description":"Soothes emotions and enhances intuition." },
+        { "name":"Lapis Lazuli","description":"Encourages wisdom and self-expression." },
+        { "name":"Sodalite","description":"Balances emotional energy and insight." },
+        { "name":"Blue Lace Agate","description":"Promotes calm communication." },
+        { "name":"Kyanite","description":"Aligns chakras and clears blockages." }
+      ]},
+      "Earth": { "crystals":[
+        { "name":"Tiger's Eye","description":"Brings confidence and grounding." },
+        { "name":"Citrine","description":"Manifests abundance and stability." },
+        { "name":"Yellow Jasper","description":"Provides clarity and protection." },
+        { "name":"Smoky Quartz","description":"Dispels negativity and anchors energy." },
+        { "name":"Picture Jasper","description":"Connects to Earth's harmony." }
+      ]},
+      "Metal": { "crystals":[
+        { "name":"Hematite","description":"Grounds and clarifies intention." },
+        { "name":"Pyrite","description":"Attracts prosperity and shields negativity." },
+        { "name":"Silver Obsidian","description":"Promotes self-awareness and protection." },
+        { "name":"Clear Quartz","description":"Amplifies clarity and intention." },
+        { "name":"Selenite","description":"Purifies and calms the mind." }
+      ]}
+    };
+
+    // === 返回结果示例 ===
+    return res.status(200).json({
+      yearPillar,
+      monthPillar,
+      dayPillar,
+      hourPillar,
+      percentages,
+      crystals
+    });
+
+  } catch (error) {
+    console.error("BaZi Analysis error:", error);
+    return res.status(500).json({ message: "⚠️ Failed to generate BaZi analysis." });
+  }
+};
