@@ -1,4 +1,4 @@
-import { Solar } from "lunar-javascript";
+const { Solar } = require("lunar-javascript");
 
 export default async function handler(req, res) {
   const { birthday, birthtime, gender, language } = req.body;
