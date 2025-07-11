@@ -11,23 +11,31 @@ export default async function handler(req, res) {
     percentages
   } = req.body;
 
+  console.log("Received body:", req.body);
+
   if (!yearPillar || !monthPillar || !dayPillar || !hourPillar || !gender || !percentages) {
     return res.status(400).json({ message: "❗ Missing required fields." });
   }
 
-  // 1️⃣ 找到最缺元素
+  // 找到最缺元素
   const entries = Object.entries(percentages);
+  if (!entries.length) {
+    return res.status(400).json({ message: "❗ Percentages are empty." });
+  }
   const sorted = entries.sort((a, b) => a[1] - b[1]);
   const lackingElement = sorted[0][0];
 
-  // 2️⃣ 拼接水晶推荐
-  const recommendedCrystals = crystals[lackingElement]?.crystals || [];
-  const crystalText = recommendedCrystals
-    .slice(0, 5)
-    .map(c => `- ${c.name}: ${c.description}\n  [View Product](${c.link})`)
-    .join("\\n");
+  console.log("Lacking Element:", lackingElement);
+  console.log("Crystals for Element:", crystals[lackingElement]);
 
-  // 3️⃣ 拼接Prompt
+  const recommendedCrystals = crystals[lackingElement]?.crystals || [];
+  const crystalText = recommendedCrystals.length
+    ? recommendedCrystals
+        .slice(0, 5)
+        .map(c => `- ${c.name}: ${c.description}\n  [View Product](${c.link})`)
+        .join("\\n")
+    : "No crystal recommendations available.";
+
   const prompt = `
 You are a professional Feng Shui Master and Healing Therapist.
 
@@ -104,7 +112,11 @@ ${crystalText}
       })
     });
 
-    const json = await response.json();
+    // 如果出错先看返回
+    const raw = await response.text();
+    console.log("OpenAI raw response:", raw);
+    const json = JSON.parse(raw);
+
     const message = json.choices?.[0]?.message?.content || "✨ Your analysis is ready.";
 
     res.status(200).json({ message });
